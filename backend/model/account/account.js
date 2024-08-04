@@ -18,9 +18,9 @@ const accountSchema = mongoose.Schema({
         required: true
     }
     ,
-    profile: {
+    profile: [{
         type: String
-    }
+    }]
     ,
     date: {type: Date}
 })

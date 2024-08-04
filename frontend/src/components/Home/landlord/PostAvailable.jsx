@@ -1,20 +1,51 @@
 import { useContext, useEffect, useState } from "react"
 
 import { Button,Box,Typography, Card, CardHeader, CardMedia, CardContent, Paper, styled, Grid, Table, TableHead, TableCell,TableRow } from "@mui/material"
-// import { DataContext } from "../../context/DataProvider"
+import { DataContext } from "../../../context/DataProvider"
 // import { useNavigate } from "react-router-dom"
-// import { API } from "../../services/Api"
+
+import { API } from "../../../services/Api"
 
 
 
 
 
 const PostAvailable = ()=>{
+    const {account} = useContext(DataContext)
 
+
+    //recalibarte the API to get prams and query just like in blog site 
+
+            // const getPostsOfId = async()=>{
+            //     try{
+
+            //         let res = await API.getPostsOfId({Gharbeti_id: account._id})
+            //         // let res = await API.getPostsOfId( account._id)
+
+
+            //         if(res.isSuccess){
+            //             console.log("gotten data")
+            //             console.log(res)
+            //         }else{
+            //             console.log('faield to fetch data')
+                    
+            //         }
+
+
+
+            //     }catch(err){
+            //         console.log(err)
+            //     }
+            // }
+             
 
 
     return (<>
-PostAvailable    </>
+        PostAvailable
+
+        <Button variant="standard" onClick={()=>getPostsOfId()}>Test</Button>
+        
+        </>
        
     )
 }

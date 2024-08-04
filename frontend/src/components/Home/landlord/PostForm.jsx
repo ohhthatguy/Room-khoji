@@ -1,18 +1,19 @@
 import { useContext, useEffect, useState } from "react"
 
 import { Button,Box,Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Paper, styled, Radio, TextareaAutosize, TableHead, TableCell,TableRow } from "@mui/material"
-import { Category } from "@mui/icons-material"
-// import { DataContext } from "../../context/DataProvider"
+import {Cancel} from '@mui/icons-material';
+
+import { DataContext } from "../../../context/DataProvider";
 // import { useNavigate } from "react-router-dom"
-// import { API } from "../../services/Api"
-
-
-
-
+import { API } from "../../../services/Api"
+import PostAvailable from "./PostAvailable";
 
 const PostForm = ()=>{
 
+    const {account} = useContext(DataContext)
+
     const initialProductData = {
+        Gharbeti_id: account._id,
         Description: "",
         Location: "",
         People: "",
@@ -22,38 +23,72 @@ const PostForm = ()=>{
         Quantity: "1",
         Rate: "1000",
         Water: "",
-        // productImages: []
-
+        productImages: [],
+        Date: ""
     }
-    const [value, setValue] = useState('');
+
 
 const [productData, setProductData] = useState(initialProductData)
 const [productImage, setProductImage] = useState()
 
-// console.log(productImage)
+console.log(productImage)
+
+useEffect(()=>{
+
+    if(productImage){
+            
+        const sendProductImageToDB = async()=>{
+            
+            console.log('here')
+                const data = new FormData()
+                
+                productImage.map((e)=>{
+                    data.append("image", e)
+                })
+                
+                try{
+
+                    let response = await API.getProductPicture(data)
+                    console.log(response.data);
+                    setProductData({...productData, productImages: [...response.data],Date: `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} ` })
+                 
+
+
+                }catch(err){
+                    console.log("Some error happend. ERROR: ",err)
+                }
+    
+        }
+
+        sendProductImageToDB()
+    }
+
+},[productImage])
+
+
+
+        
+const handleCancel=(ele)=>{
+    console.log(ele)
+    setProductData({...productData, productImages: [...productData.productImages.filter((e)=> ele !== e )]})
+}
 
 const validateForm = ()=>{
 
-let sum;
-    Object.entries(productData).map(([key,value])=>{
-        
-       if(value.length == 0){ 
-        sum=true  //set disable to true
-       }else{
-        sum=false
-       }
-        
-    })
+let disable;
+    if(productData.Description && productData.Location && productData.People && productData.Pets && productData.Category && productData.Parking  && productData.Water && productData.productImages.length > 0 && (productData.Quantity > 0 || productData.Quantity < 10 || productData.Rate > 1000 || productData.Rate < 100000)){
 
-        if(!sum && (productData.Quantity < 0 || productData.Quantity > 10 || productData.Rate < 1000 || productData.Rate > 100000)){
-            sum = true
-        }
-    
-    
-    return sum
+        disable=false
+    }else{
+        disable=true
+    }
+    // console.log(disable)    
+    return disable
 }
 
-(validateForm())
+// (validateForm())
+console.log(productData)
+
 
     const handleInput =(e)=>{
         
@@ -63,8 +98,24 @@ let sum;
 
     }
 
-    const handleClick = ()=>{
+    const handleClick = async()=>{
         console.log(productData)
+        try{
+
+            let res = await API.savePost(productData)
+            // console.log(res)
+            if(res.isSuccess){
+                console.log("successfuly saved/updated post")
+               {
+                <PostAvailable />
+               }
+            }else{
+                console.log("failed to saved/updated post")
+            }
+
+        }catch(err){
+            console.log('error: ', err)
+        }
     }
 
     return (<>
@@ -139,26 +190,22 @@ let sum;
                 </Box>      
 
                 <Box>
-                <FormLabel>Have any images??</FormLabel>
-                <br />
+                    <FormLabel>Have any images??</FormLabel>
+                    <br />
 
-                   
-                        <input multiple onChange={(e)=> setProductImage(e.target.files)} type="file" id="fileInput" />
-                    
-                    {/* <AttachFile htmlFor="fileInput" fontSize="large" 
-                    
-                    sx={{
-                         ':hover':{
-                        cursor: 'pointer',
-                        transform: 'scale(1.02)',
-                        transition: '0.4s'
-                    },
-                   
-                    transition: '0.4s' }} /> */}
+                        <input multiple onChange={(e)=> setProductImage([...e.target.files])} type="file" id="fileInput" />
 
-                    </Box>
-                    
-                    <Button variant="contained" disabled={ (validateForm() ? true : false) } onClick={()=> handleClick()}>Look for teanants</Button>
+                </Box>
+
+                <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                {
+                    productData.productImages.length > 0 && productData.productImages.map((ele, index)=>(
+                        <Box key={index} sx={{ height: '7rem', width: '7rem',border: '1px solid red',background: `url(${ele}) no-repeat 75% 25% / cover` }} > <Cancel onClick={()=>handleCancel(ele)}/> </Box>
+                    ))
+                }
+                  </Box>  
+     
+                    <Button variant="contained" disabled={ (validateForm()) } onClick={()=> handleClick()}>Look for teanants</Button>
 
 
                 

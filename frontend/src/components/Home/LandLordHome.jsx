@@ -14,17 +14,14 @@ import PostAvailable from "./landlord/PostAvailable"
 const LandLordHome = ()=>{
     const {account} = useContext(DataContext)
 
-    const [profilePic,setprofilPic] = useState('https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=1024x1024&w=is&k=20&c=t079TIvLJCn2fePWpCuKgzauHnehzuVvc4DUCecDBuw=') 
-    console.log(account)
-
     const [option, setOption] = useState('PostAvailable')
-
+   
     const navigate = useNavigate()
 
     // useEffect(()=>{
     //     const getimage = async()=>{
     //         try{
-    //             const res = await API.getProfilePicture({profile: account.profile})
+    //             const res = await API.getProductPicture(account.profile)
     //             console.log(res)
     //             if(res.isSuccess){
     //                 setprofilPic(res.data)
@@ -42,21 +39,6 @@ const LandLordHome = ()=>{
 
     const hellouserBg = 'https://cdn.pixabay.com/photo/2018/09/24/08/52/mountains-3699372_1280.jpg'
 
-    const productType = [
-        {
-            image: 'https://media.istockphoto.com/id/1929345158/photo/modern-apartment-with-large-windows.jpg?s=1024x1024&w=is&k=20&c=BPU6q-8EwLIfG63zB0V-pYyxFbtPxNtfFFs8cLchyn8=', //room image
-            name: 'Room'
-        },
-        {
-            image: 'https://media.istockphoto.com/id/1486160447/photo/closeup-new-modern-apartment-buildings-background-with-copy-space.jpg?s=1024x1024&w=is&k=20&c=fLaSMshNwbfpMz-KxVb1ht3OSWoifoKzL0GrNbLvxsw=', //flat image
-            name: 'Flat'
-        },
-        {
-            image: 'https://media.istockphoto.com/id/1328886194/photo/portrait-of-new-homeowners-admiring-their-investment.jpg?s=1024x1024&w=is&k=20&c=CkzeEmgQMZ4T8fjfL1Y1Px5EocV6YzQzpBVD6fb8Nec=', //building image
-            name: 'Building'
-        }
-    ]
-
     console.log(option)
 
     return (<>
@@ -71,8 +53,10 @@ const LandLordHome = ()=>{
             <Card sx={{backgroundColor: 'blue', width: '50%'}}>
 
                 <Box sx={{margin: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                <CardMedia sx={{height: '7rem', width: '7rem',border: '1px solid red',background: `url(${profilePic}) no-repeat 75% 25% / cover`, borderRadius: '50%' }} />
+                    <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${account.profile[0]}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' , borderRadius: '50%' }}></Box>
                 </Box>
+
+              
             
                 <CardContent>
 

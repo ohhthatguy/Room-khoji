@@ -2,7 +2,6 @@ import { useState,useEffect,useContext,useRef } from "react"
 import {Paper, Button,Grid, Box,styled,Checkbox, Radio, RadioGroup, FormGroup, FormControlLabel, TextField, FormLabel} from "@mui/material"
 import Header from "../Header/Header"
 import { useNavigate } from "react-router-dom"
-import {AttachFile} from '@mui/icons-material';
 import { API } from "../../services/Api"
 
 
@@ -29,14 +28,13 @@ const Signup = ()=>{
             name: '',
             email: '',
             password: '',
-            date: `${new Date().getFullYear()}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getDate().toString().padStart(2, '0')} `
+            date: `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')} `
            
         }
 
         const [signUpData, setSignUpData] = useState(initial)
         const [profileImage, setProfileImage] = useState()
-        const [imgUrl, setimgUrl] = useState()
-      
+    
    
         const handleInput =(e)=>{
         
@@ -92,15 +90,15 @@ console.log(signUpData)
             data.append("image", profileImage)
             
             try{
-                let response = await API.saveProfilePicture(data)
+                let response = await API.getProductPicture(data)
                 if(!response.isSuccess){
                     console.log("Server has sent data to frontend but some eroor in frntend")
                     
                 }else{
                     console.log("photo saved")
-                    console.log(response)
+                    console.log(response.data)
                     // setimgUrl(`http://localhost:6969/${profileImage.name}`)
-                    setSignUpData({...signUpData, profile:`http://localhost:6969/${profileImage.name}` })
+                    setSignUpData({...signUpData, profile:response.data})
                 }
                 
 

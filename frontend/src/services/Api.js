@@ -6,7 +6,10 @@ const API_OBJECT = {
     login: {method: 'post', url: '/login'},
     saveProfilePicture: {method: 'post', url: '/create/profile'},
     getProfilePicture: {method:'get', url: '/getProfile'},
-    getUser: {method: 'get', url: '/user'}
+    getUser: {method: 'get', url: '/user'},
+    getProductPicture: {method: 'post', url: '/save/product/picture'},
+    savePost: {method: 'post', url: '/save/post'},
+    getPostsOfId: {method: 'get', url: '/get/post'}
 
 }
 
@@ -17,24 +20,25 @@ const axiosInstance = axios.create({
 
 })
 
-// const getType =(value,body)=>{
-//     if(value.params){
-//         // console.log(value)
-//         // console.log("IM here")
-//         return {params: body}
-//     }else if(value.query){
+const getType =(value,body)=>{
+    if(value.params){
+        // console.log(value)
+        // console.log("IM here")
+        return {params: body}
+    }else if(value.query){
     
-//         //   if(typeof body == 'object'){
-//         //     // console.log(body)
+        //   if(typeof body == 'object'){
+        //     // console.log(body)
           
-//         //     return {query: body._id}
-//         // }
-//         return body
+        //     return {query: body._id}
+        // }
+        return body
 
    
-//     }else{
-//         return {}
-//     }
+    }else{
+        return {}
+    }
+}
 
     
 
@@ -96,13 +100,13 @@ for(const [key,value] of Object.entries(API_OBJECT)){
         return axiosInstance({ 
             method: value.method,
             url: value.url,
-            data: body
+            data: body,
             // ,
             // headers: {
             //     authorization: getAccessToken()
             // }
             // ,
-            // TYPE: getType(value,body)
+            TYPE: getType(value,body)
            
         })
     }
