@@ -1,16 +1,24 @@
 import { useContext, useEffect, useState } from "react"
 
-import { Button,Box,Typography, Card, CardHeader, CardMedia, Paper, styled, Grid, FormLabel } from "@mui/material"
+import { Button,Box,Typography, Card, CardHeader, CardMedia, CardContent, Paper, styled, Grid, Table, TableHead, TableCell,TableRow } from "@mui/material"
 import { DataContext } from "../../context/DataProvider"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { API } from "../../services/Api"
+
+import PostForm from "./landlord/PostForm"
+import PostHistory from "./landlord/PostHistory"
+import PostAvailable from "./landlord/PostAvailable"
 
 
 
 const LandLordHome = ()=>{
     const {account} = useContext(DataContext)
+
     const [profilePic,setprofilPic] = useState('https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=1024x1024&w=is&k=20&c=t079TIvLJCn2fePWpCuKgzauHnehzuVvc4DUCecDBuw=') 
     console.log(account)
+
+    const [option, setOption] = useState('PostAvailable')
+
     const navigate = useNavigate()
 
     // useEffect(()=>{
@@ -49,85 +57,120 @@ const LandLordHome = ()=>{
         }
     ]
 
+    console.log(option)
+
     return (<>
 
     <Paper elevation={9} sx={{background: '#005A9C', height: '5rem', fontSize: '3rem', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> Room-Khoji </Paper>
 
        <Grid container sx={{marginTop: '1rem'}}>
+       
+       <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '20rem', border: '1px solid red', display: 'flex', justifyContent: 'center', alignItems: 'center'}} xs={12}>
 
-            <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '20rem', border: '1px solid red', display: 'flex', justifyContent: 'center', alignItems: 'center'}} xs={12}>
 
-                <Paper sx={{height: '19rem', width: '50%'}}>
-                    <Box sx={{height: '5rem'}}>
-                        <img sx={{ height: '8rem'}} src={profilePic} />
-                    </Box>
+            <Card sx={{backgroundColor: 'blue', width: '50%'}}>
 
-                    <Box>
-                        hello
-                    </Box>
-                   
-                </Paper>
-                
-                {/* <Typography sx={{color: 'white', }} variant="h5"> hello, <br/> {account.name}</Typography> */}
+                <Box sx={{margin: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <CardMedia sx={{height: '7rem', width: '7rem',border: '1px solid red',background: `url(${profilePic}) no-repeat 75% 25% / cover`, borderRadius: '50%' }} />
+                </Box>
+            
+                <CardContent>
+
+                <Typography>  Name:  {account.name}</Typography> 
+                <Typography>   ID:{account._id}</Typography>
+                <Typography> Name:  {account.name}</Typography>
+                <Typography> Name: {account.name}</Typography>
+
+                </CardContent>
+
+            </Card> 
             
             </Grid>
 
             <Typography>What are you looking for ?</Typography>
 
-            <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
+            <Grid container  columnGap={1} sx={{margin: '3rem 0px'}}>
 
-                    {
-                        productType.map((e, index)=>(
-                            <Card key={index} sx={{
-                                '&:hover': {
+                {/* table */}
+                <Grid sx={{border: '1px solid black'}} item lg={3} md={2} sm={1.6} xs={12}>
+                
+                    <Table >
+                        <TableHead>
+
+                            <TableRow sx={{ cursor: 'pointer', fontSize: '50%', '&:hover': {
                                   transform: 'scale(1.03)',
-                                  transition: '0.4s'
+                                  transition: '0.4s',
+                                  boxShadow: '0px 2px 2px 0px black'
                                 },
                                 '&:active': {
                                   transform: 'scale(1.06)',
                                 },
-                                transition: '0.4s',
-                                cursor: 'pointer'
+                                transition: '0.4s'}}>
 
-                                }}>
+                                <TableCell onClick={()=> setOption(prev=> ('PostHistory') )}>
+                                Rented history
+                                </TableCell>
 
-                                <CardMedia component="img" height="194" image= {`${e.image}`}alt= {`${e.name}`}/>
-                                
-                                <CardHeader sx={{textAlign: 'center'}} title={`${e.name}`}/>
+                            </TableRow>
+                        </TableHead>
 
-                            </Card>
-                        ))
-                    }
-       
-            </Grid>
+                        <TableHead>
 
-            <Typography>See What People have to Say !</Typography>
+                          <TableRow sx={{ cursor: 'pointer', fontSize: '50%','&:hover': {
+                                  transform: 'scale(1.03)',
+                                  transition: '0.4s',
+                                  boxShadow: '0px 2px 2px 0px black'
+                                },
+                                '&:active': {
+                                  transform: 'scale(1.06)',
+                                },
+                                transition: '0.4s'}}>
 
-                <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
+                                <TableCell onClick={()=> setOption(prev=> ('PostAvailable') )}>
 
-                    <Paper elevation={9}>
-                        "i found a room. yahoooo"
-                    </Paper>
-       
+                               availalble
+
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+
+                        <TableHead>
+
+                        <TableRow sx={{ cursor: 'pointer', '&:hover': {
+                                  transform: 'scale(1.03)',
+                                  transition: '0.4s',
+                                  boxShadow: '0px 2px 2px 0px black'
+                                },
+                                '&:active': {
+                                  transform: 'scale(1.06)',
+                                },
+                                transition: '0.4s', fontSize: '50%'}}>
+
+                                <TableCell onClick={()=> setOption(prev=> ('PostForm') )}>
+                                    make new post
+                                   
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                    </Table>
+                   
                 </Grid>
-                
-                <Typography variant='h4'>hot Deals!</Typography>
-                <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
 
-                    {
-                        productType.map((e,index)=>(
-                            <Card key={index}>
+                {/* posts */}
+                <Grid item sx={{border: '1px solid black'}} lg={8.9} md={9.7} sm={9.8} xs={12}>
+                                {
+                                  (option == 'PostForm') ? <PostForm /> :
+                                  (option == 'PostAvailable') ? <PostAvailable /> : 
+                                  (option == 'PostHistory') ? <PostHistory /> : ' so emptyyyy'
+                                }
+                       
 
-                                <CardMedia component="img" height="194" image= {`${e.image}`}alt= {`${e.name}`}/>
-                                
-                                <CardHeader sx={{textAlign: 'center'}} title={`${e.name}`} subheader="price"/>
-
-                            </Card>
-                        ))
-                    }
+                </Grid>
+                  
        
             </Grid>
 
+           
 
             
        </Grid>
