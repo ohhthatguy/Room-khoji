@@ -36,7 +36,7 @@ router.post('/save/product/picture',upload.array('image'),getProductPicture)
 router.post('/save/post', savePost)
 
 //get Post of Id
-router.post('/get/post/:id', getPostsOfId)
+router.get('/get/post', getPostsOfId)
 
 
 

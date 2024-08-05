@@ -5,6 +5,7 @@ import { DataContext } from "../../../context/DataProvider"
 // import { useNavigate } from "react-router-dom"
 
 import { API } from "../../../services/Api"
+import PostCard from "./PostCard"
 
 
 
@@ -12,31 +13,34 @@ import { API } from "../../../services/Api"
 
 const PostAvailable = ()=>{
     const {account} = useContext(DataContext)
+    const [post,setPost] = useState('')
+    console.log(account._id)
 
 
     //recalibarte the API to get prams and query just like in blog site 
 
-            // const getPostsOfId = async()=>{
-            //     try{
+            const getPostsOfId = async()=>{
+                try{
 
-            //         let res = await API.getPostsOfId({Gharbeti_id: account._id})
-            //         // let res = await API.getPostsOfId( account._id)
+                    let res = await API.getPostsOfId({Gharbeti_id: account._id})
+                    // let res = await API.getPostsOfId( account._id)
 
 
-            //         if(res.isSuccess){
-            //             console.log("gotten data")
-            //             console.log(res)
-            //         }else{
-            //             console.log('faield to fetch data')
+                    if(res.isSuccess){
+                        console.log("gotten data")
+                        console.log(res)
+                        setPost(res.data)
+                    }else{
+                        console.log('faield to fetch data')
                     
-            //         }
+                    }
 
 
 
-            //     }catch(err){
-            //         console.log(err)
-            //     }
-            // }
+                }catch(err){
+                    console.log(err)
+                }
+            }
              
 
 
@@ -44,7 +48,14 @@ const PostAvailable = ()=>{
         PostAvailable
 
         <Button variant="standard" onClick={()=>getPostsOfId()}>Test</Button>
-        
+        <br />
+
+            {
+                (post.length > 0) ? <PostCard post={post} /> : <Typography> You've made no posts yet </Typography>
+            }
+
+
+
         </>
        
     )

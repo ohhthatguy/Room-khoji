@@ -1,6 +1,7 @@
 import axios from 'axios'
 // import { getAccessToken } from '../utils/getAccessToken'
 axios.defaults.withCredentials = true
+
 const API_OBJECT = {
     createNewAccount: {method: 'post', url: '/create/newAccount'},
     login: {method: 'post', url: '/login'},
@@ -9,7 +10,7 @@ const API_OBJECT = {
     getUser: {method: 'get', url: '/user'},
     getProductPicture: {method: 'post', url: '/save/product/picture'},
     savePost: {method: 'post', url: '/save/post'},
-    getPostsOfId: {method: 'get', url: '/get/post'}
+    getPostsOfId: {method: 'get', url: '/get/post', params: true}
 
 }
 
@@ -47,7 +48,12 @@ const getType =(value,body)=>{
 
 axiosInstance.interceptors.request.use(
     function (config){ 
-
+        
+        if(config.type.params){
+            config.params = config.type.params
+        }else if(config.type.query){
+            config.url = config.url + '/' + config.type.query
+        }
 
         return config
     },
@@ -106,7 +112,7 @@ for(const [key,value] of Object.entries(API_OBJECT)){
             //     authorization: getAccessToken()
             // }
             // ,
-            TYPE: getType(value,body)
+            type: getType(value,body)
            
         })
     }
