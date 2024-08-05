@@ -199,6 +199,25 @@ const getPostsOfId = async(req,res)=>{
     }
 }
 
+const deletePostsOfId = async(req,res)=>{
+    try{
+
+        let response = await postModel.findOne({_id: req.query._id})
+
+        if(!response){
+            return res.status(404).json({msg: "data to delete is not in database"})
+        }
+
+        await postModel.deleteOne({_id: req.query._id})
+        return res.status(200).json({msg: "data is delete successfully"})
+
+    }catch(err){
+        return res.status(500).json({msg: "error while deleting the blog is, " + err})
+        
+
+    }
+}
 
 
-module.exports = {getPostsOfId,createNewAccount, checkLogIn, saveProfilePicture, getUser, getProfilePicture, getProductPicture,savePost}
+
+module.exports = {getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn, saveProfilePicture, getUser, getProfilePicture, getProductPicture,savePost}

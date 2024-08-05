@@ -10,7 +10,8 @@ const API_OBJECT = {
     getUser: {method: 'get', url: '/user'},
     getProductPicture: {method: 'post', url: '/save/product/picture'},
     savePost: {method: 'post', url: '/save/post'},
-    getPostsOfId: {method: 'get', url: '/get/post', params: true}
+    getPostsOfId: {method: 'get', url: '/get/post', params: true},
+    deletePostsOfId: {method: 'delete', url: '/delete/post', params: true}
 
 }
 

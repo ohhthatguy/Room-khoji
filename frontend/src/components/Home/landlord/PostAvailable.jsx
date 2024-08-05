@@ -12,20 +12,18 @@ import PostCard from "./PostCard"
 
 
 const PostAvailable = ()=>{
-    const {account} = useContext(DataContext)
+    const {account, isUpdatedPost} = useContext(DataContext)
     const [post,setPost] = useState('')
     console.log(account._id)
 
 
     //recalibarte the API to get prams and query just like in blog site 
-
+        useEffect(()=>{
             const getPostsOfId = async()=>{
                 try{
 
                     let res = await API.getPostsOfId({Gharbeti_id: account._id})
-                    // let res = await API.getPostsOfId( account._id)
-
-
+                
                     if(res.isSuccess){
                         console.log("gotten data")
                         console.log(res)
@@ -35,19 +33,22 @@ const PostAvailable = ()=>{
                     
                     }
 
-
-
                 }catch(err){
                     console.log(err)
                 }
             }
+
+            getPostsOfId()
+
+        },[isUpdatedPost])
+           
              
 
 
     return (<>
         PostAvailable
 
-        <Button variant="standard" onClick={()=>getPostsOfId()}>Test</Button>
+        {/* <Button variant="standard" onClick={()=>getPostsOfId()}>Test</Button> */}
         <br />
 
             {

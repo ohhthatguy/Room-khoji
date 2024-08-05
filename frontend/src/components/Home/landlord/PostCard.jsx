@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 
 import { Button,Box,Typography, Card, CardHeader, CardMedia, CardContent, Paper, styled, ImageList, ImageListItem, TableHead, TableCell,TableRow } from "@mui/material"
-import { DataContext } from "../../../context/DataProvider"
-import {NavigateNext, NavigateBefore} from '@mui/icons-material';
+import { DataContext } from "../../../context/DataProvider";
+import {NavigateNext, NavigateBefore, Delete} from '@mui/icons-material';
 
 // import { useNavigate } from "react-router-dom"
-// import { API } from "../../services/Api"
+import { API } from "../../../services/Api";
 
 
 
@@ -14,12 +14,10 @@ import {NavigateNext, NavigateBefore} from '@mui/icons-material';
 const PostCard = ({post})=>{
 
     console.log(post)
+    const {setIsUpdatedPost} = useContext(DataContext)
     const [movement, setMovement] = useState(0)
     const [activeIndex, setActiveIndex] = useState(0)
-    // const [nextDisabled, setNextDisabled] = useState(false)
-    // const [prevDisabled, setPrevDisabled] = useState(false)
-
-    // let clickedNext;
+    
 
     const handleNext = (totalProductImages, index)=>{
    console.log(index)
@@ -45,13 +43,34 @@ const PostCard = ({post})=>{
         
     }
 
+    const handleDelete = async(e)=>{
+            console.log(e)
+            try{
+
+                let res = await API.deletePostsOfId({_id: e._id})
+
+                if(res.isSuccess){
+                    console.log(res)
+                    setIsUpdatedPost(prev=> !prev)
+
+                }else{
+                    console.log("delteio faild")
+                }
+
+
+            }catch(err){
+                console.log(err)
+            }
+    }
+
     console.log(movement)
 
     return (<>
         
         {
             post.map((e,index)=>(
-                <Card key={index} sx={{border: '1px solid red'}}>
+                <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
+                    <Delete onClick={()=>handleDelete(e)} sx={{position: 'absolute', top: '5%', right: '0%'}}/>
 
                 <CardHeader title={e.Category} subheader={e.Date} /> 
 

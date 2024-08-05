@@ -13,11 +13,12 @@ const DataProvider = ({children})=>{
         _id: ''
     }
     const[account, setAccount] = useState(initial)
+    const[isUpdatedPost, setIsUpdatedPost] = useState(false)
 
     console.log(account)
 
     return (
-        <DataContext.Provider value={{setAccount, account}}>
+        <DataContext.Provider value={{setAccount, account, setIsUpdatedPost,isUpdatedPost }}>
             {children}
         </DataContext.Provider>
     )
