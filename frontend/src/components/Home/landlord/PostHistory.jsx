@@ -14,7 +14,7 @@ const PostHistory = ()=>{
 
 
     return (<>
-        PostHistory
+        No room has been selected by any tenants yet!
     </>
        
     )

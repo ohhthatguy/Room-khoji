@@ -16,6 +16,7 @@ const PostAvailable = ()=>{
     const [post,setPost] = useState('')
     console.log(account._id)
 
+    console.log(isUpdatedPost)
 
     //recalibarte the API to get prams and query just like in blog site 
         useEffect(()=>{

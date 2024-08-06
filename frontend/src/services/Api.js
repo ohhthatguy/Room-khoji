@@ -11,7 +11,8 @@ const API_OBJECT = {
     getProductPicture: {method: 'post', url: '/save/product/picture'},
     savePost: {method: 'post', url: '/save/post'},
     getPostsOfId: {method: 'get', url: '/get/post', params: true},
-    deletePostsOfId: {method: 'delete', url: '/delete/post', params: true}
+    deletePostsOfId: {method: 'delete', url: '/delete/post', params: true},
+    updatePost: {method: 'put', url: '/update/post'}
 
 }
 

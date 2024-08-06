@@ -62,8 +62,7 @@ const LandLordHome = ()=>{
 
                 <Typography>  Name:  {account.name}</Typography> 
                 <Typography>   ID:{account._id}</Typography>
-                <Typography> Name:  {account.name}</Typography>
-                <Typography> Name: {account.name}</Typography>
+          
 
                 </CardContent>
 
@@ -71,7 +70,7 @@ const LandLordHome = ()=>{
             
             </Grid>
 
-            <Typography>What are you looking for ?</Typography>
+            {/* <Typography>What are you looking for ?</Typography> */}
 
             <Grid container  columnGap={1} sx={{margin: '3rem 0px'}}>
 
@@ -92,7 +91,7 @@ const LandLordHome = ()=>{
                                 transition: '0.4s'}}>
 
                                 <TableCell onClick={()=> setOption(prev=> ('PostHistory') )}>
-                                Rented history
+                                currently on rent // history
                                 </TableCell>
 
                             </TableRow>
@@ -112,7 +111,7 @@ const LandLordHome = ()=>{
 
                                 <TableCell onClick={()=> setOption(prev=> ('PostAvailable') )}>
 
-                               availalble
+                               availalble for rent
 
                                 </TableCell>
                             </TableRow>

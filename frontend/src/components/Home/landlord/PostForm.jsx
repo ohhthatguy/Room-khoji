@@ -30,6 +30,7 @@ const PostForm = ()=>{
 
 const [productData, setProductData] = useState(initialProductData)
 const [productImage, setProductImage] = useState()
+const [success, setSuccess] = useState(false)
 
 console.log(productImage)
 
@@ -106,9 +107,8 @@ console.log(productData)
             // console.log(res)
             if(res.isSuccess){
                 console.log("successfuly saved/updated post")
-               {
-                <PostAvailable />
-               }
+                setSuccess(true)
+              
             }else{
                 console.log("failed to saved/updated post")
             }
@@ -119,6 +119,12 @@ console.log(productData)
     }
 
     return (<>
+                {
+
+                 (success == true) ?
+                <PostAvailable /> :
+
+
         <Paper elevation={3} sx={{ display: 'flex',flexDirection: 'column',padding: '2rem', rowGap: '2rem'}}>
 
                 <Box>
@@ -211,7 +217,7 @@ console.log(productData)
                 
         </Paper>
 
-
+            }
     </>
        
     )

@@ -218,6 +218,23 @@ const deletePostsOfId = async(req,res)=>{
     }
 }
 
+const updatePost = async(req,res)=>{
+
+        try{
+
+          await postModel.findByIdAndUpdate(req.body._id, {
+                $set: req.body
+            })
+
+            return res.status(200).json({msg: 'post successfully updated!!'})
 
 
-module.exports = {getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn, saveProfilePicture, getUser, getProfilePicture, getProductPicture,savePost}
+        }catch(err){
+            return res.status(500).json(err)
+        }
+
+
+}
+
+
+module.exports = {getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getUser, getProfilePicture, getProductPicture,savePost}
