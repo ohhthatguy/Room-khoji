@@ -12,7 +12,7 @@ const authorizeToken = require('../Middleware/authorizeToken')
 
 
 //import from controller
-const {createNewAccount,checkLogIn, updatePost, saveProfilePicture,getUser,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
+const {createNewAccount,checkLogIn, updatePost,getPostByCategory, saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
 
 //create a new account
 router.post('/create/newAccount', createNewAccount)
@@ -27,7 +27,7 @@ router.post('/create/profile', upload.single('image') ,saveProfilePicture)
 router.get('/getProfile', getProfilePicture);
 
 //get user
-router.get('/user',authorizeToken, getUser);
+router.get('/user', getGharbetiById);
 
 //save product picture
 router.post('/save/product/picture',upload.array('image'),getProductPicture)
@@ -43,6 +43,9 @@ router.delete('/delete/post', deletePostsOfId)
 
 //update post 
 router.put('/update/post', updatePost)
+
+//get post by category
+router.get('/tenant/productmarket', getPostByCategory)
 
 
 

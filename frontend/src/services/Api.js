@@ -7,12 +7,15 @@ const API_OBJECT = {
     login: {method: 'post', url: '/login'},
     saveProfilePicture: {method: 'post', url: '/create/profile'},
     getProfilePicture: {method:'get', url: '/getProfile'},
-    getUser: {method: 'get', url: '/user'},
+
+    getGharbetiById: {method: 'get', url: '/user', params: true},
+
     getProductPicture: {method: 'post', url: '/save/product/picture'},
     savePost: {method: 'post', url: '/save/post'},
     getPostsOfId: {method: 'get', url: '/get/post', params: true},
     deletePostsOfId: {method: 'delete', url: '/delete/post', params: true},
-    updatePost: {method: 'put', url: '/update/post'}
+    updatePost: {method: 'put', url: '/update/post'},
+    getPostByCategory: {method: 'get', url:'/tenant/productmarket', params: true}
 
 }
 

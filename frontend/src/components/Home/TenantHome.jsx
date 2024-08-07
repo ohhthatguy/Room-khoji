@@ -9,24 +9,27 @@ import { API } from "../../services/Api"
 
 const TenantHome = ()=>{
     const {account} = useContext(DataContext)
-    console.log(account)
+    // console.log(account)
     const navigate = useNavigate()
 
-    const handleTest=async()=>{
-        try{
+    // const handleTest=async()=>{
+    //     try{
 
-            let response = await API.getUser();
-            console.log(response)
+    //         let response = await API.getUser();
+    //         console.log(response)
            
 
-        }catch(err){
-            console.log("error: ", err)
-            if(err.code == 401){
-                navigate('/')
-            }
-        }
-    }
-  
+    //     }catch(err){
+    //         console.log("error: ", err)
+    //         if(err.code == 401){
+    //             navigate('/')
+    //         }
+    //     }
+    // }
+  const handleProductmarket =(e)=>{
+    // console.log(e)
+    navigate(`/tenant/productmarket/${e.name}`)
+  }
   
     const hellouserBg = 'https://cdn.pixabay.com/photo/2018/09/24/08/52/mountains-3699372_1280.jpg'
 
@@ -61,7 +64,7 @@ const TenantHome = ()=>{
 
                     {
                         productType.map((e, index)=>(
-                            <Card key={index} sx={{
+                            <Card onClick={()=>handleProductmarket(e)} key={index} sx={{
                                 '&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s'

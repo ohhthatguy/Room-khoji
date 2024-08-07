@@ -14,6 +14,8 @@ const PostForm = ()=>{
 
     const initialProductData = {
         Gharbeti_id: account._id,
+        Gharbeti_name: account.name,
+        Gharbeti_profile: account.profile[0],
         Description: "",
         Location: "",
         People: "",
@@ -32,7 +34,7 @@ const [productData, setProductData] = useState(initialProductData)
 const [productImage, setProductImage] = useState()
 const [success, setSuccess] = useState(false)
 
-console.log(productImage)
+// console.log(productImage)
 
 useEffect(()=>{
 
@@ -88,7 +90,7 @@ let disable;
 }
 
 // (validateForm())
-console.log(productData)
+// console.log(productData)
 
 
     const handleInput =(e)=>{

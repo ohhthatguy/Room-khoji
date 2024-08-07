@@ -4,6 +4,14 @@ const postSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    Gharbeti_name: {
+        type: String,
+        required: true
+    },
+    Gharbeti_profile: {
+        type: String,
+        required: true
+    },
     Description: {
         type: String,
         required: true

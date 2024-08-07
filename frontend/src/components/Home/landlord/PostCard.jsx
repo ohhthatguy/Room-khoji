@@ -65,11 +65,7 @@ const PostCard = ({post})=>{
             }
     }
 
-    const handleEdit = async(e)=>{
-        console.log(e)
-        
-        
-    }
+   
 
     console.log(movement)
 let k;

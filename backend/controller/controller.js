@@ -111,13 +111,13 @@ const getProfilePicture = async(req,res)=>{
     }
 }
 
-const getUser = async(req,res)=>{
-    // console.log(req)
+const getGharbetiById = async(req,res)=>{
+    // console.log(req.query)
     try{
-        const response = await accountModel.find({})
+        const response = await accountModel.find({ _id: { $in: req.query.id } }) //lot of id i.e id:ids
 
         if(response.length > 0){
-            return res.status(200).json({valid:true, response:response})
+            return res.status(200).json(response)
         }else{
             return res.status(404).json({msg: 'data none'})
 
@@ -236,5 +236,21 @@ const updatePost = async(req,res)=>{
 
 }
 
+const getPostByCategory = async(req,res)=>{
+    // console.log(req)
+    try{
+        const response = await postModel.find({Category: req.query.Category})
 
-module.exports = {getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getUser, getProfilePicture, getProductPicture,savePost}
+        if(response){
+            return res.status(200).json(response)
+        }else{
+            return res.status(404).json({msg: 'data none'})
+
+        }
+    }catch(err){
+        return res.status(500).json({msg: 'some error from server side'})
+    }
+}
+
+
+module.exports = {getPostByCategory,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
