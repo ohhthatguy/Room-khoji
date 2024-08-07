@@ -184,9 +184,15 @@ const savePost = async(req,res)=>{
 }
 
 const getPostsOfId = async(req,res)=>{
-    // console.log(req)
+    // console.log(req.query)
     try{
-        const response = await postModel.find({Gharbeti_id: req.query.Gharbeti_id})
+        let response;
+        if(req.query.postId){
+             response = await postModel.find({_id: req.query.postId})
+        }else{
+             response = await postModel.find({Gharbeti_id: req.query.Gharbeti_id})
+
+        }
 
         if(response){
             return res.status(200).json(response)

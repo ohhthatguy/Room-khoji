@@ -11,6 +11,7 @@ import { API } from "../../../services/Api"
 const ProductMarket = () => {
 
     const {Category} = useParams();
+    const navigate = useNavigate()
 
     const [currentPost, setCurrentPost] = useState([])
     const [bookMarkClicked, setBookmarkClicked] = useState(false)
@@ -214,7 +215,7 @@ const ProductMarket = () => {
                     <Paper>Location: {e.Location}</Paper>
 
                     <Box sx={{position: 'absolute', bottom: '2%', right: '2%'}}>
-                        <Button variant='contained'>lets talk business</Button>
+                        <Button variant='contained' onClick={()=> navigate(`/tenant/BusinessTalk/${e._id}`)}>lets talk business</Button>
                     </Box>
                
                 </Box>
