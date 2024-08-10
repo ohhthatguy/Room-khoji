@@ -5,6 +5,7 @@ import TenantHome from './components/Home/TenantHome'
 import LandLordHome from './components/Home/LandLordHome'
 import ProductMarket from './components/Home/tenant/ProductMarket'
 import BusinessTalk from './components/Home/tenant/BusinessTalk'
+import FavroitProduct from './components/Home/tenant/FavroitProduct'
 
 
 
@@ -20,6 +21,8 @@ const App = () => {
      <Route path="/landlordHome" element={<LandLordHome />} />
      <Route path='/tenant/productmarket/:Category' element={<ProductMarket />} />
      <Route path='/tenant/BusinessTalk/:id' element={<BusinessTalk />} />
+     <Route path='/tenant/favroit' element={<FavroitProduct />} />
+
 
 
 

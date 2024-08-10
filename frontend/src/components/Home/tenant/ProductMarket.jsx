@@ -10,11 +10,17 @@ import { API } from "../../../services/Api"
 
 const ProductMarket = () => {
 
+    const {account} = useContext(DataContext)
     const {Category} = useParams();
     const navigate = useNavigate()
 
     const [currentPost, setCurrentPost] = useState([])
-    const [bookMarkClicked, setBookmarkClicked] = useState(false)
+    const [bookMarkClicked, setBookmarkClicked] = useState([])
+    // const [currIndex, setCurrIndex] = useState('')
+    const [favrouitPost, setFavouritePost] = useState({
+        add: '',
+        delete: ''
+    })
     const [selectedOption, setSelectedOption] = useState(Category)
    
 
@@ -72,68 +78,101 @@ const ProductMarket = () => {
     },[selectedOption])
     
 
-    // //for gahrbetis name and profile
-    // useEffect(()=>{
+    //save fav post's id to db
+    useEffect(()=>{
 
-    //     if(currentPost.length > 0){
-
-    //         let ids=[];
-    //             currentPost.map((e)=>{
-    //                 if(e.Gharbeti_id){
-    //                     ids = [...ids, e.Gharbeti_id]
-    //                 }  
-    //             })
-                 
-             
+      
+            const saveFavouritePost = async()=>{
                 
-    //             if(ids.length > 0){
+                try{
+                    let res
 
-    //                 const getGharbeti = async()=>{
+                    if(favrouitPost.add.length > 0){
+                       res = await API.saveFavouritePost({Tenant_id: account._id, Post_id: favrouitPost.add})
+                    }else if(favrouitPost.delete.length > 0){
+                       res = await API.saveFavouritePost({Tenant_id: account._id, Post_id: favrouitPost.delete})
 
-    //                     try{
-    //                         const res = await API.getGharbetiById({id: ids})
-    //                         if(res.isSuccess){
-    //                             // console.log(res.data)
-    //                             // setGharBeti(res.data)
-    //                             // setCurrentPost(...currentPost)
-    //                             //  setCurrentPost(currentPost.map(item1 => {
-    //                             //     // Find the corresponding item in array2
-    //                             //     const match = res.data.find(item2 => item2._id === item1.Gharbeti_id);
-                                    
-    //                             //     // Return the merged object
-    //                             //     return {
-    //                             //       ...item1,
-    //                             //       Gharbeti_img: match ? match.profile[0] : '', // Add age if there's a match, otherwise null or default
-    //                             //       Gharbeti_name: match ? match.name : ''
-    //                             //     };
-    //                             //   }))
+                    }else{
+                        res = await API.getFavouritePost({id: account._id})
+                    }
 
-    //                         }else{
-    //                             console.log('is failure')
-    //                         }
-    //                     }catch(err){
-    //                         console.log(err)
-    //                     }
+                    console.log('im here')
+
+                    if(res.isSuccess){
+
+                        console.log(res.data.msg?.length )
+                        console.log(res.data?.initializeBookmark[0] )
+
+
+                        if(res.data.msg?.length > 0){
+                            res.data.msg.map((e)=> !bookMarkClicked.includes(e) && setBookmarkClicked([...bookMarkClicked, e])
+                            )
+
+                        }
+
+                        if(res.data.initializeBookmark[0]){ //first remder
+                            console.log('inside')
+                            if(bookMarkClicked.length ==0){
+                                setBookmarkClicked([...res.data.initializeBookmark[0].Post_id])
+                            }else{
+                                res.data.initializeBookmark[0].Post_id.map((e)=> !bookMarkClicked.includes(e) && setBookmarkClicked([...bookMarkClicked, e])
+                                )
+                            }
+                        }
+
+                        console.log('successfully updated')
+                        // setCurrentPost(res.data)
+                    }else{
+                        console.log('is failure')
+                    }
+
+                }catch(err){
+                    console.log(err)
+                }
+
+
+            }
+
+            saveFavouritePost()
+            // console.log("here")
         
+
+    },[favrouitPost])
+  
+
+    const handleSetFavroit =(e)=>{
+
+        setBookmarkClicked(prev => {
+            if (prev.includes(e._id)) {
+              return prev.filter(itemId => itemId !== e._id); // Remove from array if already bookmarked
+            } else {
+              return [...prev, e._id]; // Add to array if not bookmarked
+            }
+          });
+          setFavouritePost({ add :e._id, delete: '' })
+
         
-    //                 }
+    }
 
-    //                 //call func here
-    //                 getGharbeti()
-    //             }
-            
+    const handleRemoveFavroit =(e)=>{
+        setBookmarkClicked(prev => {
+            if (prev.includes(e._id)) {
+              return prev.filter(itemId => itemId !== e._id); // Remove from array if already bookmarked
+            } else {
+              return [...prev, e._id]; // Add to array if not bookmarked
+            }
+          });
+        setFavouritePost({add: '', delete :e._id})
+        
 
-            
-    //     }
-
-    // },[currentPost])
+    }
 
    
 
               const optionList = ['Flat', 'Building', 'Room']   
-              console.log(selectedOption)   
-              console.log(currentPost)
-            //   console.log(gharBeti)
+            //   console.log(selectedOption)   
+            //   console.log(favrouitPost)
+              console.log(bookMarkClicked)
 
   return (
   <>
@@ -160,13 +199,21 @@ const ProductMarket = () => {
         
         <Grid item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
             {
+                
             currentPost.map((e,index)=>(
                 <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
 
                 {
-                    (!bookMarkClicked) ? 
-                    <BookmarkBorderOutlined onClick={()=>setBookmarkClicked(true)} sx={{position: 'absolute', right: '2%', top: '5%','&:hover': { color: 'blue',  cursor: 'pointer',  transition: '0.4s'}, transition: '0.4s','&:active': {transform: 'scale(1.05)'} }} /> :
-                    <Bookmark color='primary' onClick={()=>setBookmarkClicked(false)} sx={{position: 'absolute', right: '2%', top: '5%','&:hover': { color: 'blue',  cursor: 'pointer',  transition: '0.4s'}, transition: '0.4s','&:active': {transform: 'scale(1.05)'}}} /> 
+                    ((bookMarkClicked.includes(e._id) ) ? 
+
+
+                    
+                    <Bookmark color='primary' onClick={()=>handleRemoveFavroit(e)} sx={{position: 'absolute', right: '2%', top: '5%','&:hover': { color: 'blue',  cursor: 'pointer',  transition: '0.4s'}, transition: '0.4s','&:active': {transform: 'scale(1.05)'}}} />
+                    
+                     :
+
+                     <BookmarkBorderOutlined onClick={()=>handleSetFavroit(e)} sx={{position: 'absolute', right: '2%', top: '5%','&:hover': { color: 'blue',  cursor: 'pointer',  transition: '0.4s'}, transition: '0.4s','&:active': {transform: 'scale(1.05)'} }} /> )   
+
                 }
                
 

@@ -1,12 +1,10 @@
 const ImageModel = require('../model/image/image')
 const accountModel = require('../model/account/account')
 const postModel = require('../model/account/post')
-const Token = require('../model/Token/token')
+const favouriteModel = require('../model/favourite')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv').config();
-const mongoose = require('mongoose')
- 
+
 
 const createNewAccount = async(req,res)=>{
  
@@ -258,5 +256,64 @@ const getPostByCategory = async(req,res)=>{
     }
 }
 
+const saveFavouritePost = async(req,res)=>{
+    // console.log(req.query)
+    const {Post_id} = req.query
+    const {Tenant_id} = req.query
+   
 
-module.exports = {getPostByCategory,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+    try{
+
+        let data = await favouriteModel.find({Tenant_id: Tenant_id})
+
+        if(data.length > 0){
+
+            if( !(data[0].Post_id.includes(Post_id))){ //dont in list already
+                req.query.Post_id = [...data[0].Post_id, Post_id]
+
+            }else{ //it is in list already
+                let temp = (data[0].Post_id.filter((item)=> item !== Post_id))
+                req.query.Post_id = temp
+            }
+
+        }
+
+        // console.log(req.query)
+       
+      
+        let response = await favouriteModel.updateOne({Tenant_id: Tenant_id}, 
+            {$set:  req.query},
+            {upsert: true}
+        )
+        // console.log(response)
+
+        return res.status(200).json({msg: req.query.Post_id})
+
+    }catch(err){
+        console.log("here1")
+        return res.status(500).json(err)
+    }
+
+
+}
+
+const getFavouritePost = async(req,res)=>{
+    try{
+        const response = await favouriteModel.find({Tenant_id: req.query.id})
+    
+
+        if(response){
+            return res.status(200).json({initializeBookmark: response})
+        }else{
+            return res.status(404).json({msg: 'data none'})
+
+        }
+    }catch(err){
+        return res.status(500).json({msg: 'some error from server side'})
+    }
+}
+
+    // const response = await favouriteModel.find({ Tenant_id: { $in: req.query.id } })  use this way for getSavePostIn
+
+
+module.exports = {getFavouritePost,getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
