@@ -12,7 +12,7 @@ const authorizeToken = require('../Middleware/authorizeToken')
 
 
 //import from controller
-const {createNewAccount,checkLogIn, updatePost,getPostByCategory,saveFavouritePost, getFavouritePost,saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
+const {createNewAccount,checkLogIn,getFavDataFromFavPostId, updatePost,getPostByCategory,saveFavouritePost, getFavouritePost,saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
 
 //create a new account
 router.post('/create/newAccount', createNewAccount)
@@ -50,9 +50,11 @@ router.get('/tenant/productmarket', getPostByCategory)
 //save favourite post
 router.put('/save/favourite', saveFavouritePost)
 
-//get favrutire post
-router.get('/get/favourtie', getFavouritePost)
+//get saved favrutire post id
+router.get('/get/favourtie/id', getFavouritePost)
 
+//get fav posts
+router.get('/get/favourite/posts',getFavDataFromFavPostId)
 
 
 

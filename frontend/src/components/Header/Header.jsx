@@ -1,5 +1,5 @@
 
-import { AppBar,Box, Toolbar } from "@mui/material"
+import { AppBar,Avatar,Box, Toolbar } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { DataContext } from "../../context/DataProvider"
 import { useContext } from "react"
@@ -21,10 +21,13 @@ const myFav =()=>{
 
 
     return (<>
-       <AppBar>
+       <AppBar sx={{background: 'black'}}>
             <Box sx={{display: "flex"}}>
 
-            <Toolbar>Hello</Toolbar>
+            <Toolbar>
+            <Avatar  src='https://houses.splash.html.themeplayers.net/images/country-logo2.png' alt='logo' />
+            </Toolbar>
+           
 
             <Toolbar sx={{'&:hover':{
                 cursor: 'pointer',

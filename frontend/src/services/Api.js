@@ -20,7 +20,8 @@ const API_OBJECT = {
     getPostByCategory: {method: 'get', url:'/tenant/productmarket', params: true},
 
     saveFavouritePost: {method: 'put', url: '/save/favourite', params: true},
-    getFavouritePost: {method: 'get', url: '/get/favourtie', params: true}
+    getFavouritePost: {method: 'get', url: '/get/favourtie/id', params: true},
+    getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true}
 
 }
 

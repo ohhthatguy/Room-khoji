@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import Header from "../../Header/Header"
-import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table,TableHead, TableRow, TableCell, Grid, Avatar } from "@mui/material"
+import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table,TableHead, TableRow, TableCell, Grid, Avatar, TableBody } from "@mui/material"
 import {NavigateNext, NavigateBefore } from '@mui/icons-material';
 
 
@@ -76,6 +76,7 @@ const BusinessTalk = () => {
     
 console.log(currentPost)
       
+const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
           
 
   return (
@@ -98,6 +99,7 @@ console.log(currentPost)
         
         <Grid item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
             {
+
             currentPost.map((e,index)=>(
 
                 <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
@@ -135,58 +137,70 @@ console.log(currentPost)
 
                 </Box>
 
-
+                    <Typography variant="caption"> Reciept </Typography>
                 <CardContent>
                     <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
 
-                <Box sx={{position: 'relative'}}>
-                    <Paper  >Quantity: {e.Quantity}</Paper>
-                    <Paper>Rate: {e.Rate}</Paper>
-                    <Paper>Location: {e.Location}</Paper>
-                    <Paper>Parking: {e.Parking}</Paper>
-                    <Paper>People: {e.People}</Paper>
-                    <Paper>Pets: {e.Pets}</Paper>
-                    <Paper>Water: {e.Water}</Paper>
+                
 
-                    {/* <Box sx={{position: 'absolute', bottom: '2%', right: '2%'}}>
-                        <Button variant='contained'>lets talk business</Button>
-                    </Box> */}
-               
-                </Box>
+                
+                    
+                        <Table sx={{border: '1px solid black'}}>
+                        <TableHead>
+                            <TableRow sx={{background: 'grey'}}>
+                        {
+                            Object.entries(currentPost[0]).map(([key,value])=>(
+                                (checkForTable.includes(key)) &&
+                                <TableCell>
+                               <strong> {key} </strong>
+                                </TableCell>
+                            ))
+                        }
+                            </TableRow>
+                        </TableHead>
+
+                        <TableBody>
+                          
+                        <TableRow>
+                        {
+                                Object.entries(currentPost[0]).map(([key,value])=>(
+                                    (checkForTable.includes(key)) &&
+                            <TableCell>
+                            {value}
+                            </TableCell>
+                            ))
+                        }
+                        </TableRow>
+                            
+                        </TableBody>
+
+                        </Table>
+                    
+                
 
                
 
                 <Box>
              
                 
-                <Table >
+                <Table sx={{marginTop: '2rem', border: '1px solid black', padding: '2rem'}} >
                     <TableHead>
-                        <TableRow>
+                        <TableRow >
                             <TableCell>
-                            DownPayment: {e.Rate}
+                            <strong>DownPayment</strong>: {e.Rate}
                             </TableCell>
                         </TableRow>
                     </TableHead>
-
+             
                     <TableHead>
 
-                      <TableRow>
+                      <TableRow sx={{background: 'grey'}}>
 
                             <TableCell>
 
-                           Commision: {0.05 * e.Rate}
+                            <strong>Commision</strong>: {0.05 * e.Rate}
 
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-
-                    <TableHead>
-
-                    <TableRow >
-
-                            <TableCell>
-                                total: {e.Rate * e.Quantity + (0.25 * e.Rate * e.Quantity)}
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -196,7 +210,17 @@ console.log(currentPost)
                     <TableRow >
 
                             <TableCell>
-                                <Button onClick={()=> handleSewa(e.Rate , e.Quantity)}>Pay by esewa</Button>
+                            <strong>total</strong>: {e.Rate * e.Quantity + (0.25 * e.Rate * e.Quantity)}
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+
+                    <TableHead>
+
+                    <TableRow sx={{background: 'grey'}}>
+
+                            <TableCell sx={{textAlign: 'center'}}>
+                                <Button variant="contained" onClick={()=> handleSewa(e.Rate , e.Quantity)}>Pay by esewa</Button>
                             </TableCell>
                         </TableRow>
                     </TableHead>

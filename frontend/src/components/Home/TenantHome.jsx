@@ -50,21 +50,38 @@ const TenantHome = ()=>{
 
     return (<>
     <Header />
-       <Grid container sx={{marginTop: '5rem'}}>
+       <Grid container sx={{marginTop: '4.3rem'}}>
 
-            <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '8rem'}} xs={12}>
-                
-                <Typography sx={{color: 'white', }} variant="h5"> hello, <br/> {account.name}</Typography>
+            <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '30rem', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: '10px' }} xs={12}>
+         
+                <Box sx={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <img src="https://houses.splash.html.themeplayers.net/images/country-logo2.png" alt='img' />
+                <Typography sx={{color: 'white', }} variant="h5"> Room Khoji</Typography>
+                </Box>
+
+                <Box>
+                <Typography sx={{color: 'white', }} variant="h5">Welcome, {account.name}</Typography>
+              
+                </Box>
+
+         
             
             </Grid>
 
-            <Typography>What are you looking for ?</Typography>
+            <Box sx={{padding: '3rem', textAlign: 'center'}}>
 
-            <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
+                    <Typography sx={{margin: '2rem'}} variant="h4">  What are you looking for exactly ? </Typography>
+                    
+                    <Typography variant='h6' >Looking for the perfect room? You’re already in the right place! Our app makes finding your next home a breeze. Browse through a variety of listings, filter by your preferences, and connect with landlords directly. Enjoy a seamless experience from start to finish. Happy room hunting! 🏡🔍</Typography>
+
+            </Box>
+
+
+            <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px', boxShadow: 'blue 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(255, 255, 255) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px', padding: '2rem'}}>
 
                     {
                         productType.map((e, index)=>(
-                            <Card onClick={()=>handleProductmarket(e)} key={index} sx={{
+                            <Card  onClick={()=>handleProductmarket(e)} key={index} sx={{
                                 '&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s'
@@ -73,7 +90,9 @@ const TenantHome = ()=>{
                                   transform: 'scale(1.06)',
                                 },
                                 transition: '0.4s',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+
+                                background: 'grey'
 
                                 }}>
 

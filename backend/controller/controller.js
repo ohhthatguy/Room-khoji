@@ -298,6 +298,7 @@ const saveFavouritePost = async(req,res)=>{
 }
 
 const getFavouritePost = async(req,res)=>{
+    //gets id of fav posts 
     try{
         const response = await favouriteModel.find({Tenant_id: req.query.id})
     
@@ -313,7 +314,22 @@ const getFavouritePost = async(req,res)=>{
     }
 }
 
-    // const response = await favouriteModel.find({ Tenant_id: { $in: req.query.id } })  use this way for getSavePostIn
+const getFavDataFromFavPostId = async(req,res)=>{
+    try{
+        // console.log('here' )
+
+        // console.log(req.query.id )
+        const response = await postModel.find({ _id: { $in: req.query.id } })  
+        // console.log(response)
+        return res.status(200).json(response)
 
 
-module.exports = {getFavouritePost,getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+    }catch(err){
+        return res.status(500).json(err)
+    }
+
+}
+
+
+
+module.exports = {getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
