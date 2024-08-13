@@ -3,6 +3,7 @@ const accountModel = require('../model/account/account')
 const postModel = require('../model/account/post')
 const favouriteModel = require('../model/favourite')
 const bcrypt = require('bcrypt')
+const crypto = require("crypto");
 const jwt = require('jsonwebtoken')
 
 
@@ -329,6 +330,9 @@ const getFavDataFromFavPostId = async(req,res)=>{
     }
 
 }
+
+
+
 
 
 

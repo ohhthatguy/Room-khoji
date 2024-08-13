@@ -21,7 +21,8 @@ const API_OBJECT = {
 
     saveFavouritePost: {method: 'put', url: '/save/favourite', params: true},
     getFavouritePost: {method: 'get', url: '/get/favourtie/id', params: true},
-    getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true}
+    getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true},
+    
 
 }
 
