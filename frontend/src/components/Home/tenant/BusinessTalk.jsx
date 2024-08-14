@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react"
 import Header from "../../Header/Header"
 import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table,TableHead, TableRow, TableCell, Grid, Avatar, TableBody } from "@mui/material"
 import {NavigateNext, NavigateBefore } from '@mui/icons-material';
+import { v4 as uuidv4 } from 'uuid';
 
 
-import { DataContext } from "../../../context/DataProvider"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { API } from "../../../services/Api";
 
 const BusinessTalk = () => {
@@ -15,21 +15,23 @@ const BusinessTalk = () => {
     // console.log(id)
 
     const [currentPost, setCurrentPost] = useState([])
-    const [bookMarkClicked, setBookmarkClicked] = useState(false)
+    const [signature, setSignature] = useState('')
     // const [selectedOption, setSelectedOption] = useState(Category)
-   
+    const myUUID = uuidv4();
+    // console.log(myUUID);
     const eSewaParameters = {
-        amount: currentPost[0].Rate,
-        tax_amount: 0,
-        product_service_charge: 0,
-        product_delivery_charge: 0,
+        amount: `${currentPost[0]?.Rate/100}`,
+        tax_amount: '0',
+        product_service_charge: '0',
+        product_delivery_charge: '0',
         product_code: 'EPAYTEST',
-        total_amount: currentPost[0].Rate * currentPost[0].Quantity + (0.25 * currentPost[0].Rate * currentPost[0].Quantity),
-        transaction_uuid: currentPost[0]._id,
-        success_url: 'https://esewa.com.np',
-        failure_url: "https://google.com",
-        signed_field_names: `total_amount=${currentPost[0].Rate * currentPost[0].Quantity + (0.25 * currentPost[0].Rate * currentPost[0].Quantity)},transaction_uuid=${currentPost[0]._id},product_code=EPAYTEST`,
-        signature: 'empty until now' 
+        // total_amount: `${(currentPost[0]?.Rate * currentPost[0]?.Quantity + (0.25 * currentPost[0]?.Rate * currentPost[0]?.Quantity))/100}`,
+        total_amount: `${currentPost[0]?.Rate/100}`,
+        transaction_uuid: myUUID,
+        success_url: 'https://localhost:3000',
+        failure_url: 'https://localhost:3000',
+        signed_field_names: `total_amount,transaction_uuid,product_code`,
+        signature: signature 
     }
     
     const [movement, setMovement] = useState(0)
@@ -87,9 +89,31 @@ const BusinessTalk = () => {
         }
 
     ,[])
+
+    useEffect(()=>{
+
+        if(eSewaParameters){
+            const getSignature = async()=>{
+                try{
+                    const res = await API.getSignature(eSewaParameters)
+                    if(res.isSuccess){
+                        // console.log("success in getting singuatire", res.data.signature)S
+                        setSignature(res.data.signature)
+                    }else{
+                        console.log("fialed to get singature, ", res)
+                    }
+                }catch(err){
+                    console.log(err)
+                }
+            }
+            getSignature()
+        }
+
+    },[])
     
-console.log(currentPost)
+// console.log(currentPost)
 console.log(eSewaParameters)
+// console.log(signature)
       
 const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
           
@@ -242,27 +266,38 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
 
                     <TableRow sx={{background: 'grey'}}>
 
-                            <TableCell sx={{textAlign: 'center'}}>
-                            <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
-                                <input type="hidden" id="amount" name="amount" value={e.Rate} required />
-                                <input type="hidden" id="tax_amount" name="tax_amount" value ="0" required />
-                                <input type="hidden" id="total_amount" name="total_amount" value="110" required />
-                                <input type="hidden" id="transaction_uuid" name="transaction_uuid" required />
-                                <input type="hidden" id="product_code" name="product_code" value ="EPAYTEST" required />
-                                <input type="hidden" id="product_service_charge" name="product_service_charge" value={0.25 * e.Rate} required />
-                                <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value="0" required />
-                                <input type="hidden" id="success_url" name="success_url" value="https://esewa.com.np" required />
-                                <input type="hidden" id="failure_url" name="failure_url" value="https://google.com" required />
-                                <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required />
-                                <input type="hidden" id="signature" name="signature"  required />
-                                {/* <input value="Submit" type="submit" /> */}
+                        <TableCell sx={{textAlign: 'center'}}>
+                        <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
 
-                                <Button value="Submit" type="submit"  variant="contained" onClick={()=> handleSewa(e.Rate , e.Quantity)}>Pay by esewa</Button>
-                            </form>
+                            <input type="hidden" id="amount" name="amount" value={eSewaParameters.amount} required />
+                            
+                            <input type="hidden" id="tax_amount" name="tax_amount" value ={eSewaParameters.tax_amount} required />
+                            
+                            <input type="hidden" id="total_amount" name="total_amount" value={eSewaParameters.total_amount} required />
+                            
+                            <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={eSewaParameters.transaction_uuid} required />
+                            
+                            <input type="hidden" id="product_code" name="product_code" value ="EPAYTEST" required />
+                            
+                            <input type="hidden" id="product_service_charge" name="product_service_charge" value={eSewaParameters.product_service_charge} required />
+                            
+                            <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value={eSewaParameters.product_delivery_charge} required />
+                            
+                            <input type="hidden" id="success_url" name="success_url" value={eSewaParameters.success_url} required />
+                            
+                            <input type="hidden" id="failure_url" name="failure_url" value={eSewaParameters.failure_url} required />
+                            
+                            <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required />
+                            
+                            <input type="hidden" id="signature" name="signature" value={signature}  required />
+                            
 
-                                
+                            <Button value="Submit" type="submit" disabled={(signature.length > 0) ? false : true }  variant="contained" onClick={()=> handleSewa(e.Rate , e.Quantity)}>Pay by esewa</Button>
+                        </form>
 
-                            </TableCell>
+                            
+
+                        </TableCell>
                         </TableRow>
                     </TableHead>
 

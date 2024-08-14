@@ -22,7 +22,7 @@ const API_OBJECT = {
     saveFavouritePost: {method: 'put', url: '/save/favourite', params: true},
     getFavouritePost: {method: 'get', url: '/get/favourtie/id', params: true},
     getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true},
-    
+    getSignature: {method: 'get', url: '/get/signature', params: true}
 
 }
 

@@ -332,8 +332,51 @@ const getFavDataFromFavPostId = async(req,res)=>{
 }
 
 
+/////esewa
+
+async function getEsewaPaymentHash( amount, transaction_uuid ) {
+    try {
+      const data = `total_amount=${amount},transaction_uuid=${transaction_uuid},product_code=${process.env.ESEWA_PRODUCT_CODE}`;
+  
+      const secretKey = process.env.ESEWA_SECRET_KEY;
+      const hash = crypto
+        .createHmac("sha256", secretKey)
+        .update(data)
+        .digest("base64");
+  
+      return {
+        signature: hash,
+        signed_field_names: "total_amount,transaction_uuid,product_code",
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+const getSignature = async(req,res)=>{
+
+    // total_amount=100,transaction_uuid=11-201-13,product_code=EPAYTEST
+    const {total_amount, transaction_uuid, product_code} = req.query
+
+    //get hashed
+    try{
+        const hash = await getEsewaPaymentHash(total_amount, transaction_uuid)
+        // console.log(hash.signature)
+        return res.status(200).json(hash)
+
+    }catch(err1){
+        console.log('error at hasing: ', err1)
+        return res.status(500).json(err1)
+    }
 
 
 
 
-module.exports = {getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+ 
+}
+
+
+
+
+
+module.exports = {getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
