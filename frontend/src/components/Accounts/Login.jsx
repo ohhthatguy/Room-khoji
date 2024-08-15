@@ -41,16 +41,16 @@ const Login = ()=>{
 
     const handleLogIn = async()=>{
 
-        console.log(logInData)
+        // console.log(logInData)
         try{
             let response = await API.login(logInData)
             
             if(!response.isSuccess){
                 console.log("some error came across. RESPONSE: ", response)
             }else{
-                console.log("login successfull")
+                // console.log("login successfull")
                     setLogInData(initial)
-                    console.log(response)
+                    // console.log(response)
                     setAccount(response.data.response)
                     if(response.data.response.category === 'Tenant'){
                 navigate('/tenantHome')}else{

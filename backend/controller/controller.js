@@ -5,6 +5,7 @@ const favouriteModel = require('../model/favourite')
 const bcrypt = require('bcrypt')
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken')
+const { v4: uuidv4 } = require('uuid');
 
 
 const createNewAccount = async(req,res)=>{
@@ -353,15 +354,67 @@ async function getEsewaPaymentHash( amount, transaction_uuid ) {
     }
   }
 
+  
+async function verifyEsewaPayment(encodedData) {
+    try {
+      // decoding base64 code revieved from esewa
+      let decodedData = atob(encodedData);
+      decodedData = await JSON.parse(decodedData);
+      // let headersList = {
+      //   Accept: "application/json",
+      //   "Content-Type": "application/json",
+      // };
+  
+      const data = `transaction_code=${decodedData.transaction_code},status=${decodedData.status},total_amount=${decodedData.total_amount},transaction_uuid=${decodedData.transaction_uuid},product_code=${process.env.ESEWA_PRODUCT_CODE},signed_field_names=${decodedData.signed_field_names}`;
+  
+      const secretKey = process.env.ESEWA_SECRET_KEY;
+      const hash = crypto
+        .createHmac("sha256", secretKey)
+        .update(data)
+        .digest("base64");
+  
+      console.log(hash);
+      console.log(decodedData.signature);
+      // let reqOptions = {
+      //   url: `${process.env.ESEWA_GATEWAY_URL}/api/epay/transaction/status/?product_code=${process.env.ESEWA_PRODUCT_CODE}&total_amount=${decodedData.total_amount}&transaction_uuid=${decodedData.transaction_uuid}`,
+      //   method: "GET",
+      //   headers: headersList,
+      // };
+
+      if (hash !== decodedData.signature) {
+        throw { message: "Invalid Info", decodedData };
+      }
+
+      // let response = await axios.request(reqOptions);
+      // if (
+      //   response.data.status !== "COMPLETE" ||
+      //   response.data.transaction_uuid !== decodedData.transaction_uuid ||
+      //   Number(response.data.total_amount) !== Number(decodedData.total_amount)
+      // ) {
+      //   throw { message: "Invalid Info", decodedData };
+      // }
+      console.log('here')
+      console.log({ response: response.data, decodedData })
+      console.log('here')
+      return { response: response.data, decodedData };
+    } catch (error) {
+      throw error;
+    }
+  }
+
 const getSignature = async(req,res)=>{
 
     // total_amount=100,transaction_uuid=11-201-13,product_code=EPAYTEST
-    const {total_amount, transaction_uuid, product_code} = req.query
-
+    const {total_amount} = req.query
+    let transaction_uuid = uuidv4()
     //get hashed
     try{
-        const hash = await getEsewaPaymentHash(total_amount, transaction_uuid)
+        let hash = await getEsewaPaymentHash(total_amount, transaction_uuid)
+        // console.log(total_amount)
+        // console.log(transaction_uuid)
         // console.log(hash.signature)
+        hash = {...hash, transaction_uuid: transaction_uuid, total_amount: total_amount}
+        // console.log(hash)
         return res.status(200).json(hash)
 
     }catch(err1){
@@ -375,8 +428,24 @@ const getSignature = async(req,res)=>{
  
 }
 
+const verifyPayment = async(req,res)=>{
+    const {data} = req.query
+    // console.log(data)
+
+    try{
+        let response = await verifyEsewaPayment(data)
+
+        // console.log(response)
+        return res.status(200).json(response)
+
+    }catch(err){
+        return res.status(500).json(err)
+    }
+    
+}
 
 
 
 
-module.exports = {getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+
+module.exports = {verifyPayment,getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}

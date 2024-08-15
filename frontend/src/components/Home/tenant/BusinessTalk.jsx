@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Header from "../../Header/Header"
-import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table,TableHead, TableRow, TableCell, Grid, Avatar, TableBody } from "@mui/material"
+import { Button,Box,Typography, Card, CardHeader, CardContent, Table,TableHead, TableRow, TableCell, Grid, Avatar, TableBody } from "@mui/material"
 import {NavigateNext, NavigateBefore } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
 
 
 import { useParams } from "react-router-dom"
@@ -16,28 +15,23 @@ const BusinessTalk = () => {
 
     const [currentPost, setCurrentPost] = useState([])
     const [signature, setSignature] = useState('')
+    const [total_amount, setTotalAmount] = useState('')
+    const [uuid, setUuid] = useState('')
+    // const [properAmount, setProperAmount] = useState(false)
     // const [selectedOption, setSelectedOption] = useState(Category)
-    const myUUID = uuidv4();
+    // const myUUID = uuidv4();
     // console.log(myUUID);
+
+    
     const eSewaParameters = {
-        amount: `${currentPost[0]?.Rate/100}`,
-        tax_amount: '0',
-        product_service_charge: '0',
-        product_delivery_charge: '0',
-        product_code: 'EPAYTEST',
-        // total_amount: `${(currentPost[0]?.Rate * currentPost[0]?.Quantity + (0.25 * currentPost[0]?.Rate * currentPost[0]?.Quantity))/100}`,
-        total_amount: `${currentPost[0]?.Rate/100}`,
-        transaction_uuid: myUUID,
-        success_url: 'https://localhost:3000',
-        failure_url: 'https://localhost:3000',
-        signed_field_names: `total_amount,transaction_uuid,product_code`,
-        signature: signature 
+        total_amount: `${(currentPost[0]?.Rate * currentPost[0]?.Quantity + (0.25 * currentPost[0]?.Rate * currentPost[0]?.Quantity))/1000}`
     }
+
     
     const [movement, setMovement] = useState(0)
     const [activeIndex, setActiveIndex] = useState(0)
    
-    
+    // eSewaParameters.amount >= 0 ? console.log(true) : console.log(false)
 
     const handleNext = (totalProductImages, index)=>{
    console.log(index)
@@ -63,9 +57,7 @@ const BusinessTalk = () => {
         
     }
 
-    const handleSewa =(rate,quantity)=>{
-        console.log(rate, quantity)
-    }
+   
     
     useEffect(()=>{
 
@@ -89,16 +81,21 @@ const BusinessTalk = () => {
         }
 
     ,[])
+       
 
+    //signature and uuid
     useEffect(()=>{
-
-        if(eSewaParameters){
+// console.log('here')
+        if(currentPost[0]?.Rate >=0){
+            // console.log(eSewaParameters)
             const getSignature = async()=>{
                 try{
                     const res = await API.getSignature(eSewaParameters)
                     if(res.isSuccess){
                         // console.log("success in getting singuatire", res.data.signature)S
                         setSignature(res.data.signature)
+                        setUuid(res.data.transaction_uuid)
+                        setTotalAmount(res.data.total_amount)
                     }else{
                         console.log("fialed to get singature, ", res)
                     }
@@ -109,7 +106,7 @@ const BusinessTalk = () => {
             getSignature()
         }
 
-    },[])
+    },[currentPost])
     
 // console.log(currentPost)
 console.log(eSewaParameters)
@@ -267,32 +264,33 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                     <TableRow sx={{background: 'grey'}}>
 
                         <TableCell sx={{textAlign: 'center'}}>
-                        <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+                        {/* */}
+                        <form  action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
 
-                            <input type="hidden" id="amount" name="amount" value={eSewaParameters.amount} required />
+                            <input type="hidden" id="amount" name="amount" value={total_amount} required />
                             
-                            <input type="hidden" id="tax_amount" name="tax_amount" value ={eSewaParameters.tax_amount} required />
+                            <input type="hidden" id="tax_amount" name="tax_amount" value ="0" required />
                             
                             <input type="hidden" id="total_amount" name="total_amount" value={eSewaParameters.total_amount} required />
                             
-                            <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={eSewaParameters.transaction_uuid} required />
+                            <input type="hidden" id="transaction_uuid" name="transaction_uuid" value={uuid} required />
                             
                             <input type="hidden" id="product_code" name="product_code" value ="EPAYTEST" required />
                             
-                            <input type="hidden" id="product_service_charge" name="product_service_charge" value={eSewaParameters.product_service_charge} required />
+                            <input type="hidden" id="product_service_charge" name="product_service_charge" value="0" required />
                             
-                            <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value={eSewaParameters.product_delivery_charge} required />
+                            <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value="0" required />
                             
-                            <input type="hidden" id="success_url" name="success_url" value={eSewaParameters.success_url} required />
+                            <input type="hidden" id="success_url" name="success_url" value="http://localhost:3000/tenantHome" required />
                             
-                            <input type="hidden" id="failure_url" name="failure_url" value={eSewaParameters.failure_url} required />
+                            <input type="hidden" id="failure_url" name="failure_url" value="http://localhost:3000/tenantHome" required />
                             
                             <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required />
                             
                             <input type="hidden" id="signature" name="signature" value={signature}  required />
                             
 
-                            <Button value="Submit" type="submit" disabled={(signature.length > 0) ? false : true }  variant="contained" onClick={()=> handleSewa(e.Rate , e.Quantity)}>Pay by esewa</Button>
+                            <Button value="Submit" type="submit" disabled={(signature.length > 0) ? false : true }  variant="contained" >Pay by esewa</Button>
                         </form>
 
                             

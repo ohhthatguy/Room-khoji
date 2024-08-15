@@ -15,7 +15,7 @@ const DataProvider = ({children})=>{
     const[account, setAccount] = useState(initial)
     const[isUpdatedPost, setIsUpdatedPost] = useState(false)
 
-    console.log(account)
+    // console.log(account)
 
     return (
         <DataContext.Provider value={{setAccount, account, setIsUpdatedPost,isUpdatedPost }}>

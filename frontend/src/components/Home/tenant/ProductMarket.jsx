@@ -96,12 +96,12 @@ const ProductMarket = () => {
                         res = await API.getFavouritePost({id: account._id})
                     }
 
-                    console.log('im here')
+                    // console.log('im here')
 
                     if(res.isSuccess){
 
-                        console.log(res.data.msg?.length )
-                        console.log(res.data?.initializeBookmark[0] )
+                        // console.log(res.data.msg?.length )
+                        // console.log(res.data?.initializeBookmark[0] )
 
 
                         if(res.data.msg?.length > 0){
@@ -172,7 +172,7 @@ const ProductMarket = () => {
               const optionList = ['Flat', 'Building', 'Room']   
             //   console.log(selectedOption)   
             //   console.log(favrouitPost)
-              console.log(bookMarkClicked)
+            //   console.log(bookMarkClicked)
 
   return (
   <>

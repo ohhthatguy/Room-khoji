@@ -2,30 +2,50 @@ import { useContext, useEffect, useState } from "react"
 import Header from "../Header/Header"
 import { Button,Box,Typography, Card, CardHeader, CardMedia, Paper, styled, Grid, FormLabel } from "@mui/material"
 import { DataContext } from "../../context/DataProvider"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { API } from "../../services/Api"
+
 
 
 
 const TenantHome = ()=>{
     const {account} = useContext(DataContext)
-    // console.log(account)
+    const [verifyData, setVerifyData] = useState('')
     const navigate = useNavigate()
 
-    // const handleTest=async()=>{
-    //     try{
+    //useLocation for query params
+    const {search} = useLocation();
+    const params = new URLSearchParams(search);
+    const query = {};
+  params.forEach((value, key) => {
+    query[key] = value;
+  });
 
-    //         let response = await API.getUser();
-    //         console.log(response)
-           
+ console.log(query.data.length)
 
-    //     }catch(err){
-    //         console.log("error: ", err)
-    //         if(err.code == 401){
-    //             navigate('/')
-    //         }
-    //     }
-    // }
+ if(query.data){
+    const verifyPayment = async()=>{
+        try{
+
+            let res = await API.verifyPayment(query)
+            if(res.isSuccess){
+                console.log(res)
+                setVerifyData(res)
+            }else{
+                console.log('something wrong happened')
+                console.log(res)
+            }
+
+        }catch(err){
+            console.log(err)
+        }
+    }
+    console.log("calling verifyPayment()")
+    verifyPayment()
+ }
+
+ console.log(verifyData)
+   
   const handleProductmarket =(e)=>{
     // console.log(e)
     navigate(`/tenant/productmarket/${e.name}`)
