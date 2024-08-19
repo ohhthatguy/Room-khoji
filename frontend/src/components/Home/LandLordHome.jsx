@@ -50,7 +50,7 @@ const LandLordHome = ()=>{
        <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '20rem', border: '1px solid red', display: 'flex', justifyContent: 'center', alignItems: 'center'}} xs={12}>
 
 
-            <Card sx={{backgroundColor: 'blue', width: '50%'}}>
+            <Card sx={{ backgroundColor: '#D5D0A4', opacity: '0.95', width: '50%'}}>
 
                 <Box sx={{margin: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                     <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${account.profile[0]}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' , borderRadius: '50%' }}></Box>
@@ -140,7 +140,7 @@ const LandLordHome = ()=>{
                 </Grid>
 
                 {/* posts */}
-                <Grid item sx={{border: '1px solid black'}} lg={8.9} md={9.7} sm={9.8} xs={12}>
+                <Grid item  lg={8.9} md={9.7} sm={9.8} xs={12}>
                                 {
                                   (option == 'PostForm') ? <PostForm /> :
                                   (option == 'PostAvailable') ? <PostAvailable /> : 

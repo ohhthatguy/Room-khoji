@@ -185,10 +185,6 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                     
                     <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
-
-                
-
-                
                     
                         <Table sx={{border: '1px solid black'}}>
                         <TableHead>
@@ -220,11 +216,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                         </TableBody>
 
                         </Table>
-                    
-                
-
-               
-
+ 
                 <Box>
              
                 

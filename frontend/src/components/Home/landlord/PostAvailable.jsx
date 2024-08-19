@@ -47,10 +47,7 @@ const PostAvailable = ()=>{
 
 
     return (<>
-        PostAvailable
-
-        {/* <Button variant="standard" onClick={()=>getPostsOfId()}>Test</Button> */}
-        <br />
+       
 
             {
                 (post.length > 0) ? <PostCard post={post} /> : <Typography> You've made no posts yet </Typography>

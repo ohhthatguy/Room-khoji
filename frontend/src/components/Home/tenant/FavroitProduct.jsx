@@ -139,7 +139,7 @@ const FavroitProduct = () => {
 <Grid item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
     {
     favPost.map((e,index)=>(
-        <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
+        <Card key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
 
      
 

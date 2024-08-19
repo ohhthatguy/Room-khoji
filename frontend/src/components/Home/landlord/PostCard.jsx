@@ -86,7 +86,7 @@ let k;
             <Box sx={{display: ` ${edit !=0 ? 'none' : 'flex' } `,rowGap: '2rem', flexDirection: 'column-reverse' }}>
             {
             post.map((e,index)=>(
-                <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
+                <Card key={index} sx={{border: '1px solid red', position: 'relative', background: '#D5D0A4'}} >
 
                     <Delete onClick={()=>handleDelete(e)} sx={{position: 'absolute', top: '5%', right: '5%', '&:hover': {
           color: 'red',
@@ -114,12 +114,7 @@ let k;
 
                 <CardHeader title={e.Category} subheader={e.Date} /> 
 
-                <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-                    <Paper>Parking: {e.Parking}</Paper>
-                    <Paper>People: {e.People}</Paper>
-                    <Paper>Pets: {e.Pets}</Paper>
-                    <Paper>Water: {e.Water}</Paper>
-                </Box>
+              
 
                 <Box sx={{border: '1px solid red', position: 'relative'}}>
            
@@ -151,12 +146,55 @@ let k;
                     <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
 
-                <Box>
-                    <Paper>Quantity: {e.Quantity}</Paper>
-                    <Paper>Rate: {e.Rate}</Paper>
-                    <Paper>Location: {e.Location}</Paper>
-               
-                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-evenly', padding: '1.2rem 0rem'}}>
+
+                    <Box sx={{marginLeft: '1.2rem',display: 'flex', columnGap: '1.4rem'}}>
+                    
+
+                        <Box>
+                            <Typography><strong>Quantity</strong></Typography>
+                            <Typography> <strong>Rate</strong></Typography>
+                            <Typography> <strong>Location</strong></Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography>: {e.Quantity}</Typography>
+                            <Typography>: {e.Rate}</Typography>
+                            <Typography>: {e.Location}</Typography>
+
+                        </Box>
+
+                    </Box>
+
+
+                        <Box sx={{display: 'flex', columnGap: '1.4rem'}}>
+                        
+
+                        <Box>
+                            <Typography><strong>Water</strong></Typography>
+                            <Typography> <strong>Parking</strong></Typography>
+                            <Typography> <strong>Prefered</strong></Typography>
+                            <Typography> <strong>Pets</strong></Typography>
+
+                        </Box>
+
+                        <Box>
+                            <Typography>: {e.Water}</Typography>
+                            <Typography>: {e.Parking}</Typography>
+                            <Typography>: {e.People}</Typography>
+                            <Typography>: {e.Pets}</Typography>
+
+
+                        </Box>
+
+                        </Box>
+
+
+
+
+                        </Box>
+
+              
     
     
     

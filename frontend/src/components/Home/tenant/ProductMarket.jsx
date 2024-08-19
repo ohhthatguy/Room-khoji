@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import Header from "../../Header/Header"
-import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, styled, Grid, Avatar } from "@mui/material"
+import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table, TableRow, TableHead, Grid, Avatar, TableCell } from "@mui/material"
 import {NavigateNext, NavigateBefore, Bookmark, BookmarkBorderOutlined } from '@mui/icons-material';
 
 
@@ -201,7 +201,7 @@ const ProductMarket = () => {
             {
                 
             currentPost.map((e,index)=>(
-                <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
+                <Card key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
 
                 {
                     ((bookMarkClicked.includes(e._id) ) ? 
@@ -218,13 +218,6 @@ const ProductMarket = () => {
                
 
                 <CardHeader avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
-
-                <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-                    <Paper>Parking: {e.Parking}</Paper>
-                    <Paper>People: {e.People}</Paper>
-                    <Paper>Pets: {e.Pets}</Paper>
-                    <Paper>Water: {e.Water}</Paper>
-                </Box>
 
                 <Box sx={{border: '1px solid red', position: 'relative'}}>
            
@@ -256,16 +249,64 @@ const ProductMarket = () => {
                     <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
 
-                <Box sx={{position: 'relative'}}>
-                    <Paper  >Quantity: {e.Quantity}</Paper>
-                    <Paper>Rate: {e.Rate}</Paper>
-                    <Paper>Location: {e.Location}</Paper>
+                <Box sx={{ display: 'flex', justifyContent: 'space-around'}}>
 
-                    <Box sx={{position: 'absolute', bottom: '2%', right: '2%'}}>
-                        <Button variant='contained' onClick={()=> navigate(`/tenant/BusinessTalk/${e._id}`)}>lets talk business</Button>
+                    
+                    
+                    {/* <Typography variant="h5">About {selectedOption}</Typography> */}
+                    <Box sx={{marginLeft: '2rem',display: 'flex', columnGap: '1.4rem'}}>
+                     
+
+                        <Box sx={{}}>
+                        <Typography><strong>Quantity</strong></Typography>
+                        <Typography> <strong>Rate</strong></Typography>
+                        <Typography> <strong>Location</strong></Typography>
+                        </Box>
+
+                        <Box>
+                            <Typography>: {e.Quantity}</Typography>
+                            <Typography>: {e.Rate}</Typography>
+                            <Typography>: {e.Location}</Typography>
+
+                        </Box>
+
                     </Box>
+
+                    {/* <Typography variant="h5">Additional Info</Typography> */}
+                    <Box sx={{display: 'flex', columnGap: '1.4rem',  '&::before': {
+                                  content: '""',
+                                  borderLeft: '1px solid black',
+                                  marginRight: '5rem'
+                                },}}>
+                     
+
+                     <Box>
+                        <Typography><strong>Water</strong></Typography>
+                        <Typography> <strong>Parking</strong></Typography>
+                        <Typography> <strong>Prefered</strong></Typography>
+                        <Typography> <strong>Pets</strong></Typography>
+
+                     </Box>
+
+                     <Box>
+                         <Typography>: {e.Water}</Typography>
+                         <Typography>: {e.Parking}</Typography>
+                         <Typography>: {e.People}</Typography>
+                         <Typography>: {e.Pets}</Typography>
+
+
+                     </Box>
+
+                 </Box>
+                    
+
+                
                
                 </Box>
+                
+                <Box >
+                        <Button variant='contained' onClick={()=> navigate(`/tenant/BusinessTalk/${e._id}`)}>lets talk business</Button>
+                    </Box>
     
     
     

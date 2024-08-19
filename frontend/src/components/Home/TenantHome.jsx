@@ -1,33 +1,34 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext,useState } from "react"
 import Header from "../Header/Header"
-import { Button,Box,Typography, Card, CardHeader, CardMedia, Paper, styled, Grid, FormLabel } from "@mui/material"
+import { Box,Typography, Card, Avatar, CardHeader, CardMedia, CardContent, Grid,Rating } from "@mui/material"
 import { DataContext } from "../../context/DataProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import { API } from "../../services/Api"
+import Footer from "../footer/Footer"
+import LogOut from "../Logout/LogOut"
 
 
 
 
 const TenantHome = ()=>{
-    const {account} = useContext(DataContext)
+    const {account,openPortal} = useContext(DataContext)
     const [verifyData, setVerifyData] = useState('')
     const navigate = useNavigate()
 
     //useLocation for query params
-    const {search} = useLocation();
-    const params = new URLSearchParams(search);
-    const query = {};
-  params.forEach((value, key) => {
-    query[key] = value;
-  });
 
- console.log(query.data.length)
+    const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const data = queryParams.get('data');
+//   console.log(data)
 
- if(query.data){
+ 
+ if(data && verifyData.length == 0){
     const verifyPayment = async()=>{
         try{
 
-            let res = await API.verifyPayment(query)
+            let res = await API.verifyPayment({data})
+            // console.log(res)
             if(res.isSuccess){
                 console.log(res)
                 setVerifyData(res)
@@ -46,6 +47,9 @@ const TenantHome = ()=>{
 
  console.log(verifyData)
    
+
+
+
   const handleProductmarket =(e)=>{
     // console.log(e)
     navigate(`/tenant/productmarket/${e.name}`)
@@ -68,8 +72,27 @@ const TenantHome = ()=>{
         }
     ]
 
+    const feedback = [
+        {
+            content: 'I had an excellent experience using the Room Finder app! The interface was user-friendly, and I found exactly what I was looking for in just a few clicks. The search filters were spot-on, allowing me to narrow down my options quickly. I especially appreciated the detailed listings and the ability to contact landlords directly through the app. Thanks to Room Finder, I secured a great place within my budget and preferred location. Highly recommend this app to anyone searching for a room!',
+
+            photo: 'https://cdn.pixabay.com/photo/2018/11/08/23/52/man-3803551_1280.jpg',
+            name: 'John Doe'
+        },
+        {
+            content: '"Room Finder made my room search so easy and stress-free! As a girl, safety and location were my top priorities, and the app allowed me to filter options based on those needs. The listings were detailed, with clear photos and descriptions, so I knew exactly what to expect. I loved the convenience of being able to compare different rooms side by side and even schedule visits directly through the app. I found a cozy, safe place thats perfect for me. I couldnt be happier—Room Finder is a must-have for anyone looking for a new place!"',
+
+            photo: 'https://cdn.pixabay.com/photo/2020/02/01/03/00/girl-4809433_1280.jpg',
+              name: 'Ethal Cray'
+        }
+
+    ]
+
     return (<>
     <Header />
+
+        
+
        <Grid container sx={{marginTop: '4.3rem'}}>
 
             <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '30rem', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: '10px' }} xs={12}>
@@ -87,6 +110,7 @@ const TenantHome = ()=>{
          
             
             </Grid>
+
 
             <Box sx={{padding: '3rem', textAlign: 'center'}}>
 
@@ -116,7 +140,7 @@ const TenantHome = ()=>{
 
                                 }}>
 
-                                <CardMedia component="img" height="194" image= {`${e.image}`}alt= {`${e.name}`}/>
+                                <CardMedia component="img" height="250" image= {`${e.image}`}alt= {`${e.name}`}/>
                                 
                                 <CardHeader sx={{textAlign: 'center'}} title={`${e.name}`}/>
 
@@ -126,15 +150,30 @@ const TenantHome = ()=>{
        
             </Grid>
 
-            <Typography>See What People have to Say !</Typography>
+            
+            <Typography sx={{textAlign: 'center', width: '100%'}} variant="h4">See What People have to Say !</Typography>
+           
+                <Grid container justifyContent={'center'} alignItems={'center'}  sx={{margin: '3rem 0px'}}  >
+                    <Grid item lg={10} md={10} sm={10} xs={10}>
+                    {
+                        feedback.map((e,index)=>(
+                            <Card key={index} sx={{border: '1px solid red', marginTop: '1.52rem'}} >
 
-                <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
+                            <CardHeader avatar={ <Avatar  src={e.photo} alt={e.name} />} title={ e.name} subheader={        <Rating name="read-only" value={5} size='small' readOnly />}/> 
 
-                    <Paper elevation={9}>
-                        "i found a room. yahoooo"
-                    </Paper>
+            
+                            <CardContent>
+                                <Typography variant="h5">{e.content}</Typography>
+                        
+                            </CardContent>
+            
+                        </Card>
+                        ))
+                    }
+                    </Grid>
        
                 </Grid>
+
                 
                 <Typography variant='h4'>hot Deals!</Typography>
                 <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
@@ -154,7 +193,10 @@ const TenantHome = ()=>{
             </Grid>
 
 
-            
+            <Footer />
+
+            {openPortal && <LogOut />}
+
        </Grid>
 
       
