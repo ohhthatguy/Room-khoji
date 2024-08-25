@@ -119,14 +119,14 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
   <>
    <Header />
 
-<Box>
+{/* <Box>
   
- </Box>
+ </Box> */}
 
  
 
    
-   <Box sx={{marginTop: '5rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
+   <Box sx={{marginTop: '4.3rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
 
           lets talk business
 
@@ -145,7 +145,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
 
             currentPost.map((e,index)=>(
 
-                <Card key={index} sx={{border: '1px solid red', position: 'relative'}} >
+                <Card key={index} sx={{border: '1px solid red', position: 'relative',  backgroundColor: '#FFF9E6'}} >
 
 
                 <CardHeader avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 

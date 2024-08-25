@@ -1,16 +1,22 @@
-import { useContext,useState } from "react"
+import { useContext,useEffect,useState,useRef } from "react"
 import Header from "../Header/Header"
 import { Box,Typography, Card, Avatar, CardHeader, CardMedia, CardContent, Grid,Rating } from "@mui/material"
 import { DataContext } from "../../context/DataProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import { API } from "../../services/Api"
+import {gsap} from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Footer from "../footer/Footer"
-import LogOut from "../Logout/LogOut"
 
 
 
 
-const TenantHome = ()=>{
+
+const TenantHome = ({darkMode})=>{
+   
+    const reviewCard = useRef([])
+    const startCard = useRef([])
+   
     const {account,openPortal} = useContext(DataContext)
     const [verifyData, setVerifyData] = useState('')
     const navigate = useNavigate()
@@ -47,8 +53,6 @@ const TenantHome = ()=>{
 
  console.log(verifyData)
    
-
-
 
   const handleProductmarket =(e)=>{
     // console.log(e)
@@ -88,6 +92,65 @@ const TenantHome = ()=>{
 
     ]
 
+    //animation
+    useEffect(()=>{
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: startCard.current[0], // Use the first card as the trigger point
+          start: 'top 80%',
+          end: 'top 20%',
+          scrub: true,
+        //   markers: true,
+        },
+      });
+
+
+
+      startCard.current.forEach((card, index) => {
+        tl.fromTo(
+          card,
+          { y: 100, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power2.out',
+          },
+          index * 0.2 // Adding delay within the timeline for each card
+        )});
+
+
+        const t2 = gsap.timeline({
+            scrollTrigger:{
+            trigger: reviewCard.current[0], // Use the first card as the trigger point
+            start: 'top 80%',
+            end: 'top 40%',
+          scrub: true,
+          markers: true,
+            }
+        })
+
+        reviewCard.current.forEach((e,index) =>{
+            
+            t2.fromTo(e, {
+                x: 100, opacity: 0 
+            },{
+                x: 0,
+                opacity: 1,
+                duration: 1,
+                // ease: 'power2.out',
+            }, index*2.2)
+            
+        })
+
+
+
+
+    },[])
+      
+
     return (<>
     <Header />
 
@@ -112,7 +175,7 @@ const TenantHome = ()=>{
             </Grid>
 
 
-            <Box sx={{padding: '3rem', textAlign: 'center'}}>
+            <Box  sx={{padding: '3rem', textAlign: 'center', color: (darkMode) ? 'white' : 'black'}}>
 
                     <Typography sx={{margin: '2rem'}} variant="h4">  What are you looking for exactly ? </Typography>
                     
@@ -120,12 +183,13 @@ const TenantHome = ()=>{
 
             </Box>
 
-
-            <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px', boxShadow: 'blue 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(255, 255, 255) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px', padding: '2rem'}}>
+            {/* , boxShadow: 'blue 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(255, 255, 255) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px' */}
+            <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{ padding: '2rem'}}>
 
                     {
                         productType.map((e, index)=>(
-                            <Card  onClick={()=>handleProductmarket(e)} key={index} sx={{
+
+                            <Card ref={(el) => (startCard.current[index] = el)}  onClick={()=>handleProductmarket(e)} key={index} sx={{
                                 '&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s'
@@ -142,7 +206,7 @@ const TenantHome = ()=>{
 
                                 <CardMedia component="img" height="250" image= {`${e.image}`}alt= {`${e.name}`}/>
                                 
-                                <CardHeader sx={{textAlign: 'center'}} title={`${e.name}`}/>
+                                <CardHeader sx={{textAlign: 'center', color: 'white'}} title={`${e.name}`}/>
 
                             </Card>
                         ))
@@ -151,13 +215,13 @@ const TenantHome = ()=>{
             </Grid>
 
             
-            <Typography sx={{textAlign: 'center', width: '100%'}} variant="h4">See What People have to Say !</Typography>
+            <Typography sx={{textAlign: 'center', width: '100%', color: (darkMode) ? 'white' : 'black',margin: '2rem'}} variant="h4">See What People have to Say !</Typography>
            
-                <Grid container justifyContent={'center'} alignItems={'center'}  sx={{margin: '3rem 0px'}}  >
+                <Grid container justifyContent={'center'} alignItems={'center'}  sx={{margin: '1.25rem 0px'}}  >
                     <Grid item lg={10} md={10} sm={10} xs={10}>
                     {
                         feedback.map((e,index)=>(
-                            <Card key={index} sx={{border: '1px solid red', marginTop: '1.52rem'}} >
+                            <Card ref={(e)=>(reviewCard.current[index] = e)} key={index} sx={{border: '1px solid red', marginTop: '1.52rem', background: darkMode ? '#212121' : 'white', color: (darkMode) ? 'white' : 'black', boxShadow: darkMode && '0px 2px 2px 2px black'}} >
 
                             <CardHeader avatar={ <Avatar  src={e.photo} alt={e.name} />} title={ e.name} subheader={        <Rating name="read-only" value={5} size='small' readOnly />}/> 
 
@@ -175,27 +239,12 @@ const TenantHome = ()=>{
                 </Grid>
 
                 
-                <Typography variant='h4'>hot Deals!</Typography>
-                <Grid container justifyContent={"space-evenly"} direction={{md: 'row', lg: 'row'}}  sx={{margin: '3rem 0px'}}>
-
-                    {
-                        productType.map((e,index)=>(
-                            <Card key={index}>
-
-                                <CardMedia component="img" height="194" image= {`${e.image}`}alt= {`${e.name}`}/>
-                                
-                                <CardHeader sx={{textAlign: 'center'}} title={`${e.name}`} subheader="price"/>
-
-                            </Card>
-                        ))
-                    }
-       
-            </Grid>
+                
 
 
             <Footer />
 
-            {openPortal && <LogOut />}
+        
 
        </Grid>
 

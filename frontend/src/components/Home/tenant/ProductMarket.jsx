@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, useRef } from "react"
 import Header from "../../Header/Header"
 import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table, TableRow, TableHead, Grid, Avatar, TableCell } from "@mui/material"
 import {NavigateNext, NavigateBefore, Bookmark, BookmarkBorderOutlined } from '@mui/icons-material';
@@ -8,7 +8,13 @@ import { DataContext } from "../../../context/DataProvider"
 import { useNavigate, useParams } from "react-router-dom"
 import { API } from "../../../services/Api"
 
+import {gsap} from 'gsap'
+// import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 const ProductMarket = () => {
+
+    const productRef = useRef(null)
+    // const tl = gsap.timeline()
 
     const {account} = useContext(DataContext)
     const {Category} = useParams();
@@ -77,6 +83,15 @@ const ProductMarket = () => {
 
     },[selectedOption])
     
+    //animaiton
+    // useEffect(()=>{
+   
+    
+       
+    //     tl.fromTo(productRef.current, { opacity: 0, scale: 0}, {opacity: 1, scale: 1})
+
+
+    // },[])
 
     //save fav post's id to db
     useEffect(()=>{
@@ -178,7 +193,7 @@ const ProductMarket = () => {
   <>
    <Header />
    
-   <Box sx={{marginTop: '5rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
+   <Box sx={{marginTop: '4.3rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
 
             {
                 optionList.map((e)=>(
@@ -197,11 +212,11 @@ const ProductMarket = () => {
         {
             (currentPost.length > 0) ? 
         
-        <Grid item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
+        <Grid ref={productRef} item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
             {
                 
             currentPost.map((e,index)=>(
-                <Card key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
+                <Card  key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
 
                 {
                     ((bookMarkClicked.includes(e._id) ) ? 

@@ -1,6 +1,6 @@
 
 import { AppBar,Avatar,Box, Toolbar } from "@mui/material"
-import {Logout, LightMode, DarkMode} from '@mui/icons-material';
+import {Logout, DarkMode, LightMode} from '@mui/icons-material';
 import { useNavigate } from "react-router-dom"
 import { DataContext } from "../../context/DataProvider"
 import { useContext } from "react"
@@ -8,7 +8,7 @@ import { useContext } from "react"
 
 const Header =()=>{
 
-    const {account, setOpenPortal} = useContext(DataContext)
+    const {account, setOpenPortal, setDarkMode, darkMode} = useContext(DataContext)
     const navigate = useNavigate()
     console.log(account)
 
@@ -21,7 +21,11 @@ const myFav =()=>{
 }
 
 const handleLogOut=()=>{
-    setOpenPortal(true)
+   
+}
+
+const handleDarkMode =()=>{
+    !darkMode ?  setDarkMode(true) : setDarkMode(false)
 }
 
 
@@ -74,7 +78,7 @@ const handleLogOut=()=>{
 
                     <Toolbar sx={{'&:hover':{
                         cursor: 'pointer',
-                        transform: 'Scale(1.02)',
+                        // transform: 'Scale(1.02)',
                         transition: '0.3s'
                     },'&:active':{
                         cursor: 'pointer',
@@ -83,12 +87,25 @@ const handleLogOut=()=>{
                     },
                     transition: '0.3s'}}>
                   
-                        <Logout onClick={()=> handleLogOut()} />
+                        <Logout onClick={()=>  setOpenPortal(prev=> !prev)} />
                     </Toolbar>
 
-                    <Toolbar>
 
-                        <DarkMode />
+
+
+                    <Toolbar  onClick={()=> handleDarkMode()}  sx={{'&:hover':{
+                        cursor: 'pointer',
+                        // transform: 'Scale(1.02)',
+                        transition: '0.3s'
+                    },'&:active':{
+                        cursor: 'pointer',
+                        transform: 'rotate(-90deg)',
+                    
+                    },
+                    transition: '0.3s',
+                }}>
+
+                        { darkMode ? <DarkMode /> : <LightMode /> }
 
                     </Toolbar>
 
