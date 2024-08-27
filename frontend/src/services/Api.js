@@ -23,6 +23,8 @@ const API_OBJECT = {
     getFavouritePost: {method: 'get', url: '/get/favourtie/id', params: true},
     getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true},
 
+    saveRentedProduct: {method: 'post', url: '/save/rented_product'},
+
     //esewa
     getSignature: {method: 'get', url: '/get/signature', params: true},
     verifyPayment: {method: 'get', url: '/check/verification', params: true}

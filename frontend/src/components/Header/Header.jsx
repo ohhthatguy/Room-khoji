@@ -10,7 +10,7 @@ const Header =()=>{
 
     const {account, setOpenPortal, setDarkMode, darkMode} = useContext(DataContext)
     const navigate = useNavigate()
-    console.log(account)
+    // console.log(account)
 
 const homeNavigation=()=>{
     (account.category == "Tenant") ? navigate('/tenantHome') :  navigate('/') 

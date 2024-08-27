@@ -60,11 +60,19 @@ const Login = ()=>{
             }else{
                 // console.log("login successfull")
                     setLogInData(initial)
-                    // console.log(response)
+                    console.log(response)
+                    
+                    const name = response.data.response.name
+                    const profile = response.data.response.profile
+                    const currentUser = {name, profile}
+
+
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
                     setAccount(response.data.response)
                     if(response.data.response.category === 'Tenant'){
-                navigate('/tenantHome')}else{
-                navigate('/landlordHome')}
+                        navigate('/tenantHome')}else{
+                        navigate('/landlordHome')}
 
             }
 

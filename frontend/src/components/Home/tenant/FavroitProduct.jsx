@@ -8,7 +8,7 @@ import { DataContext } from "../../../context/DataProvider"
 import { useNavigate, useParams } from "react-router-dom"
 import { API } from "../../../services/Api"
 
-const FavroitProduct = () => {
+const FavroitProduct = ({darkMode}) => {
 
     // const {id} = useParams();
     const {account} = useContext(DataContext)
@@ -121,10 +121,10 @@ const FavroitProduct = () => {
   <>
    <Header />
    
-   <Box sx={{marginTop: '5rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
+   <Box  sx={{marginTop: '4rem',display:'flex', color: darkMode ? 'white' : 'black', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem', paddingTop: '1.5rem'}}>
 
 
-            My Favroitss
+   My Favroitss
 
         </Box>
 

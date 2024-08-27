@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 
-import { Button,Box,Typography, Card, CardHeader, CardMedia, CardContent, Paper, styled, ImageList, ImageListItem, TableHead, TableCell,TableRow } from "@mui/material"
+import { Box,Typography, Card, CardHeader, CardMedia, CardContent } from "@mui/material"
 import { DataContext } from "../../../context/DataProvider";
 import {NavigateNext, NavigateBefore, Delete, Edit} from '@mui/icons-material';
 
-import { useNavigate } from "react-router-dom"
 import PostEdit from "./PostEdit";
 import { API } from "../../../services/Api";
 
@@ -12,9 +11,9 @@ import { API } from "../../../services/Api";
 
 
 
-const PostCard = ({post})=>{
+const PostCard = ({post, darkMode})=>{
 
-    console.log(post)
+    // console.log(post)
     const {setIsUpdatedPost} = useContext(DataContext)
     const [movement, setMovement] = useState(0)
     const [activeIndex, setActiveIndex] = useState(0)
@@ -83,10 +82,10 @@ let k;
 
 
         
-            <Box sx={{display: ` ${edit !=0 ? 'none' : 'flex' } `,rowGap: '2rem', flexDirection: 'column-reverse' }}>
+            <Box sx={{ display: ` ${edit !=0 ? 'none' : 'flex' } `,rowGap: '2rem', flexDirection: 'column-reverse' }}>
             {
             post.map((e,index)=>(
-                <Card key={index} sx={{border: '1px solid red', position: 'relative', background: '#D5D0A4'}} >
+                <Card key={index} sx={{border: '2px solid #587351', position: 'relative',  backgroundColor: darkMode ? '#587351' : '#D5D0A4', color: darkMode ? 'white' : 'black',}} >
 
                     <Delete onClick={()=>handleDelete(e)} sx={{position: 'absolute', top: '5%', right: '5%', '&:hover': {
           color: 'red',
@@ -112,11 +111,14 @@ let k;
         }}}/>
 
 
-                <CardHeader title={e.Category} subheader={e.Date} /> 
+                <CardHeader   sx={{
+    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+  }} title={e.Category} subheader={e.Date} /> 
 
               
 
-                <Box sx={{border: '1px solid red', position: 'relative'}}>
+                <Box sx={{ position: 'relative'}}>
            
                     <Box sx={{width: '100%', zIndex: '1', position: 'absolute', top: '50%'}}>
             
@@ -127,8 +129,8 @@ let k;
                         
                     </Box>    
            
-
-                <Box sx={{border: '2px solid black', height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
+                   
+                <Box sx={{boxShadow: darkMode ? '9px 9px 9px 9px #587362' : '9px 9px 9px 9px #E7D0A4'  , height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
 
                    
                     {

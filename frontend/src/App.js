@@ -23,7 +23,7 @@ const App = () => {
 // 
 
   if(darkMode){
-    root.style.background = '#464646';
+    root.style.background = '#1E1F23';
   }else{
     root.style.background = 'white';
 

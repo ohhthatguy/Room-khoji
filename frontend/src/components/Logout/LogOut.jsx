@@ -44,7 +44,7 @@ const LogOut = () => {
  
   return (
     <>
-    <Header />
+
 
 
         <Grid ref={logOutRef} container justifyContent={'center'} alignItems={'center'} sx={{border: '1px solid black', background: '#000000', width: '40%', position: 'fixed', top: '30%', left: '50%', transform: 'Translate(-50%)', padding: '2rem'}} >

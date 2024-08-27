@@ -2,6 +2,7 @@ const ImageModel = require('../model/image/image')
 const accountModel = require('../model/account/account')
 const postModel = require('../model/account/post')
 const favouriteModel = require('../model/favourite')
+const rentedModel = require('../model/rented_product/rented')
 const bcrypt = require('bcrypt')
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken')
@@ -426,8 +427,24 @@ const verifyPayment = async(req,res)=>{
     
 }
 
+////
+
+
+//save rented product
+const saveRentedProduct = async(req,res)=>{
+    // console.log(req.body)
+    try{
+        //save rented data
+        let response = new rentedModel(req.body)
+        await response.save()
+        return res.status(200).json({msg: 'post saved/updated'})
+
+    }catch(err){
+        return res.status(500).json(err)
+    }
+}
 
 
 
 
-module.exports = {verifyPayment,getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+module.exports = {saveRentedProduct, verifyPayment,getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}

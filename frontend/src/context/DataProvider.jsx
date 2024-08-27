@@ -17,10 +17,14 @@ const DataProvider = ({children})=>{
     const [darkMode, setDarkMode] = useState(false)
     const [openPortal, setOpenPortal] = useState(false)
 
+    // const [rented, setRented] = useState([])
+    const [currentPost, setCurrentPost] = useState([])
+    
+
     // console.log(account)
 
     return (
-        <DataContext.Provider value={{setAccount, account,setOpenPortal, openPortal,setIsUpdatedPost,isUpdatedPost,setDarkMode, darkMode }}>
+        <DataContext.Provider value={{setCurrentPost, currentPost, setAccount, account,setOpenPortal, openPortal,setIsUpdatedPost,isUpdatedPost,setDarkMode, darkMode }}>
             {children}
         </DataContext.Provider>
     )

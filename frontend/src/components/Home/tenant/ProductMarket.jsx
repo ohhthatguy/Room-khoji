@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState, useRef } from "react"
 import Header from "../../Header/Header"
 import { Button,Box,Typography, Card, CardHeader, CardContent, Paper, Table, TableRow, TableHead, Grid, Avatar, TableCell } from "@mui/material"
-import {NavigateNext, NavigateBefore, Bookmark, BookmarkBorderOutlined } from '@mui/icons-material';
+import {NavigateNext, NavigateBefore, Bookmark, BookmarkBorderOutlined, DarkMode } from '@mui/icons-material';
 
 
 import { DataContext } from "../../../context/DataProvider"
@@ -11,7 +11,7 @@ import { API } from "../../../services/Api"
 import {gsap} from 'gsap'
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const ProductMarket = () => {
+const ProductMarket = ({darkMode}) => {
 
     const productRef = useRef(null)
     // const tl = gsap.timeline()
@@ -79,6 +79,8 @@ const ProductMarket = () => {
             }
 
             getPostOfCategory()
+        gsap.fromTo(productRef.current, { opacity: 0, scale: 0}, {opacity: 1, scale: 1})
+
         }
 
     },[selectedOption])
@@ -88,7 +90,7 @@ const ProductMarket = () => {
    
     
        
-    //     tl.fromTo(productRef.current, { opacity: 0, scale: 0}, {opacity: 1, scale: 1})
+        
 
 
     // },[])
@@ -193,12 +195,18 @@ const ProductMarket = () => {
   <>
    <Header />
    
-   <Box sx={{marginTop: '4.3rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
+        <Box sx={{marginTop: '4rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem', paddingTop: '1.5rem'}}>
 
             {
                 optionList.map((e)=>(
                      
-                       (selectedOption === e) ? <Button variant="outlined">{e}</Button>  : <Button onClick={()=>setSelectedOption(e)} variant="contained">{e}</Button>
+                       (selectedOption === e) ? <Button sx=  {{ backgroundColor: darkMode ? 'black' : 'white', color:  darkMode ? 'white' : 'black', '&:hover': {
+                        backgroundColor: darkMode ? 'white' : 'black', color:  darkMode ? 'black' : 'white',
+                                }, }}
+                                
+                                variant={!darkMode && "contained"}>{e}</Button>  : <Button sx=  {{ backgroundColor: darkMode ? 'white' : 'black', color:  darkMode ? 'black' : 'white', '&:hover': {
+                                    backgroundColor: darkMode ? 'black' : 'white', color:  darkMode ? 'white' : 'black',
+                                            }, }}  onClick={()=>setSelectedOption(e)} variant= {!darkMode && "outlined"}>{e}</Button>
                      
                 ))
             }

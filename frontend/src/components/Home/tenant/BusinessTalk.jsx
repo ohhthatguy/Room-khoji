@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import Header from "../../Header/Header"
 import { Button,Box,Typography, Card, CardHeader, CardContent, Table,TableHead, TableRow, TableCell, Grid, Avatar, TableBody } from "@mui/material"
 import {NavigateNext, NavigateBefore } from '@mui/icons-material';
-
-
 import { useParams } from "react-router-dom"
-import { API } from "../../../services/Api";
+import { API } from "../../../services/Api"
+import {DataContext} from "../../../context/DataProvider"
 
-const BusinessTalk = () => {
+const BusinessTalk = ({darkMode}) => {
 
     const {id} = useParams();
-    
+    const {currentPost,setCurrentPost} = useContext(DataContext) //post tobe rented is saved
+  
     // console.log(id)
-
-    const [currentPost, setCurrentPost] = useState([])
+    
+   
     const [signature, setSignature] = useState('')
     const [total_amount, setTotalAmount] = useState('')
     const [uuid, setUuid] = useState('')
@@ -66,7 +66,9 @@ const BusinessTalk = () => {
                     const res = await API.getPostsOfId({postId: id})
                     if(res.isSuccess){
                         // console.log(res.data)
+                        localStorage.setItem('currentPost', JSON.stringify(res.data));
                         setCurrentPost(res.data)
+                       
                     }else{
                         console.log('is failure')
                     }
@@ -81,6 +83,11 @@ const BusinessTalk = () => {
         }
 
     ,[])
+
+    if(currentPost.length > 0){
+   
+    }
+        
        
 
     //signature and uuid
@@ -108,7 +115,9 @@ const BusinessTalk = () => {
 
     },[currentPost])
     
-// console.log(currentPost)
+console.log(currentPost)
+
+
 console.log(eSewaParameters)
 // console.log(signature)
       
@@ -126,7 +135,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
  
 
    
-   <Box sx={{marginTop: '4.3rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem'}}>
+   <Box sx={{marginTop: '4rem',display:'flex', color: darkMode ? 'white' : 'black', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem', paddingTop: '1.5rem'}}>
 
           lets talk business
 
@@ -190,9 +199,9 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                         <TableHead>
                             <TableRow sx={{background: 'grey'}}>
                         {
-                            Object.entries(currentPost[0]).map(([key,value])=>(
+                            Object.entries(currentPost[0]).map(([key,value], index)=>(
                                 (checkForTable.includes(key)) &&
-                                <TableCell>
+                                <TableCell key={index}>
                                <strong> {key} </strong>
                                 </TableCell>
                             ))
@@ -204,9 +213,9 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                           
                         <TableRow>
                         {
-                                Object.entries(currentPost[0]).map(([key,value])=>(
+                                Object.entries(currentPost[0]).map(([key,value], index)=>(
                                     (checkForTable.includes(key)) &&
-                            <TableCell>
+                            <TableCell key={index}>
                             {value}
                             </TableCell>
                             ))

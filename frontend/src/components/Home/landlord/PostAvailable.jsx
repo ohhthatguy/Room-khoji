@@ -11,7 +11,7 @@ import PostCard from "./PostCard"
 
 
 
-const PostAvailable = ()=>{
+const PostAvailable = ({darkMode})=>{
     const {account, isUpdatedPost} = useContext(DataContext)
     const [post,setPost] = useState('')
     console.log(account._id)
@@ -50,7 +50,7 @@ const PostAvailable = ()=>{
        
 
             {
-                (post.length > 0) ? <PostCard post={post} /> : <Typography> You've made no posts yet </Typography>
+                (post.length > 0) ? <PostCard post={post} darkMode={darkMode}/> : <Typography> You've made no posts yet </Typography>
             }
 
 

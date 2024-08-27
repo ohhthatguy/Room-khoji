@@ -1,7 +1,7 @@
-import { useContext,useEffect,useState,useRef } from "react"
+import {useEffect,useState,useRef } from "react"
 import Header from "../Header/Header"
 import { Box,Typography, Card, Avatar, CardHeader, CardMedia, CardContent, Grid,Rating } from "@mui/material"
-import { DataContext } from "../../context/DataProvider"
+// import { DataContext } from "../../context/DataProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import { API } from "../../services/Api"
 import {gsap} from 'gsap'
@@ -17,7 +17,9 @@ const TenantHome = ({darkMode})=>{
     const reviewCard = useRef([])
     const startCard = useRef([])
    
-    const {account,openPortal} = useContext(DataContext)
+    // const {account} = useContext(DataContext)
+    // const [rentedAdded, setRentedAdded] = useState(false)
+    const account = JSON.parse(localStorage.getItem('currentUser'))
     const [verifyData, setVerifyData] = useState('')
     const navigate = useNavigate()
 
@@ -26,7 +28,7 @@ const TenantHome = ({darkMode})=>{
     const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const data = queryParams.get('data');
-//   console.log(data)
+  console.log(account)
 
  
  if(data && verifyData.length == 0){
@@ -36,7 +38,7 @@ const TenantHome = ({darkMode})=>{
             let res = await API.verifyPayment({data})
             // console.log(res)
             if(res.isSuccess){
-                console.log(res)
+                // console.log(res)
                 setVerifyData(res)
             }else{
                 console.log('something wrong happened')
@@ -52,6 +54,44 @@ const TenantHome = ({darkMode})=>{
  }
 
  console.log(verifyData)
+ const savedPost = localStorage.getItem('currentPost') ;
+
+ if ( verifyData.data?.status === 'COMPLETE' && savedPost ) {
+    // save this data to db rented
+
+    let data = JSON.parse(savedPost)
+    let rentedData = {...data[0], ...account}
+    // console.log(rentedData)
+
+    const saveRentedProduct =async()=>{
+        
+        //data is being saved in db but here it is showing error. solve this
+        //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
+        //use the prev made postdeleteById (see API.js)
+
+        try{
+            let response = await API.saveRentedProduct(rentedData)
+            if(!response.isSuccess){
+                console.log("Server has sent data to frontend but some eroor in frntend")
+            }else{
+                // setRentedAdded(true)
+                console.log("data saved")
+            }
+            
+
+        }catch(err){
+            console.log("ERROR: ", err)
+        }
+      
+
+    }
+
+    saveRentedProduct()
+
+ 
+
+  }
+//  console.log(rentedAdded)
    
 
   const handleProductmarket =(e)=>{
@@ -125,22 +165,24 @@ const TenantHome = ({darkMode})=>{
         const t2 = gsap.timeline({
             scrollTrigger:{
             trigger: reviewCard.current[0], // Use the first card as the trigger point
-            start: 'top 80%',
-            end: 'top 40%',
+            start: 'top 100%',
+            end: 'top 20%',
           scrub: true,
-          markers: true,
+        //   markers: true,
             }
         })
 
         reviewCard.current.forEach((e,index) =>{
             
             t2.fromTo(e, {
-                x: 100, opacity: 0 
+                x: 200, opacity: 0, border: '5px solid black', boxShadow: '2px 2px 2px 2px black' 
             },{
                 x: 0,
                 opacity: 1,
-                duration: 1,
-                // ease: 'power2.out',
+                duration: 2,
+                ease: 'power2.out',
+                border: '1px solid black',
+                boxShadow: '0px 0px 0px 0px black' 
             }, index*2.2)
             
         })
