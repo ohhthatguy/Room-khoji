@@ -444,7 +444,22 @@ const saveRentedProduct = async(req,res)=>{
     }
 }
 
+const getRentedProduct = async(req,res)=>{
+    try{
+        const response = await rentedModel.find({})
+    
+        if(response){
+            return res.status(200).json(response)
+        }else{
+            return res.status(404).json({msg: 'data none'})
+
+        }
+    }catch(err){
+        return res.status(500).json({msg: 'some error from server side'})
+    }
+}
 
 
 
-module.exports = {saveRentedProduct, verifyPayment,getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}
+
+module.exports = {saveRentedProduct,getRentedProduct, verifyPayment,getSignature,getFavouritePost,getFavDataFromFavPostId, getPostByCategory,saveFavouritePost,getPostsOfId,createNewAccount,deletePostsOfId, checkLogIn,updatePost, saveProfilePicture, getGharbetiById, getProfilePicture, getProductPicture,savePost}

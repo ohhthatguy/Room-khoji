@@ -71,6 +71,7 @@ const TenantHome = ({darkMode})=>{
 
         try{
             let response = await API.saveRentedProduct(rentedData)
+            localStorage.clear() //clear data stored
             if(!response.isSuccess){
                 console.log("Server has sent data to frontend but some eroor in frntend")
             }else{

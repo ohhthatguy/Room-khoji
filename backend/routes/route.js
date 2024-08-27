@@ -12,7 +12,7 @@ const authorizeToken = require('../Middleware/authorizeToken')
 
 
 //import from controller
-const { saveRentedProduct, createNewAccount,checkLogIn,getSignature,getFavDataFromFavPostId,verifyPayment, updatePost,getPostByCategory,saveFavouritePost, getFavouritePost,saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
+const { saveRentedProduct,getRentedProduct, createNewAccount,checkLogIn,getSignature,getFavDataFromFavPostId,verifyPayment, updatePost,getPostByCategory,saveFavouritePost, getFavouritePost,saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
 
 //create a new account
 router.post('/create/newAccount', createNewAccount)
@@ -71,5 +71,9 @@ router.get('/check/verification', verifyPayment)
 
 //save rented product
 router.post('/save/rented_product',saveRentedProduct )
+
+//get rented product
+router.get('/get/rented_product', getRentedProduct)
+
 
 module.exports = router

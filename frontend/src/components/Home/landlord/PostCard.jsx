@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 
-import { Box,Typography, Card, CardHeader, CardMedia, CardContent } from "@mui/material"
+import { Box,Typography, Card, CardHeader, Avatar, CardContent } from "@mui/material"
 import { DataContext } from "../../../context/DataProvider";
 import {NavigateNext, NavigateBefore, Delete, Edit} from '@mui/icons-material';
 
@@ -86,7 +86,8 @@ let k;
             {
             post.map((e,index)=>(
                 <Card key={index} sx={{border: '2px solid #587351', position: 'relative',  backgroundColor: darkMode ? '#587351' : '#D5D0A4', color: darkMode ? 'white' : 'black',}} >
-
+                
+                {     (!e?.name) &&
                     <Delete onClick={()=>handleDelete(e)} sx={{position: 'absolute', top: '5%', right: '5%', '&:hover': {
           color: 'red',
           cursor: 'pointer',
@@ -98,7 +99,9 @@ let k;
          
         }
          }}/>
+        }
 
+{     (!e?.name) &&
                     <Edit onClick={()=>setEdit(e._id)} sx={{position: 'absolute', top: '5%', right: '10%','&:hover': {
           color: 'green',
           cursor: 'pointer',
@@ -109,12 +112,24 @@ let k;
           transform: 'scale(1.05)',
          
         }}}/>
+    }
 
+            {
+                     (e?.name) ?
 
-                <CardHeader   sx={{
-    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
-    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
-  }} title={e.Category} subheader={e.Date} /> 
+                        <Box sx={{display: 'flex'}}>
+                                <CardHeader avatar={ <Avatar  src={e.profile[0]} alt={e.name} />}  sx={{
+                                    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+                                    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+                                }} title={e.name} subheader="Tenant"/> 
+                        </Box> :
+
+                            <CardHeader   sx={{
+                    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+                    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+                }} title={e.Category} subheader={e.Date} /> 
+
+            }
 
               
 
@@ -145,7 +160,24 @@ let k;
 
 
                 <CardContent>
-                    <Typography variant="h5">{e.Description}</Typography>
+                    {
+                        (e?.name) ?
+                      
+                            // <Box sx={{ display: 'flex'}}>
+                                
+                            //     <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${e.profile[0]}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' , 
+                            //     borderRadius: '50%' }}></Box>
+
+                            //     {e.name}
+
+                            // </Box>
+                        
+
+                                 <Typography variant="h5">{e.Category}</Typography>
+
+                        
+                        :  <Typography variant="h5">{e.Description}</Typography>
+                    }
                 </CardContent>
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-evenly', padding: '1.2rem 0rem'}}>

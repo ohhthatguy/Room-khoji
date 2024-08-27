@@ -24,6 +24,9 @@ const API_OBJECT = {
     getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true},
 
     saveRentedProduct: {method: 'post', url: '/save/rented_product'},
+    getRentedProduct: {method: 'get', url: '/get/rented_product'},
+
+    
 
     //esewa
     getSignature: {method: 'get', url: '/get/signature', params: true},
