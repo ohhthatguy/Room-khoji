@@ -23,9 +23,9 @@ const App = () => {
 // 
 
   if(darkMode){
-    root.style.background = '#1E1F23';
+    root.style.background = '#232B2B';
   }else{
-    root.style.background = 'white';
+    root.style.background = '#F8F8FF';
 
   }
 

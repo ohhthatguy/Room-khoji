@@ -45,7 +45,7 @@ const PostCard = ({post, darkMode})=>{
     }
 
     const handleDelete = async(e)=>{
-            console.log(e)
+            // console.log(e)
             try{
 
                 let res = await API.deletePostsOfId({_id: e._id})
@@ -77,7 +77,7 @@ let k;
     return (<>
         
         {
-                (edit != 0) && <PostEdit edit={edit} setEdit={setEdit} post={post.filter((ele)=> ele._id == edit)}/>
+                (edit != 0) && <PostEdit edit={edit} setEdit={setEdit} darkMode={darkMode} post={post.filter((ele)=> ele._id == edit)}/>
         }
 
 
@@ -85,7 +85,7 @@ let k;
             <Box sx={{ display: ` ${edit !=0 ? 'none' : 'flex' } `,rowGap: '2rem', flexDirection: 'column-reverse' }}>
             {
             post.map((e,index)=>(
-                <Card key={index} sx={{border: '2px solid #587351', position: 'relative',  backgroundColor: darkMode ? '#587351' : '#D5D0A4', color: darkMode ? 'white' : 'black',}} >
+                <Card key={index} sx={{border: '2px solid #587351', position: 'relative',  backgroundColor: darkMode ? '#494F55' : ' #F5F5F5', color: darkMode ? 'white' : 'black',}} >
                 
                 {     (!e?.name) &&
                     <Delete onClick={()=>handleDelete(e)} sx={{position: 'absolute', top: '5%', right: '5%', '&:hover': {
@@ -145,7 +145,7 @@ let k;
                     </Box>    
            
                    
-                <Box sx={{boxShadow: darkMode ? '9px 9px 9px 9px #587362' : '9px 9px 9px 9px #E7D0A4'  , height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
+                <Box sx={{boxShadow: darkMode ? '0px 2px 2px 0px #B6B6B4' : '9px 9px 9px 9px #FEFEFA'  , height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
 
                    
                     {

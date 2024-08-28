@@ -121,7 +121,7 @@ const FavroitProduct = ({darkMode}) => {
   <>
    <Header />
    
-   <Box  sx={{marginTop: '4rem',display:'flex', color: darkMode ? 'white' : 'black', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem', paddingTop: '1.5rem'}}>
+   <Box  sx={{marginTop: '4rem',display:'flex', justifyContent: 'center', gap: '10px', marginBottom: '1.22rem', paddingTop: '1.5rem'}}>
 
 
    My Favroitss
@@ -139,20 +139,18 @@ const FavroitProduct = ({darkMode}) => {
 <Grid item sx={{display:'flex',rowGap: '2rem', flexDirection: 'column-reverse' }} lg={7} md={8} sm={8}>
     {
     favPost.map((e,index)=>(
-        <Card key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
+        <Card key={index} sx={{position: 'relative', backgroundColor: darkMode ?'#494F55' : ' #F5F5F5', color: darkMode ? 'white' : 'black'}}>
 
      
 
-        <CardHeader avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
+        <CardHeader  sx={{
+                                    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+                                    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+                                }}  avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
 
-        <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-            <Paper>Parking: {e.Parking}</Paper>
-            <Paper>People: {e.People}</Paper>
-            <Paper>Pets: {e.Pets}</Paper>
-            <Paper>Water: {e.Water}</Paper>
-        </Box>
+       
 
-        <Box sx={{border: '1px solid red', position: 'relative'}}>
+        <Box sx={{position: 'relative'}}>
    
             <Box sx={{width: '100%', zIndex: '1', position: 'absolute', top: '50%'}}>
     
@@ -164,7 +162,7 @@ const FavroitProduct = ({darkMode}) => {
             </Box>    
    
 
-        <Box sx={{border: '2px solid black', height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
+        <Box sx={{ height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
 
            
             {
@@ -182,18 +180,63 @@ const FavroitProduct = ({darkMode}) => {
             <Typography variant="h5">{e.Description}</Typography>
         </CardContent>
 
-        <Box sx={{position: 'relative'}}>
-            <Paper  >Quantity: {e.Quantity}</Paper>
-            <Paper>Rate: {e.Rate}</Paper>
-            <Paper>Location: {e.Location}</Paper>
+            <Box sx={{ display: 'flex', justifyContent: 'space-around'}}>
 
-            <Box sx={{position: 'absolute', bottom: '2%', right: '2%'}}>
+                                
+       
+            <Box sx={{marginLeft: '2rem',display: 'flex', columnGap: '1.4rem'}}>
+            
+
+                <Box sx={{}}>
+                <Typography><strong>Quantity</strong></Typography>
+                <Typography> <strong>Rate</strong></Typography>
+                <Typography> <strong>Location</strong></Typography>
+                </Box>
+
+                <Box>
+                    <Typography>: {e.Quantity}</Typography>
+                    <Typography>: {e.Rate}</Typography>
+                    <Typography>: {e.Location}</Typography>
+
+                </Box>
+
+            </Box>
+
+            {/* <Typography variant="h5">Additional Info</Typography> */}
+            <Box sx={{display: 'flex', columnGap: '1.4rem',  '&::before': {
+                        content: '""',
+                        borderLeft: '1px solid black',
+                        marginRight: '5rem'
+                        },}}>
+            
+
+            <Box>
+                <Typography><strong>Water</strong></Typography>
+                <Typography> <strong>Parking</strong></Typography>
+                <Typography> <strong>Prefered</strong></Typography>
+                <Typography> <strong>Pets</strong></Typography>
+
+            </Box>
+
+            <Box>
+                <Typography>: {e.Water}</Typography>
+                <Typography>: {e.Parking}</Typography>
+                <Typography>: {e.People}</Typography>
+                <Typography>: {e.Pets}</Typography>
+
+
+            </Box>
+
+            </Box>
+
+
+
+
+            </Box>
+
+            <Box >
                 <Button variant='contained' onClick={()=> navigate(`/tenant/BusinessTalk/${e._id}`)}>lets talk business</Button>
             </Box>
-       
-        </Box>
-
-
 
     </Card>
     ))

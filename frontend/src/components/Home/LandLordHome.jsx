@@ -1,11 +1,7 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import {Logout, DarkMode, LightMode} from '@mui/icons-material';
-
 import { Box,Typography, Card, CardContent, Paper, Grid, Table, TableHead, TableCell,TableRow } from "@mui/material"
 import { DataContext } from "../../context/DataProvider"
-// import { useNavigate } from "react-router-dom"
-// import { API } from "../../services/Api"
-
 import PostForm from "./landlord/PostForm"
 import PostHistory from "./landlord/PostHistory"
 import PostAvailable from "./landlord/PostAvailable"
@@ -13,32 +9,31 @@ import PostAvailable from "./landlord/PostAvailable"
 
 
 const LandLordHome = ({darkMode})=>{
-    const {account, setOpenPortal, setDarkMode} = useContext(DataContext)
-    // const {account, setOpenPortal, setDarkMode, darkMode} = useContext(DataContext)
+    const {setOpenPortal, setDarkMode} = useContext(DataContext)
+    const account = JSON.parse(localStorage.getItem('currentUser'))
 
+
+    const opt1 = useRef(null)
+    const opt2 = useRef(null)
+    const opt3 = useRef(null)
 
     const [option, setOption] = useState('PostAvailable')
    
-    // const navigate = useNavigate()
+    const checkColor = (opt)=>{
+        console.log()
+        // .style.backgroundColor = '#F5F5DC'
 
-    // useEffect(()=>{
-    //     const getimage = async()=>{
-    //         try{
-    //             const res = await API.getProductPicture(account.profile)
-    //             console.log(res)
-    //             if(res.isSuccess){
-    //                 setprofilPic(res.data)
-    //             }else{
-    //                 console.log("errror")
-    //             }
+        const temp = [opt1.current, opt2.current, opt3.current]
+        temp.map((e)=>{
+            if(e == opt.current){
+                (darkMode) ? e.style.backgroundColor = ' #000000' :
+                e.style.backgroundColor = '#F1E9D2'
+            }else{
+                e.style.backgroundColor = ''
 
-    //         }catch(err){
-    //             console.log("errror", err)
-
-    //         }
-    //     }
-    //     getimage()
-    // },[])
+            }
+        })
+    }
 
     const hellouserBg = 'https://cdn.pixabay.com/photo/2018/09/24/08/52/mountains-3699372_1280.jpg'
 
@@ -46,9 +41,9 @@ const LandLordHome = ({darkMode})=>{
 
     return (<>
 
-    <Paper elevation={9} sx={{background: darkMode ? '#153534': '#005A9C', height: '5rem', fontSize: '3rem', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative'}}> Room-Khoji 
+    <Paper elevation={9} sx={{background: darkMode ? ' #494F55': '#005A9C', height: '5rem', fontSize: '3rem', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative'}}> Room-Khoji 
 
-        <Box sx={{display: 'flex', position: 'absolute', right: '3%',  width: '5%', justifyContent: 'space-between' }}>
+        <Box sx={{display: 'flex', position: 'absolute', right: '2%',  width: '15%', justifyContent: 'space-evenly',}}>
 
                   <Box  onClick={()=>   !darkMode ?  setDarkMode(true) : setDarkMode(false)}  sx={{'&:hover':{
                       cursor: 'pointer',
@@ -88,23 +83,22 @@ const LandLordHome = ({darkMode})=>{
 
        <Grid container sx={{marginTop: '1rem'}}>
        
-       <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '20rem', border: '1px solid red', display: 'flex', justifyContent: 'center', alignItems: 'center'}} xs={12}>
+       <Grid item sx={{background: `url(${hellouserBg}) no-repeat 75% 25% / cover`, height: '20rem',display: 'flex', justifyContent: 'center', alignItems: 'center'}} xs={12}>
 
 
-            <Card sx={{ backgroundColor: darkMode ? '#153534' : '#D5D0A4', color: darkMode ? 'white' : 'black', opacity: '0.95', width: '50%'}}>
+            <Card sx={{ backgroundColor: darkMode ? ' #494F55' : '#D5D0A4', color: darkMode ? 'white' : 'black', opacity: '0.95', width: '50%'}}>
 
                 <Box sx={{margin: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                    <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${account.profile[0]}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' , borderRadius: '50%' }}></Box>
+                    <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${account.profile}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' , borderRadius: '50%' }}></Box>
                 </Box>
 
               
             
                 <CardContent sx={{textAlign: 'center'}}>
 
-                <Typography>  LandLord:  {account.name}</Typography> 
+                    <Typography>  LandLord:  {account.name}</Typography> 
                 <Typography>   ID:{account._id}</Typography>
-          
-
+        
                 </CardContent>
 
             </Card> 
@@ -113,15 +107,15 @@ const LandLordHome = ({darkMode})=>{
 
             {/* <Typography>What are you looking for ?</Typography> */}
 
-            <Grid container  columnGap={1} sx={{margin: '3rem 0px'}}>
+            <Grid container  columnGap={1} >
 
                 {/* table */}
-                <Grid sx={{border: '1px solid black', background: darkMode && '#153534' }} item lg={3} md={2} sm={1.6} xs={12}>
+                <Grid sx={{border: '1px solid black', background: darkMode ? '#494F55' : ' #F5F5F5' }} item lg={3} md={2} sm={1.6} xs={12}>
                 
                     <Table>
                         <TableHead>
 
-                            <TableRow sx={{cursor: 'pointer', fontSize: '50%', '&:hover': {
+                            <TableRow ref={opt1} sx={{cursor: 'pointer', fontSize: '50%', '&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s',
                                   boxShadow: '0px 2px 2px 0px black'
@@ -129,7 +123,7 @@ const LandLordHome = ({darkMode})=>{
                                 '&:active': {
                                   transform: 'scale(1.06)',
                                 },
-                                transition: '0.4s'}}>
+                                transition: '0.4s'}} onClick={()=>checkColor(opt1)} >
 
                                 <TableCell sx={{color: darkMode ? 'white' : 'black',}}  onClick={()=> setOption(prev=> ('PostHistory') )}>
                                 currently on rent // history
@@ -140,7 +134,7 @@ const LandLordHome = ({darkMode})=>{
 
                         <TableHead>
 
-                          <TableRow sx={{ cursor: 'pointer', fontSize: '50%','&:hover': {
+                          <TableRow ref={opt2} sx={{ cursor: 'pointer', fontSize: '50%','&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s',
                                   boxShadow: '0px 2px 2px 0px black'
@@ -148,7 +142,7 @@ const LandLordHome = ({darkMode})=>{
                                 '&:active': {
                                   transform: 'scale(1.06)',
                                 },
-                                transition: '0.4s'}}>
+                                transition: '0.4s'}} onClick={()=>checkColor(opt2)}>
 
                                 <TableCell sx={{color: darkMode ? 'white' : 'black',}}  onClick={()=> setOption(prev=> ('PostAvailable') )}>
 
@@ -160,7 +154,7 @@ const LandLordHome = ({darkMode})=>{
 
                         <TableHead>
 
-                        <TableRow sx={{ cursor: 'pointer', '&:hover': {
+                        <TableRow ref={opt3} sx={{ cursor: 'pointer', '&:hover': {
                                   transform: 'scale(1.03)',
                                   transition: '0.4s',
                                   boxShadow: '0px 2px 2px 0px black'
@@ -168,7 +162,7 @@ const LandLordHome = ({darkMode})=>{
                                 '&:active': {
                                   transform: 'scale(1.06)',
                                 },
-                                transition: '0.4s', fontSize: '50%'}}>
+                                transition: '0.4s', fontSize: '50%'}} onClick={()=>checkColor(opt3)}>
 
                                 <TableCell sx={{color: darkMode ? 'white' : 'black',}}  onClick={()=> setOption(prev=> ('PostForm') )}>
                                     make new post

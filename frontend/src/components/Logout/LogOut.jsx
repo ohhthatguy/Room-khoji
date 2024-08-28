@@ -16,6 +16,7 @@ const LogOut = () => {
    
     const handleLogOut1 =()=>{
         navigate('/')
+        localStorage.clear() //clear data stored
         setOpenPortal(false)
     }
 

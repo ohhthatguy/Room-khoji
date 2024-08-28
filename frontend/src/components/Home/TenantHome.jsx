@@ -1,7 +1,7 @@
 import {useEffect,useState,useRef } from "react"
 import Header from "../Header/Header"
 import { Box,Typography, Card, Avatar, CardHeader, CardMedia, CardContent, Grid,Rating } from "@mui/material"
-// import { DataContext } from "../../context/DataProvider"
+import { DataContext } from "../../context/DataProvider"
 import { useNavigate, useLocation } from "react-router-dom"
 import { API } from "../../services/Api"
 import {gsap} from 'gsap'
@@ -18,7 +18,7 @@ const TenantHome = ({darkMode})=>{
     const startCard = useRef([])
    
     // const {account} = useContext(DataContext)
-    // const [rentedAdded, setRentedAdded] = useState(false)
+    const [rentedAdded, setRentedAdded] = useState(false)
     const account = JSON.parse(localStorage.getItem('currentUser'))
     const [verifyData, setVerifyData] = useState('')
     const navigate = useNavigate()
@@ -56,6 +56,8 @@ const TenantHome = ({darkMode})=>{
  console.log(verifyData)
  const savedPost = localStorage.getItem('currentPost') ;
 
+
+
  if ( verifyData.data?.status === 'COMPLETE' && savedPost ) {
     // save this data to db rented
 
@@ -70,13 +72,14 @@ const TenantHome = ({darkMode})=>{
         //use the prev made postdeleteById (see API.js)
 
         try{
-            let response = await API.saveRentedProduct(rentedData)
-            localStorage.clear() //clear data stored
-            if(!response.isSuccess){
-                console.log("Server has sent data to frontend but some eroor in frntend")
+            let res = await API.saveRentedProduct(rentedData)
+            console.log(res)
+           
+            if(res.isSuccess){
+                console.log(res)
+                setRentedAdded(true)
             }else{
-                // setRentedAdded(true)
-                console.log("data saved")
+                console.log("Server has sent data to frontend but some eroor in frntend")
             }
             
 
@@ -89,10 +92,40 @@ const TenantHome = ({darkMode})=>{
 
     saveRentedProduct()
 
- 
-
   }
-//  console.log(rentedAdded)
+ console.log(rentedAdded)
+
+ if(rentedAdded == true){
+    const deleteRentedProductFromPost =async()=>{
+        
+        //data is being saved in db but here it is showing error. solve this
+        //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
+        //use the prev made postdeleteById (see API.js)
+        const rented = JSON.parse(savedPost)
+
+        console.log(rented[0]._id)
+        try{
+
+            let res = await API.deletePostsOfId({_id: rented[0]._id})
+
+            if(res.isSuccess){
+                console.log(res)
+                console.log('deletion complete of rented product fromm post')
+                setRentedAdded(false)
+
+            }else{
+                console.log("delteio faild")
+            }
+
+
+        }catch(err){
+            console.log(err)
+        }
+      
+
+    }
+    deleteRentedProductFromPost()
+ }
    
 
   const handleProductmarket =(e)=>{
@@ -176,13 +209,13 @@ const TenantHome = ({darkMode})=>{
         reviewCard.current.forEach((e,index) =>{
             
             t2.fromTo(e, {
-                x: 200, opacity: 0, border: '5px solid black', boxShadow: '2px 2px 2px 2px black' 
+                x: 200, opacity: 0,  boxShadow: '2px 2px 2px 2px black' 
             },{
                 x: 0,
                 opacity: 1,
                 duration: 2,
                 ease: 'power2.out',
-                border: '1px solid black',
+                
                 boxShadow: '0px 0px 0px 0px black' 
             }, index*2.2)
             
@@ -264,7 +297,7 @@ const TenantHome = ({darkMode})=>{
                     <Grid item lg={10} md={10} sm={10} xs={10}>
                     {
                         feedback.map((e,index)=>(
-                            <Card ref={(e)=>(reviewCard.current[index] = e)} key={index} sx={{border: '1px solid red', marginTop: '1.52rem', background: darkMode ? '#212121' : 'white', color: (darkMode) ? 'white' : 'black', boxShadow: darkMode && '0px 2px 2px 2px black'}} >
+                            <Card ref={(e)=>(reviewCard.current[index] = e)} key={index} sx={{ marginTop: '1.52rem', background: darkMode ? '#494F55' : '#F5F5F5', color: (darkMode) ? 'white' : 'black', boxShadow: darkMode && '0px 2px 2px 2px black'}} >
 
                             <CardHeader avatar={ <Avatar  src={e.photo} alt={e.name} />} title={ e.name} subheader={        <Rating name="read-only" value={5} size='small' readOnly />}/> 
 

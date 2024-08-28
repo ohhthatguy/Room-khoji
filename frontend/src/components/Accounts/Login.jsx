@@ -64,7 +64,9 @@ const Login = ()=>{
                     
                     const name = response.data.response.name
                     const profile = response.data.response.profile
-                    const currentUser = {name, profile}
+                    const _id = response.data.response._id
+                    
+                    const currentUser = {name, profile,_id}
 
 
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -92,7 +94,7 @@ const Login = ()=>{
       
             <Grid item sx={{textAlign: 'right', position: 'relative', display:{xs:'none', sm: 'block'} }} lg={4} md={5} sm={5} xs>
                     <StyledImg src='https://cdn.pixabay.com/photo/2019/05/24/11/00/interior-4226020_1280.jpg' alt='bg-login' />
-                    <Typography variant="h5" sx={{position: 'absolute', top: '5%', left: '25%'}}>screen to room</Typography>
+                    {/* <Typography variant="h5" sx={{position: 'absolute', top: '5%', left: '25%'}}>screen to room</Typography> */}
             </Grid>
 
           

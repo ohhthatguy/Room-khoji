@@ -10,7 +10,7 @@ import PostAvailable from "./PostAvailable";
 
 const PostForm = ({darkMode})=>{
 
-    const {account} = useContext(DataContext)
+    const account = JSON.parse(localStorage.getItem('currentUser'))
 
     const initialProductData = {
         Gharbeti_id: account._id,
@@ -126,7 +126,7 @@ let disable;
                 <PostAvailable /> :
 
 
-        <Paper elevation={3} sx={{ background: darkMode ? '#17273F' : 'white', display: 'flex',flexDirection: 'column',padding: '2rem', rowGap: '2rem'}}>
+        <Paper elevation={3} sx={{border: '2px solid #587351', background: darkMode ? '#494F55' : '#F5F5F5', display: 'flex',flexDirection: 'column',padding: '2rem', rowGap: '2rem'}}>
 
                 <Box  sx={{color: darkMode ? 'white' : 'black'}}>
                     <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Category</FormLabel>
@@ -205,7 +205,7 @@ let disable;
       '& .MuiFormHelperText-root': { color: darkMode ? 'white' : 'black' },
     }}   />         
 
-                    <TextareaAutosize style={{padding: '10px', fontSize: '1.15rem'}} placeholder='Description' minRows={5} name="Description" onChange={(e)=> handleInput(e)} variant="standard" required   style={{
+                    <TextareaAutosize style={{padding: '10px', fontSize: '1.15rem'}} placeholder='Description' minRows={5} name="Description" onChange={(e)=> handleInput(e)} variant="standard" required  style={{
     padding: '10px',
     fontSize: '1.15rem',
     color: darkMode ? 'white' : 'black',

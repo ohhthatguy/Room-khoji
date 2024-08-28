@@ -24,7 +24,8 @@ const BusinessTalk = ({darkMode}) => {
 
     
     const eSewaParameters = {
-        total_amount: `${(currentPost[0]?.Rate * currentPost[0]?.Quantity + (0.25 * currentPost[0]?.Rate * currentPost[0]?.Quantity))/1000}`
+        total_amount: '50'
+        // total_amount: `${(currentPost[0]?.Rate * currentPost[0]?.Quantity + (0.25 * currentPost[0]?.Rate * currentPost[0]?.Quantity))/1000}`
     }
 
     
@@ -154,28 +155,32 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
 
             currentPost.map((e,index)=>(
 
-                <Card key={index} sx={{border: '1px solid red', position: 'relative',  backgroundColor: '#FFF9E6'}} >
+                <Card key={index} sx={{ position: 'relative',color: darkMode ? 'white' : 'black',  backgroundColor: darkMode ?'#494F55' : ' #F5F5F5'}} >
 
 
-                <CardHeader avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
+                <CardHeader  sx={{
+                                    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+                                    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+                                }}  avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
 
                 {/* <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
                     
                 </Box> */}
 
-                <Box sx={{border: '1px solid red', position: 'relative'}}>
-           
-                    <Box sx={{width: '100%', zIndex: '1', position: 'absolute', top: '50%'}}>
+                <Box sx={{ position: 'relative'}}>
+                
+                {/* width: '100%', display: 'flex', justifyContent: 'space-around', alignContent: 'center', top: '50%', position: 'absolute' */}
+                    <Box sx={{width: '100%',  zIndex: '1', position: 'absolute', top: '50%'}}>
             
-                        <NavigateBefore disabled={(movement-1 == -1) ? true : false} fontSize="large" sx={{ marginRight: '0%', display:`${e.productImages.length <= 1 ? 'none' : 'block'}`}} onClick={()=>handlePrev(index)}/>
+                        <NavigateBefore disabled={(movement-1 == -1) ? true : false} fontSize="large" sx={{  display:`${e.productImages.length <= 1 ? 'none' : 'block'}`}} onClick={()=>handlePrev(index)}/>
                        
-                        <NavigateNext disabled={(movement == e.productImages.length - 1) ? true : false}  fontSize="large" sx={{marginLeft: '90%', display:`${e.productImages.length <= 1 ? 'none' : 'block'}`}} onClick={()=>handleNext( e.productImages.length, index)}/>
+                        <NavigateNext disabled={(movement == e.productImages.length - 1) ? true : false}  fontSize="large" sx={{marginLeft: '95%', marginTop: '-4%' , display:`${e.productImages.length <= 1 ? 'none' : 'block'}`}} onClick={()=>handleNext( e.productImages.length, index)}/>
 
                         
                     </Box>    
            
 
-                <Box sx={{border: '2px solid black', height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
+                <Box sx={{ height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
 
                    
                     {
@@ -197,11 +202,11 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                     
                         <Table sx={{border: '1px solid black'}}>
                         <TableHead>
-                            <TableRow sx={{background: 'grey'}}>
+                            <TableRow sx={{background: 'grey', }}>
                         {
                             Object.entries(currentPost[0]).map(([key,value], index)=>(
                                 (checkForTable.includes(key)) &&
-                                <TableCell key={index}>
+                                <TableCell key={index} sx={{color: darkMode ? 'white' : 'black',}}>
                                <strong> {key} </strong>
                                 </TableCell>
                             ))
@@ -215,7 +220,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                         {
                                 Object.entries(currentPost[0]).map(([key,value], index)=>(
                                     (checkForTable.includes(key)) &&
-                            <TableCell key={index}>
+                            <TableCell key={index} sx={{color: darkMode ? 'white' : 'black',}}>
                             {value}
                             </TableCell>
                             ))
@@ -229,10 +234,10 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
                 <Box>
              
                 
-                <Table sx={{marginTop: '2rem', border: '1px solid black', padding: '2rem'}} >
+                <Table sx={{padding: '2rem'}} >
                     <TableHead>
                         <TableRow >
-                            <TableCell>
+                            <TableCell sx={{color: darkMode ? 'white' : 'black',}}>
                             <strong>DownPayment</strong>: {e.Rate}
                             </TableCell>
                         </TableRow>
@@ -242,7 +247,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
 
                       <TableRow sx={{background: 'grey'}}>
 
-                            <TableCell>
+                            <TableCell sx={{color: darkMode ? 'white' : 'black',}}>
 
                             <strong>Commision</strong>: {0.05 * e.Rate}
 
@@ -254,7 +259,7 @@ const checkForTable = ['Location', 'Parking', 'Quantity', 'Rate', 'Location']
 
                     <TableRow >
 
-                            <TableCell>
+                            <TableCell sx={{color: darkMode ? 'white' : 'black',}}>
                             <strong>total</strong>: {e.Rate * e.Quantity + (0.25 * e.Rate * e.Quantity)}
                             </TableCell>
                         </TableRow>

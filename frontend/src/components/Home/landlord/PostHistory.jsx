@@ -14,6 +14,7 @@ const PostHistory = ({darkMode})=>{
 //if any history steore in a var and send it as <postcard post = {post} /> else show this no room seold
 
     const [historyPost, setHistoryPost] = useState([])
+    const account = JSON.parse(localStorage.getItem('currentUser'))
 
     useEffect(()=>{
 
@@ -42,13 +43,15 @@ const PostHistory = ({darkMode})=>{
 
     },[])
 
-    console.log(historyPost)
+    // console.log(historyPost[0].Gharbeti_id)
+    // console.log(account._id)
+
 
     return (<>
 
         {
-            historyPost.length > 0 ? <PostCard post={historyPost}/> :
-                <Box sx={{background: darkMode && '#0F283F ' , color: darkMode && 'white', textAlign: 'center', fontSize: '2rem'}}>No room has been selected by any tenants yet!</Box>
+            (historyPost.length > 0 && historyPost[0].Gharbeti_id == account._id)  ? <PostCard post={historyPost} darkMode={darkMode}/> :
+                <Box sx={{background: darkMode ? '#494F55' : '#F5F5F5 ' , color: darkMode && 'white', textAlign: 'center', fontSize: '2rem'}}>you have no tenants yet!</Box>
                 
         }
 

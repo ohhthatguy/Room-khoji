@@ -224,7 +224,7 @@ const ProductMarket = ({darkMode}) => {
             {
                 
             currentPost.map((e,index)=>(
-                <Card  key={index} sx={{border: '1px solid red', position: 'relative', backgroundColor: '#FFF9E6'}} >
+                <Card  key={index} sx={{position: 'relative', backgroundColor: darkMode ?'#494F55' : ' #F5F5F5', color: darkMode ? 'white' : 'black'}} >
 
                 {
                     ((bookMarkClicked.includes(e._id) ) ? 
@@ -240,9 +240,12 @@ const ProductMarket = ({darkMode}) => {
                 }
                
 
-                <CardHeader avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
+                <CardHeader  sx={{
+                                    '& .MuiCardHeader-title': { color: darkMode ? 'white' : 'black' },
+                                    '& .MuiCardHeader-subheader': { color: darkMode ? 'white' : 'black' },
+                                }}  avatar={ <Avatar  src={e.Gharbeti_profile} alt={e.Gharbeti_name} />} title={ e.Gharbeti_name} subheader={e.Date} /> 
 
-                <Box sx={{border: '1px solid red', position: 'relative'}}>
+                <Box sx={{ position: 'relative'}}>
            
                     <Box sx={{width: '100%', zIndex: '1', position: 'absolute', top: '50%'}}>
             
@@ -254,7 +257,7 @@ const ProductMarket = ({darkMode}) => {
                     </Box>    
            
 
-                <Box sx={{border: '2px solid black', height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
+                <Box sx={{height: '20rem', display: 'flex',  transform: (activeIndex === index) ? `  translateX(-${movement * 100}%)` : `translateX(0px)`, transition: '0.5s' }} >
 
                    
                     {

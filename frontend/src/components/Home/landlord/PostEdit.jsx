@@ -6,9 +6,9 @@ import {Cancel, Category} from '@mui/icons-material';
 import { DataContext } from "../../../context/DataProvider";
 // import { useNavigate } from "react-router-dom"
 import { API } from "../../../services/Api"
-import PostAvailable from "./PostAvailable";
+// import PostAvailable from "./PostAvailable";
 
-const PostEdit = ({post, edit, setEdit})=>{
+const PostEdit = ({post, edit, setEdit, darkMode})=>{
     // console.log(post[0]._id)
     const {setIsUpdatedPost, isUpdatedPost} = useContext(DataContext)
 
@@ -114,17 +114,17 @@ let disable;
 
 
     
-        <Paper elevation={3} sx={{ display: `${edit == 0 ? 'none' : 'flex'}`,flexDirection: 'column',padding: '2rem', rowGap: '2rem', }}>
+        <Paper elevation={3} sx={{border: '2px solid #587351', background: darkMode ? '#494F55' : '#F5F5F5', display: `${edit == 0 ? 'none' : 'flex'}`,flexDirection: 'column',padding: '2rem', rowGap: '2rem', }}>
 
-                <Box>
-                    <FormLabel>Category</FormLabel>
+                <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                    <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Category</FormLabel>
                 
                    
                     <RadioGroup row value={postData.Category} onChange={(e)=>setPostData({...postData, Category: e.target.value})} >
 
-                        <FormControlLabel  value='Room' name="Category"  control={<Radio />} label="Room" />
-                        <FormControlLabel value='Flat' name="Category"  control={<Radio />} label="Flat" />
-                        <FormControlLabel value='Building' name="Category" control={<Radio />} label="Building" />
+                        <FormControlLabel  value='Room' name="Category"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Room" />
+                        <FormControlLabel value='Flat' name="Category"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Flat" />
+                        <FormControlLabel value='Building' name="Category" control={<Radio  sx={{color: darkMode ? 'white' : 'black'}}/>} label="Building" />
 
                     </RadioGroup>
 
@@ -134,62 +134,75 @@ let disable;
             <Box  sx={{display: 'flex',flexDirection: 'column',rowGap: '2rem'}}>
     
                 
-                <TextField label='Quantity' inputProps={{min: 1,max: 10}}  defaultValue={1} error={postData.Quantity  < 1 || postData.Quantity > 10} helperText={postData.Quantity < 0 ? 'Quantity must be at least 1' : postData.Quantity > 10 ? 'Quantity must be at most 10' : ''} type="number" name="Quantity" onChange={(e)=> setPostData({...postData, Quantity: e.target.value})} value={post.Quantity} variant="standard" required /> 
+                <TextField label='Quantity' inputProps={{min: 1,max: 10}}  defaultValue={1} error={postData.Quantity  < 1 || postData.Quantity > 10} helperText={postData.Quantity < 0 ? 'Quantity must be at least 1' : postData.Quantity > 10 ? 'Quantity must be at most 10' : ''} type="number" name="Quantity" onChange={(e)=> setPostData({...postData, Quantity: e.target.value})} value={post.Quantity} variant="standard" required sx={{
+      '& .MuiInputLabel-root': { color: darkMode ? 'white' : 'black' },
+      '& .MuiInputBase-input': { color: darkMode ? 'white' : 'black' },
+      '& .MuiFormHelperText-root': { color: darkMode ? 'white' : 'black' },
+    }} /> 
 
-                <TextField label='Rate (/month)' defaultValue={1000}  error={postData.Rate  < 1000 || postData.Rate  > 100000}  helperText={postData.Rate < 1000 ? 'Rate must be at least 1000' : postData.Rate > 100000 ? 'Rate must be at most 100000' : ''} inputProps={{min: 1000,max: 100000}} type="number" name="Rate" onChange={(e)=> setPostData({...postData, Rate: e.target.value})} variant="standard"  value={post.Rate} required />         
+                <TextField label='Rate (/month)' defaultValue={1000}  error={postData.Rate  < 1000 || postData.Rate  > 100000}  helperText={postData.Rate < 1000 ? 'Rate must be at least 1000' : postData.Rate > 100000 ? 'Rate must be at most 100000' : ''} inputProps={{min: 1000,max: 100000}} type="number" name="Rate" onChange={(e)=> setPostData({...postData, Rate: e.target.value})} variant="standard"  value={post.Rate} required sx={{
+      '& .MuiInputLabel-root': { color: darkMode ? 'white' : 'black' },
+      '& .MuiInputBase-input': { color: darkMode ? 'white' : 'black' },
+      '& .MuiFormHelperText-root': { color: darkMode ? 'white' : 'black' },
+    }}/>         
             </Box>
 
-            <Box>
-                <FormLabel>Water facility</FormLabel>
+            <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Water facility</FormLabel>
                 <RadioGroup row value={postData.Water} onChange={(e)=>setPostData({...postData, Water: e.target.value})} >
 
-                    <FormControlLabel  value='24hrs' name="Water" control={<Radio />} label="24hrs" />
-                    <FormControlLabel value='once /day' name="Water" control={<Radio />} label="once /day" />
-                    <FormControlLabel value='Twice /day' name="Water"  control={<Radio />} label="Twice /day" />
+                    <FormControlLabel  value='24hrs' name="Water" control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="24hrs" />
+                    <FormControlLabel value='once /day' name="Water" control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="once /day" />
+                    <FormControlLabel value='Twice /day' name="Water"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Twice /day" />
 
                 </RadioGroup>
             </Box>
 
-            <Box>
-                <FormLabel>Paking facility</FormLabel>
+            <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Paking facility</FormLabel>
                 <RadioGroup row value={postData.Parking} onChange={(e)=>setPostData({...postData, Parking: e.target.value})}>
 
-                    <FormControlLabel  value='spacious' name="Parking"  control={<Radio />} label="spacious" />
-                    <FormControlLabel value='narrow' name="Parking"  control={<Radio />} label="narrow" />
+                    <FormControlLabel  value='spacious' name="Parking"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}}/>} label="spacious" />
+                    <FormControlLabel value='narrow' name="Parking"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="narrow" />
                    
                 </RadioGroup>
             </Box>
 
-            <Box>
-                <FormLabel>Looking for </FormLabel>
+            <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Looking for </FormLabel>
                 <RadioGroup row value={postData.People} onChange={(e)=>setPostData({...postData, People: e.target.value})} >
 
-                    <FormControlLabel  value='Couple' name="People"  control={<Radio />} label="Couple" />
-                    <FormControlLabel value='Student' name="People"  control={<Radio />} label="Student" />
-                    <FormControlLabel value='Family' name="People"  control={<Radio />} label="Family" />
+                    <FormControlLabel  value='Couple' name="People"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Couple" />
+                    <FormControlLabel value='Student' name="People"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Student" />
+                    <FormControlLabel value='Family' name="People"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}} />} label="Family" />
                    
                 </RadioGroup>
             </Box>
 
-            <Box>
-                <FormLabel>Pets </FormLabel>
+            <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Pets </FormLabel>
                 <RadioGroup row value={postData.Pets} onChange={(e)=>setPostData({...postData, Pets: e.target.value})}>
 
-                    <FormControlLabel  value='Allowed' name="Pets"  control={<Radio />} label="Allowed" />
-                    <FormControlLabel value='Not Allowed' name="Pets" control={<Radio />} label="Not Allowed" />
+                    <FormControlLabel  value='Allowed' name="Pets"  control={<Radio sx={{color: darkMode ? 'white' : 'black'}}/>} label="Allowed" />
+                    <FormControlLabel value='Not Allowed' name="Pets" control={<Radio sx={{color: darkMode ? 'white' : 'black'}}/>} label="Not Allowed" />
                   
                 </RadioGroup>
             </Box>
 
                 <Box  sx={{display: 'flex',flexDirection: 'column',rowGap: '2rem'}}>
 
-                    <TextField label='Location' value={postData.Location} name="Location" onChange={(e)=> handleInput(e)} variant="standard" required />         
+                    <TextField label='Location' value={postData.Location} name="Location" onChange={(e)=> handleInput(e)} variant="standard" required sx={{
+      '& .MuiInputLabel-root': { color: darkMode ? 'white' : 'black' },
+      '& .MuiInputBase-input': { color: darkMode ? 'white' : 'black' },
+      '& .MuiFormHelperText-root': { color: darkMode ? 'white' : 'black' },
+    }}/>         
 
-                    <TextareaAutosize style={{padding: '10px', fontSize: '1.15rem'}} placeholder='Description' minRows={5} name="Description" value={postData.Description} onChange={(e)=> handleInput(e)} variant="standard" required />   
+                    <TextareaAutosize style={{padding: '10px', fontSize: '1.15rem',color: darkMode ? 'white' : 'black',
+    backgroundColor: darkMode ? '#333' : '#fff',}} placeholder='Description' minRows={5} name="Description" value={postData.Description} onChange={(e)=> handleInput(e)} variant="standard" required  />   
                 </Box>      
 
-                <Box>
-                    <FormLabel>Have any images??</FormLabel>
+                <Box sx={{color: darkMode ? 'white' : 'black'}}>
+                    <FormLabel sx={{color: darkMode ? 'white' : 'black'}}>Have any images??</FormLabel>
                     <br />
 
                         <input multiple onChange={(e)=> setProductImage([...e.target.files])} type="file" id="fileInput" />

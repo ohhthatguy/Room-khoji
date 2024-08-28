@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 
-import { Button,Box,Typography, Card, CardHeader, CardMedia, CardContent, Paper, styled, Grid, Table, TableHead, TableCell,TableRow } from "@mui/material"
+import {Typography } from "@mui/material"
 import { DataContext } from "../../../context/DataProvider"
 // import { useNavigate } from "react-router-dom"
 
@@ -12,7 +12,8 @@ import PostCard from "./PostCard"
 
 
 const PostAvailable = ({darkMode})=>{
-    const {account, isUpdatedPost} = useContext(DataContext)
+    const { isUpdatedPost} = useContext(DataContext)
+    const account = JSON.parse(localStorage.getItem('currentUser'))
     const [post,setPost] = useState('')
     console.log(account._id)
 
