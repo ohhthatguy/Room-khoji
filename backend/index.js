@@ -9,10 +9,11 @@ const cookieParser = require('cookie-parser')
 
 const dotenv = require('dotenv').config();
 
+console.log(process.env.FRONTEND_URL);
 app.use(cookieParser())
 app.use(cors(
     {
-        origin: [`${process.env.FRONTEND_URL}`],
+        origin: ['https://roomkhojiv1.vercel.app', `${process.env.FRONTEND_URL}`],
         credentials: true
     }
 ));
