@@ -88,7 +88,7 @@ const Login = ()=>{
 
     return (<>
  
-        <Grid container justifyContent={'center'} sx={{ padding: '2rem'}}>
+        <Grid container justifyContent={'center'} sx={{ padding: '2rem', height: '100vh'}}>
             
             
       

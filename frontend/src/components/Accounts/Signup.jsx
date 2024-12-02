@@ -124,7 +124,7 @@ console.log(signUpData)
         
     return (<>
       
-        <Grid container justifyContent={'center'} sx={{ padding: '2rem'}}>
+        <Grid container justifyContent={'center'} sx={{ padding: '2rem', height: '100vh'}}>
 
         <Grid item sx={{textAlign: 'right', position: 'relative', display:{xs:'none', sm: 'block'} }} lg={4} md={5} sm={5} xs>
                     <StyledImg src='https://cdn.pixabay.com/photo/2019/05/24/11/00/interior-4226020_1280.jpg' alt='bg-login' />

@@ -13,7 +13,7 @@ console.log(process.env.FRONTEND_URL);
 app.use(cookieParser())
 app.use(cors(
     {
-        origin: ['https://roomkhojiv1.vercel.app', `${process.env.FRONTEND_URL}`],
+        origin:  `${process.env.FRONTEND_URL}`,
         credentials: true
     }
 ));
