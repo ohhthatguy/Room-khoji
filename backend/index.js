@@ -9,17 +9,22 @@ const cookieParser = require('cookie-parser')
 
 const dotenv = require('dotenv').config();
 
+
+
 console.log(process.env.FRONTEND_URL);
 app.use(cookieParser())
 app.use(cors(
     {
-        origin:  `${process.env.FRONTEND_URL}`,
-        credentials: true
+        origin: process.env.FRONTEND_URL,
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow OPTIONS method
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
     }
 ));
 // app.use(cors());
 app.use(bodyParser.json({extended:true}));
 app.use(bodyParser.urlencoded({extended:true}));
+
 app.use(express.static('images'))
 app.use('/', router);
 
