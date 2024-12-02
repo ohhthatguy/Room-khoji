@@ -106,7 +106,7 @@ console.log(signUpData)
                 }else{
                     console.log("photo saved")
                     console.log(response.data)
-                    // setimgUrl(`http://localhost:6969/${profileImage.name}`)
+                   
                     setSignUpData({...signUpData, profile:response.data})
                 }
                 

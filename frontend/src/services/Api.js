@@ -36,7 +36,7 @@ const API_OBJECT = {
 
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:6969',
+    baseURL: process.env.REACT_APP_LINK_TO_BACKEND,
     timeout: 10000
 
 })

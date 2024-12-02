@@ -103,7 +103,7 @@ const getProfilePicture = async(req,res)=>{
         if(!response){
             return  res.status(404).json({msg:'no such image'})
         }
-        let profilePic = `http://localhost:6969/profile/${response.profile}`
+        let profilePic = `${process.env.BACKEND_URL}/profile/${response.profile}`
         console.log(profilePic)
 
         return res.status(200).json(profilePic)
@@ -154,7 +154,7 @@ const getProductPicture = async(req,res)=>{
 
     let endPoints = [];
     req.files.map((e)=>{
-        endPoints = [...endPoints,`http://localhost:6969/profile/${e.filename}`]
+        endPoints = [...endPoints,`${process.env.BACKEND_URL}/profile/${e.filename}`]
     })
     // console.log(endPoints)
 
