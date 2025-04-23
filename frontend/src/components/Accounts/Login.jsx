@@ -11,7 +11,6 @@ const StyledGrid = styled(Grid)`
     margin-top: 8rem;
 `
 
-
 const StyledPaper = styled(Paper)`
     border: 1px solid black;
     display: flex;
@@ -43,12 +42,14 @@ const Login = ()=>{
     password: ''
   }
     const [logInData, setLogInData] = useState(initial);
+
     const handleInput =(e)=>{
+        console.log(e)
             setLogInData({...logInData, [e.target.name]: e.target.value})
     }
-    // console.log(logInData)
-    
 
+    console.log(logInData)
+    
     const handleLogIn = async()=>{
 
         // console.log(logInData)
@@ -109,8 +110,8 @@ const Login = ()=>{
 
                         </Box>
 
-                        <TextField label='email' name='email' onChange={(e)=>handleInput(e)} variant="standard" required />         
-                        <TextField label='password'  name='password' onChange={(e)=>handleInput(e)} type="password" required variant="standard" />    
+                        <TextField label='email' name='email'  onChange={(e)=>handleInput(e)} variant="standard" required />         
+                        <TextField label='password'  name='password'  onChange={(e)=>handleInput(e)} type="password" required variant="standard" />    
 
                         <Button variant="contained" disabled={(logInData.email && logInData.password) ? false : true} onClick={()=>handleLogIn()} >login</Button>
 
