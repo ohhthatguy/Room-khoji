@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 
 import { Button,Box,Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Paper, styled, Radio, TextareaAutosize, TableHead, TableCell,TableRow } from "@mui/material"
 import {Cancel, Category} from '@mui/icons-material';
+import MapSelector from "../../Location-Selector/LocationSelector";
 
 import { DataContext } from "../../../context/DataProvider";
 // import { useNavigate } from "react-router-dom"
@@ -84,6 +85,11 @@ let disable;
         }
 
     }
+
+    const handleLocation = (latlng) =>{
+    console.log(latlng)
+     setPostData({...postData, Location: `${latlng.lat},${latlng.lng},${latlng.address}`})
+}
 
     const handleClick = async()=>{
         console.log(postData)
@@ -191,11 +197,18 @@ let disable;
 
                 <Box  sx={{display: 'flex',flexDirection: 'column',rowGap: '2rem'}}>
 
-                    <TextField label='Location' value={postData.Location} name="Location" onChange={(e)=> handleInput(e)} variant="standard" required sx={{
+                    {/* <TextField label='Location' value={postData.Location} name="Location" onChange={(e)=> handleInput(e)} variant="standard" required sx={{
       '& .MuiInputLabel-root': { color: darkMode ? 'white' : 'black' },
       '& .MuiInputBase-input': { color: darkMode ? 'white' : 'black' },
       '& .MuiFormHelperText-root': { color: darkMode ? 'white' : 'black' },
-    }}/>         
+    }}/>          */}
+
+     <div >
+                              
+                                    {/* <LocationSelector onAddressChange={(latlng) => handleLocation(latlng)} /> */}
+                                    <MapSelector onAddressChange={(latlng) => handleLocation(latlng)} />
+    
+                        </div>
 
                     <TextareaAutosize style={{padding: '10px', fontSize: '1.15rem',color: darkMode ? 'white' : 'black',
     backgroundColor: darkMode ? '#333' : '#fff',}} placeholder='Description' minRows={5} name="Description" value={postData.Description} onChange={(e)=> handleInput(e)} variant="standard" required  />   

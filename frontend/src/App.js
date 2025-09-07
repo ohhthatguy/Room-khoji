@@ -1,6 +1,12 @@
 import {Routes, Route} from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { useContext } from 'react'
+import { Toaster } from 'react-hot-toast';
+// At the top of your App.js or Map component
+import 'leaflet/dist/leaflet.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 import Login from './components/Accounts/Login'
 import Signup from './components/Accounts/Signup'
@@ -9,9 +15,13 @@ import LandLordHome from './components/Home/LandLordHome'
 import ProductMarket from './components/Home/tenant/ProductMarket'
 import BusinessTalk from './components/Home/tenant/BusinessTalk'
 import FavroitProduct from './components/Home/tenant/FavroitProduct'
+import Ecom from './components/Accounts/Ecom'
+import Recommened from './components/Home/tenant/Recommened';
 
 import LogOut from './components/Logout/LogOut'
 import { DataContext } from './context/DataProvider'
+
+
 
 
 
@@ -34,10 +44,13 @@ const App = () => {
     
     { createPortal( openPortal && <LogOut />, root) }
 
+   <Toaster position="top-right" reverseOrder={false} />
 
     <Routes>
 
       <Route path="/" element={<Login />} />
+
+      {/* <Route path="/" element={<Ecom />} /> */}
 
       <Route path="/create/account" element={<Signup />} />
 
@@ -46,6 +59,8 @@ const App = () => {
      <Route path='/tenant/productmarket/:Category' element={<ProductMarket darkMode={darkMode}/>} />
      <Route path='/tenant/BusinessTalk/:id' element={<BusinessTalk darkMode={darkMode}/>} />
      <Route path='/tenant/favroit' element={<FavroitProduct darkMode={darkMode}/>} />
+     <Route path='/tenant/recommended/:Category' element={<Recommened darkMode={darkMode}/>} />
+
 
    
 

@@ -14,6 +14,13 @@ import {
   Grid,
   Avatar,
   TableCell,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  TextField,
+  styled,
+  Radio,
+  TextareaAutosize,
 } from "@mui/material";
 import {
   NavigateNext,
@@ -22,7 +29,9 @@ import {
   BookmarkBorderOutlined,
   DarkMode,
 } from "@mui/icons-material";
-
+import toast from "react-hot-toast";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import MapSelector from "../../Location-Selector/LocationSelector";
 import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
@@ -30,14 +39,26 @@ import { API } from "../../../services/Api";
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const ProductMarket = ({ darkMode }) => {
+const Recommened = ({ darkMode }) => {
   const productRef = useRef(null);
+
+  const initialProductData = {
+    Location: "",
+    People: "",
+    Pets: "",
+
+    Parking: "",
+    Quantity: "1",
+    Rate: "1000",
+    Water: "",
+  };
+
+  const [productData, setProductData] = useState(initialProductData);
   // const tl = gsap.timeline()
 
   const { account } = useContext(DataContext);
   const { Category } = useParams();
   const navigate = useNavigate();
-
 
   const [currentPost, setCurrentPost] = useState([]);
   const [bookMarkClicked, setBookmarkClicked] = useState([]);
@@ -46,11 +67,11 @@ const ProductMarket = ({ darkMode }) => {
     add: "",
     delete: "",
   });
-  const [selectedOption, setSelectedOption] = useState(Category);
-  
+  const [selectedOption, setSelectedOption] = useState("");
 
   const [movement, setMovement] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [getUserPref, setGetUserPref] = useState(false);
 
   const handleNext = (totalProductImages, index) => {
     console.log(index);
@@ -74,25 +95,61 @@ const ProductMarket = ({ darkMode }) => {
     }
   };
 
-  useEffect(() => {
-    if (selectedOption.length > 0) {
-      const getPostOfCategory = async () => {
-        try {
-          const user = localStorage.getItem("currentUser");
-          const userID = JSON.parse(user);
-          const res = await API.getPostByCategory({ Category: selectedOption, userID: userID });
-          if (res.isSuccess) {
-            // console.log(res.data)
-            setCurrentPost(res.data);
-          } else {
-            console.log("is failure");
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
 
+
+  const getPostOfRecomended = async (userPrefData='') => {
+      try {
+let res;
+        if(userPrefData==''){
+         res = await API.getRecommendedList({ Category });
+        }else{
+         console.log(userPrefData)
+         res = await API.getRecommendedList({Category: Category, userPrefData});
+
+        }
+        if (res.isSuccess) {
+          // console.log(res.data)
+          setCurrentPost(res.data);
+        } else {
+          console.log("is failure");
+        }
+
+      } catch (err) {
+        console.log(err);
+      }
+
+      setGetUserPref(prev=> !prev)
+    };
+
+  useEffect(() => {
+    
+
+    const getPostOfCategory = async () => {
+      try {
+        const res = await API.getPostByCategory({ Category });
+        if (res.isSuccess) {
+          // console.log(res.data)
+          setCurrentPost(res.data);
+          console.log(res.data)
+        } else {
+          console.log("is failure");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (selectedOption.length > 0 && selectedOption !== "Recommended") {
       getPostOfCategory();
+      gsap.fromTo(
+        productRef.current,
+        { opacity: 0, scale: 0 },
+        { opacity: 1, scale: 1 }
+      );
+    }
+
+    if (selectedOption.length > 0 && selectedOption == "Recommended") {
+      getPostOfRecomended();
       gsap.fromTo(
         productRef.current,
         { opacity: 0, scale: 0 },
@@ -101,13 +158,7 @@ const ProductMarket = ({ darkMode }) => {
     }
   }, [selectedOption]);
 
-  
-
-
-  //animaiton
-  // useEffect(()=>{
-
-  // },[])
+  console.log(selectedOption);
 
   //save fav post's id to db
   useEffect(() => {
@@ -198,17 +249,47 @@ const ProductMarket = ({ darkMode }) => {
   //   console.log(favrouitPost)
   //   console.log(bookMarkClicked)
 
-  useEffect(()=>{
-
-    if(selectedOption == "Recommended"){
-        navigate(`/tenant/recommended/${Category}`)
+  useEffect(() => {
+    if (selectedOption !== "" && selectedOption !== "Recommended") {
+      navigate(`/tenant/productmarket/${Category}`);
     }
+  }, [selectedOption]);
 
-  },[selectedOption])
+  console.log(selectedOption);
+  console.log(Category);
 
+  //getUserPref == false, get the user Pref through modal
+  //getUserPref == true, show recomended list
 
-  console.log(currentPost)
+  const toggleModal = () => {
+    setGetUserPref((prev) => !prev);
+  };
 
+  const handleInput = (e) => {
+    if (e.target.type !== undefined) {
+      setProductData({ ...productData, [e.target.name]: e.target.value });
+    }
+  };
+
+  const handleModalData = () => {
+    const allAreFilled = Object.values(productData).some(
+      (value) => String(value).trim() === ""
+    );
+
+    if (allAreFilled) {
+      toast.error("Please fill all the data");
+    } else {
+      console.log("here");
+      getPostOfRecomended(productData)
+    }
+  };
+
+  const handleLocation = (latlng) => {
+    setProductData({
+      ...productData,
+      Location: `${latlng.lat},${latlng.lng},${latlng.address}`,
+    });
+  };
 
   return (
     <>
@@ -222,7 +303,6 @@ const ProductMarket = ({ darkMode }) => {
           gap: "10px",
           marginBottom: "1.22rem",
           paddingTop: "1.5rem",
-          
         }}
       >
         {optionList.map((e) =>
@@ -259,16 +339,15 @@ const ProductMarket = ({ darkMode }) => {
         )}
       </Box>
 
-
       <Grid container justifyContent="center">
-        {currentPost.length > 0 ? (
+        {currentPost.length > 0 && getUserPref ? (
           <Grid
             ref={productRef}
             item
             sx={{
               display: "flex",
               rowGap: "2rem",
-              flexDirection: "column",
+              flexDirection: "column-reverse",
             }}
             lg={7}
             md={8}
@@ -401,7 +480,7 @@ const ProductMarket = ({ darkMode }) => {
                 </CardContent>
 
                 <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-              
+                  {/* <Typography variant="h5">About {selectedOption}</Typography> */}
                   <Box
                     sx={{
                       marginLeft: "2rem",
@@ -417,16 +496,17 @@ const ProductMarket = ({ darkMode }) => {
                         {" "}
                         <strong>Rate</strong>
                       </Typography>
-                     
+                      {/* <Typography> <strong>Location</strong></Typography> */}
                     </Box>
 
                     <Box>
                       <Typography>: {e.Quantity}</Typography>
                       <Typography>: {e.Rate}</Typography>
-                    
+                      {/* <Typography>: {e.Location}</Typography> */}
                     </Box>
                   </Box>
 
+                  {/* <Typography variant="h5">Additional Info</Typography> */}
                   <Box
                     sx={{
                       display: "flex",
@@ -484,14 +564,234 @@ const ProductMarket = ({ darkMode }) => {
                 </Box>
               </Card>
             ))}
-          
           </Grid>
         ) : (
           <Box>sorry but currenlty none are available</Box>
         )}
       </Grid>
+
+      <Modal isOpen={!getUserPref} toggle={toggleModal} centered scrollable>
+        <ModalHeader toggle={toggleModal}>User Pref</ModalHeader>
+        <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
+          <Paper
+            elevation={3}
+            sx={{
+              border: "2px solid #587351",
+              background: darkMode ? "#494F55" : "#F5F5F5",
+              display: "flex",
+              flexDirection: "column",
+              padding: "2rem",
+              rowGap: "2rem",
+            }}
+          >
+            <Box
+              sx={{ display: "flex", flexDirection: "column", rowGap: "2rem" }}
+            >
+              <TextField
+                label="Quantity"
+                inputProps={{ min: 1, max: 10 }}
+                defaultValue={1}
+                error={productData.Quantity < 1 || productData.Quantity > 10}
+                helperText={
+                  productData.Quantity < 0
+                    ? "Quantity must be at least 1"
+                    : productData.Quantity > 10
+                    ? "Quantity must be at most 10"
+                    : ""
+                }
+                type="number"
+                name="Quantity"
+                onChange={(e) => handleInput(e)}
+                variant="standard"
+                required
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    color: darkMode ? "white" : "black",
+                  },
+                  "& .MuiInputBase-input": {
+                    color: darkMode ? "white" : "black",
+                  },
+                  "& .MuiFormHelperText-root": {
+                    color: darkMode ? "white" : "black",
+                  },
+                }}
+              />
+
+              <TextField
+                label="Rate (/month)"
+                defaultValue={1000}
+                error={productData.Rate < 1000 || productData.Rate > 100000}
+                helperText={
+                  productData.Rate < 1000
+                    ? "Rate must be at least 1000"
+                    : productData.Rate > 100000
+                    ? "Rate must be at most 100000"
+                    : ""
+                }
+                inputProps={{ min: 1000, max: 100000 }}
+                type="number"
+                name="Rate"
+                onChange={(e) => handleInput(e)}
+                variant="standard"
+                required
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    color: darkMode ? "white" : "black",
+                  },
+                  "& .MuiInputBase-input": {
+                    color: darkMode ? "white" : "black",
+                  },
+                  "& .MuiFormHelperText-root": {
+                    color: darkMode ? "white" : "black",
+                  },
+                }}
+              />
+            </Box>
+
+            <Box sx={{ color: darkMode ? "white" : "black" }}>
+              <FormLabel sx={{ color: darkMode ? "white" : "black" }}>
+                Water facility
+              </FormLabel>
+              <RadioGroup row>
+                <FormControlLabel
+                  value="24hrs"
+                  name="Water"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="24hrs"
+                />
+                <FormControlLabel
+                  value="once /day"
+                  name="Water"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="once /day"
+                />
+                <FormControlLabel
+                  value="Twice /day"
+                  name="Water"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Twice /day"
+                />
+              </RadioGroup>
+            </Box>
+
+            <Box sx={{ color: darkMode ? "white" : "black" }}>
+              <FormLabel sx={{ color: darkMode ? "white" : "black" }}>
+                Paking facility
+              </FormLabel>
+              <RadioGroup row>
+                <FormControlLabel
+                  value="spacious"
+                  name="Parking"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="spacious"
+                />
+                <FormControlLabel
+                  value="narrow"
+                  name="Parking"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="narrow"
+                />
+              </RadioGroup>
+            </Box>
+
+            <Box sx={{ color: darkMode ? "white" : "black" }}>
+              <FormLabel sx={{ color: darkMode ? "white" : "black" }}>
+                Looking for{" "}
+              </FormLabel>
+              <RadioGroup row>
+                <FormControlLabel
+                  value="Couple"
+                  name="People"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Couple"
+                />
+                <FormControlLabel
+                  value="Student"
+                  name="People"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Student"
+                />
+                <FormControlLabel
+                  value="Family"
+                  name="People"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Family"
+                />
+              </RadioGroup>
+            </Box>
+
+            <Box sx={{ color: darkMode ? "white" : "black" }}>
+              <FormLabel sx={{ color: darkMode ? "white" : "black" }}>
+                Pets{" "}
+              </FormLabel>
+              <RadioGroup row>
+                <FormControlLabel
+                  value="Allowed"
+                  name="Pets"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Allowed"
+                />
+                <FormControlLabel
+                  value="Not Allowed"
+                  name="Pets"
+                  onClick={(e) => handleInput(e)}
+                  control={
+                    <Radio sx={{ color: darkMode ? "white" : "black" }} />
+                  }
+                  label="Not Allowed"
+                />
+              </RadioGroup>
+            </Box>
+
+            <Box
+              sx={{ display: "flex", flexDirection: "column", rowGap: "3rem" }}
+            >
+              <div>
+                <MapSelector
+                  onAddressChange={(latlng) => handleLocation(latlng)}
+                />
+              </div>
+            </Box>
+          </Paper>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggleModal}>
+            Cancel
+          </Button>
+          <Button color="primary" onClick={handleModalData}>
+            Save
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };
 
-export default ProductMarket;
+export default Recommened;

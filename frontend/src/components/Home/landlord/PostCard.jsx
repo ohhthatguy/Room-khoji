@@ -188,13 +188,13 @@ let k;
                         <Box>
                             <Typography><strong>Quantity</strong></Typography>
                             <Typography> <strong>Rate</strong></Typography>
-                            <Typography> <strong>Location</strong></Typography>
+                            {/* <Typography> <strong>Location</strong></Typography> */}
                         </Box>
 
                         <Box>
                             <Typography>: {e.Quantity}</Typography>
                             <Typography>: {e.Rate}</Typography>
-                            <Typography>: {e.Location}</Typography>
+                            {/* <Typography>: {e.Location}</Typography> */}
 
                         </Box>
 
@@ -223,12 +223,15 @@ let k;
 
                         </Box>
 
-
-
-
                         </Box>
 
-              
+                 <div>
+                            <Typography> <strong>Location: </strong></Typography>
+                            <Typography>{e.Location.split(",").slice(2).join(",").trim()}</Typography>
+
+
+
+                        </div>
     
     
     

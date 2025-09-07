@@ -1,79 +1,106 @@
-const express = require('express')
+const express = require("express");
 
-const router = express()
-
+const router = express();
 
 //middleware
-const upload = require('../Middleware/upload')
-const authorizeToken = require('../Middleware/authorizeToken')
-
+const upload = require("../Middleware/upload");
+const authorizeToken = require("../Middleware/authorizeToken");
 
 ///////////////////////////////
 
-
 //import from controller
-const { saveRentedProduct,getRentedProduct, createNewAccount,checkLogIn,getSignature,getFavDataFromFavPostId,verifyPayment, updatePost,getPostByCategory,saveFavouritePost, getFavouritePost,saveProfilePicture,getGharbetiById,deletePostsOfId, getProfilePicture, getProductPicture,getPostsOfId, savePost} = require('../controller/controller')
+const {
+  saveRentedProduct,
+  getRentedProduct,
+  createNewAccount,
+  checkLogIn,
+  getSignature,
+  getFavDataFromFavPostId,
+  verifyPayment,
+  updatePost,
+  getPostByCategory,
+  saveFavouritePost,
+  getFavouritePost,
+  saveProfilePicture,
+  getGharbetiById,
+  deletePostsOfId,
+  getProfilePicture,
+  getProductPicture,
+  getPostsOfId,
+  savePost,
+  getRecommendedList,
+  clickRecomendation,
+  registerClick
+} = require("../controller/controller");
 
 //create a new account
-router.post('/create/newAccount', createNewAccount)
+router.post("/create/newAccount", createNewAccount);
 
 //login
-router.post('/login', checkLogIn)
+router.post("/login", checkLogIn);
 
 //save prfile image
-router.post('/create/profile', upload.single('image') ,saveProfilePicture)
+router.post("/create/profile", upload.single("image"), saveProfilePicture);
 
 //get image
-router.get('/getProfile', getProfilePicture);
+router.get("/getProfile", getProfilePicture);
 
 //get user
-router.get('/user', getGharbetiById);
+router.get("/user", getGharbetiById);
 
 //save product picture
-router.post('/save/product/picture',upload.array('image'),getProductPicture)
+router.post("/save/product/picture", upload.array("image"), getProductPicture);
 
 //save Post
-router.post('/save/post', savePost)
+router.post("/save/post", savePost);
 
 //get Post of Id
-router.get('/get/post', getPostsOfId)
+router.get("/get/post", getPostsOfId);
 
 //delete post by id
-router.delete('/delete/post', deletePostsOfId)
+router.delete("/delete/post", deletePostsOfId);
 
-//update post 
-router.put('/update/post', updatePost)
+//update post
+router.put("/update/post", updatePost);
 
 //get post by category
-router.get('/tenant/productmarket', getPostByCategory)
+router.get("/tenant/productmarket", getPostByCategory);
+
+//get recommended post by category
+router.get("/tenant/recommended", getRecommendedList);
 
 //save favourite post
-router.put('/save/favourite', saveFavouritePost)
+router.put("/save/favourite", saveFavouritePost);
 
 //get saved favrutire post id
-router.get('/get/favourtie/id', getFavouritePost)
+router.get("/get/favourtie/id", getFavouritePost);
 
 //get fav posts
-router.get('/get/favourite/posts',getFavDataFromFavPostId)
-
+router.get("/get/favourite/posts", getFavDataFromFavPostId);
 
 ////easewa//////////////////////////////////////
 
 //get signature
-router.get('/get/signature',getSignature)
+router.get("/get/signature", getSignature);
 
 //check verification
-router.get('/check/verification', verifyPayment)
-
+router.get("/check/verification", verifyPayment);
 
 ////////////////////////////////////////////////
 
-
 //save rented product
-router.post('/save/rented_product',saveRentedProduct )
+router.post("/save/rented_product", saveRentedProduct);
 
 //get rented product
-router.get('/get/rented_product', getRentedProduct)
+router.get("/get/rented_product", getRentedProduct);
+
+//clicked reco
+
+// register click
+router.post("/post/registerClick", registerClick)
+
+// route: POST /api/rooms/click
+router.post("/click", clickRecomendation);
 
 
-module.exports = router
+module.exports = router;

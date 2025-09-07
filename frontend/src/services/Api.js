@@ -18,6 +18,8 @@ const API_OBJECT = {
     deletePostsOfId: {method: 'delete', url: '/delete/post', params: true},
     updatePost: {method: 'put', url: '/update/post'},
     getPostByCategory: {method: 'get', url:'/tenant/productmarket', params: true},
+    getRecommendedList: {method: 'get', url:'/tenant/recommended', params: true},
+
 
     saveFavouritePost: {method: 'put', url: '/save/favourite', params: true},
     getFavouritePost: {method: 'get', url: '/get/favourtie/id', params: true},
@@ -25,6 +27,8 @@ const API_OBJECT = {
 
     saveRentedProduct: {method: 'post', url: '/save/rented_product'},
     getRentedProduct: {method: 'get', url: '/get/rented_product'},
+
+    registerClickAPI:{method: 'post', url: '/post/registerClick', params: true},
 
     
 
