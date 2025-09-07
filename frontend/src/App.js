@@ -17,6 +17,7 @@ import BusinessTalk from './components/Home/tenant/BusinessTalk'
 import FavroitProduct from './components/Home/tenant/FavroitProduct'
 import Ecom from './components/Accounts/Ecom'
 import Recommened from './components/Home/tenant/Recommened';
+import Schedule from './components/Home/Schedule';
 
 import LogOut from './components/Logout/LogOut'
 import { DataContext } from './context/DataProvider'
@@ -53,7 +54,8 @@ const App = () => {
       {/* <Route path="/" element={<Ecom />} /> */}
 
       <Route path="/create/account" element={<Signup />} />
-
+     <Route path="/myschedule" element={<Schedule darkMode={darkMode} />} />
+      
      <Route path="/tenantHome" element={<TenantHome darkMode={darkMode} />} />
      <Route path="/landlordHome" element={<LandLordHome darkMode={darkMode}/>} />
      <Route path='/tenant/productmarket/:Category' element={<ProductMarket darkMode={darkMode}/>} />

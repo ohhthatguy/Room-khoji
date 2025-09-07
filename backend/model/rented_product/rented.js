@@ -66,7 +66,16 @@ const rentedSchema = mongoose.Schema({
     },
     profile:[
         {type: String, required: true}
-    ]
+    ],
+    Status: {
+    type: String,
+    default: "PENDING", // optional field with default value
+  },
+  tenantID:{
+    type:String,
+    required:true
+  }
+
 })
 
 const rentedModel = mongoose.model('rented', rentedSchema)

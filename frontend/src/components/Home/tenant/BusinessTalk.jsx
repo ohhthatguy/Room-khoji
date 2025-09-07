@@ -13,18 +13,27 @@ import {
   TableCell,
   Grid,
   Avatar,
-  TableBody,
+  
+  Chip,
+  Paper,
 } from "@mui/material";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import Calendar from "../../Calendar/Calendar";
+import PlaceIcon from "@mui/icons-material/Place";
 import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
 import { DataContext } from "../../../context/DataProvider";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
+
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 const BusinessTalk = ({ darkMode }) => {
   const { id } = useParams();
   const { currentPost, setCurrentPost } = useContext(DataContext); //post tobe rented is saved
-
+  const [latLng, setLatLng] = useState();
+  const [schedule, setSchedule] = useState(false)
   // console.log(id)
 
   const [signature, setSignature] = useState("");
@@ -42,6 +51,7 @@ const BusinessTalk = ({ darkMode }) => {
 
   const [movement, setMovement] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [selectedDate, setSelectedDate] = useState();
 
   // eSewaParameters.amount >= 0 ? console.log(true) : console.log(false)
 
@@ -85,10 +95,9 @@ const BusinessTalk = ({ darkMode }) => {
 
     const registerClick = async () => {
       try {
-
-        const userId =  JSON.parse(localStorage.getItem("currentUser"));
-        console.log(userId.name)
-        console.log(userId._id)
+        const userId = JSON.parse(localStorage.getItem("currentUser"));
+        console.log(userId.name);
+        console.log(userId._id);
 
         const res = await API.registerClickAPI({
           userId: userId._id, // from auth context or localStorage
@@ -96,19 +105,16 @@ const BusinessTalk = ({ darkMode }) => {
         });
         if (res.isSuccess) {
           // console.log(res.data)
-          toast.success("CLikded send db failed")
-         
+          toast.success("CLikded send db failed");
         } else {
           console.log("is failure");
-             toast.success("is failure")
+          toast.success("is failure");
         }
       } catch (err) {
         console.log(err);
-          toast.success("somehitng wornfg")
-
+        toast.success("somehitng wornfg");
       }
     };
-
 
     getPostOfCategory();
     registerClick();
@@ -137,7 +143,16 @@ const BusinessTalk = ({ darkMode }) => {
           console.log(err);
         }
       };
+
+      const setLatLngFunc = () => {
+        const coords = currentPost[0].Location.split(",")
+          .slice(0, 2)
+          .map(Number);
+        setLatLng(coords);
+      };
+
       getSignature();
+      setLatLngFunc();
     }
   }, [currentPost]);
 
@@ -147,6 +162,18 @@ const BusinessTalk = ({ darkMode }) => {
   // console.log(signature)
 
   const checkForTable = ["Location", "Parking", "Quantity", "Rate", "Location"];
+
+   const toggleModal = () => {
+    setSchedule((prev) => !prev);
+  };
+
+ 
+  const handleDate = (date) => {
+    console.log("Selected Dayjs:", date);
+    console.log("Formatted:", date.format("YYYY-MM-DD"));
+    setSelectedDate(date)
+    localStorage.setItem("scheduledDate", date);
+  };
 
   return (
     <>
@@ -163,12 +190,8 @@ const BusinessTalk = ({ darkMode }) => {
           color: darkMode ? "white" : "black",
           justifyContent: "center",
           gap: "10px",
-          marginBottom: "1.22rem",
-          paddingTop: "1.5rem",
         }}
-      >
-        lets talk business
-      </Box>
+      ></Box>
 
       <Grid container justifyContent="center">
         {currentPost.length > 0 ? (
@@ -179,7 +202,7 @@ const BusinessTalk = ({ darkMode }) => {
               rowGap: "2rem",
               flexDirection: "column-reverse",
             }}
-            lg={7}
+            lg={12}
             md={8}
             sm={8}
           >
@@ -192,7 +215,7 @@ const BusinessTalk = ({ darkMode }) => {
                   backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
                 }}
               >
-                <CardHeader
+                {/* <CardHeader
                   sx={{
                     "& .MuiCardHeader-title": {
                       color: darkMode ? "white" : "black",
@@ -206,7 +229,7 @@ const BusinessTalk = ({ darkMode }) => {
                   }
                   title={e.Gharbeti_name}
                   subheader={e.Date}
-                />
+                /> */}
 
                 {/* <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
                     
@@ -264,7 +287,7 @@ const BusinessTalk = ({ darkMode }) => {
                       <Box
                         key={index}
                         sx={{
-                          background: `url(${item}) no-repeat 50% 50% / contain`,
+                          background: `url(${item}) no-repeat 50% 50% / cover`,
                           width: "100%",
                           height: "20rem",
                           flex: "0 0 100%",
@@ -275,8 +298,8 @@ const BusinessTalk = ({ darkMode }) => {
                   </Box>
                 </Box>
 
-                <Typography variant="caption"> Reciept </Typography>
-                <CardContent>
+                <Box style={{ margin: "0 10%" }}>
+                  {/* <CardContent>
                   <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
 
@@ -312,144 +335,393 @@ const BusinessTalk = ({ darkMode }) => {
                       )}
                     </TableRow>
                   </TableBody>
-                </Table>
+                </Table> */}
 
-                <Box>
-                  <Table sx={{ padding: "2rem" }}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ color: darkMode ? "white" : "black" }}>
-                          <strong>DownPayment</strong>: {e.Rate}
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
+                  <CardContent
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "15px",
+                    }}
+                  >
+                    <Box style={{ padding: "15px" }}>
+                      <div style={{ fontSize: "1.7rem", fontWeight: "bold" }}>
+                        {e.Description}
+                      </div>
+                      <Typography
+                        style={{
+                          fontSize: "0.82rem",
+                          color: "GrayText",
+                          paddingTop: "15px",
+                          paddingBottom: "15px",
+                        }}
+                      >
+                        <PlaceIcon fontSize="small" />
+                        {e.Location.split(",").slice(2).join(",").trim()}
+                      </Typography>
 
-                    <TableHead>
-                      <TableRow sx={{ background: "grey" }}>
-                        <TableCell sx={{ color: darkMode ? "white" : "black" }}>
-                          <strong>Commision</strong>: {0.05 * e.Rate}
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Chip color="secondary" label={e.Category} />
 
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ color: darkMode ? "white" : "black" }}>
-                          <strong>total</strong>:{" "}
-                          {e.Rate * e.Quantity + 0.25 * e.Rate * e.Quantity}
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
+                        <Typography variant="h5">Rs. {e.Rate}</Typography>
+                      </div>
 
-                    <TableHead>
-                      <TableRow sx={{ background: "grey" }}>
-                        <TableCell sx={{ textAlign: "center" }}>
-                          {/* */}
-                          <form
-                            action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
-                            method="POST"
-                          >
-                            <input
-                              type="hidden"
-                              id="amount"
-                              name="amount"
-                              value={total_amount}
-                              required
-                            />
+                      <div
+                        style={{
+                          display: "flex",
+                          // gridAutoColumns: "2",
+                          gap: "2rem",
 
-                            <input
-                              type="hidden"
-                              id="tax_amount"
-                              name="tax_amount"
-                              value="0"
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="total_amount"
-                              name="total_amount"
-                              value={eSewaParameters.total_amount}
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="transaction_uuid"
-                              name="transaction_uuid"
-                              value={uuid}
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="product_code"
-                              name="product_code"
-                              value="EPAYTEST"
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="product_service_charge"
-                              name="product_service_charge"
-                              value="0"
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="product_delivery_charge"
-                              name="product_delivery_charge"
-                              value="0"
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="success_url"
-                              name="success_url"
-                              value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="failure_url"
-                              name="failure_url"
-                              value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="signed_field_names"
-                              name="signed_field_names"
-                              value="total_amount,transaction_uuid,product_code"
-                              required
-                            />
-
-                            <input
-                              type="hidden"
-                              id="signature"
-                              name="signature"
-                              value={signature}
-                              required
-                            />
-
-                            <Button
-                              value="Submit"
-                              type="submit"
-                              disabled={signature.length > 0 ? false : true}
-                              variant="contained"
+                          margin: "20px 0",
+                          overflowX: "auto",
+                        }}
+                      >
+                        <Paper
+                          style={{
+                            width: "200px",
+                            height: "150px",
+                            padding: "20px",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "0.9rem",
+                                color: "GrayText",
+                              }}
                             >
-                              Pay by esewa
-                            </Button>
-                          </form>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                  </Table>
+                              Parking
+                            </div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "1.3rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              {e.Parking}
+                            </div>
+                          </div>
+                        </Paper>
+
+                        <Paper
+                          style={{
+                            width: "200px",
+                            height: "150px",
+                            padding: "20px",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "0.9rem",
+                                color: "GrayText",
+                              }}
+                            >
+                              Prefered
+                            </div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "1.3rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              {e.People}
+                            </div>
+                          </div>
+                        </Paper>
+
+                        <Paper
+                          style={{
+                            width: "200px",
+                            height: "150px",
+                            padding: "20px",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "0.9rem",
+                                color: "GrayText",
+                              }}
+                            >
+                              Pets
+                            </div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "1.3rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              {e.Pets}
+                            </div>
+                          </div>
+                        </Paper>
+
+                        <Paper
+                          style={{
+                            width: "200px",
+                            height: "150px",
+                            padding: "20px",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "0.9rem",
+                                color: "GrayText",
+                              }}
+                            >
+                              Water Available
+                            </div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "1.3rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              {e.Water}
+                            </div>
+                          </div>
+                        </Paper>
+
+                        <Paper
+                          style={{
+                            width: "200px",
+                            height: "150px",
+                            padding: "20px",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "0.9rem",
+                                color: "GrayText",
+                              }}
+                            >
+                              Available Unit
+                            </div>
+                            <div
+                              style={{
+                                textAlign: "center",
+                                fontSize: "1.3rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              {e.Quantity}
+                            </div>
+                          </div>
+                        </Paper>
+                      </div>
+                    </Box>
+                  </CardContent>
+
+                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
+                    Gallery ({e.productImages.length})
+                  </Typography>
+                  <div
+                    style={{
+                      height: "200px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {e.productImages.map((ele) => (
+                      <div>
+                        <img
+                          src={ele}
+                          style={{
+                            height: "100%",
+                            width: "100%",
+                            objectFit: "cover",
+                            borderRadius: "3%",
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
+                    Location
+                  </Typography>
+
+                  <div>
+                    {" "}
+                    {latLng && (
+                      <MapContainer
+                        center={latLng}
+                        zoom={18}
+                        style={{ height: "200px", width: "100%" }}
+                      >
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <Marker position={latLng} />
+                      </MapContainer>
+                    )}
+                  </div>
+
+                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
+                    Contact
+                  </Typography>
+
+                  <Box>
+                    <Table sx={{ margin: "1rem 0 2rem 0" }}>
+                      <TableHead>
+                        <Paper>
+                          <TableRow style={{ display: "grid" }}>
+                            <CardHeader
+                              sx={{
+                                "& .MuiCardHeader-title": {
+                                  color: darkMode ? "white" : "black",
+                                },
+                                "& .MuiCardHeader-subheader": {
+                                  color: darkMode ? "white" : "black",
+                                },
+                              }}
+                              avatar={
+                                <Avatar
+                                  src={e.Gharbeti_profile}
+                                  alt={e.Gharbeti_name}
+                                />
+                              }
+                              title={e.Gharbeti_name}
+                              subheader={e.Date}
+                            />
+
+                            <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>To Schedule a meeting, You have to pay RS. 50 upfront. This is refundable fund once you reach the meeting. This measure is taken to reduce the fraud message </Typography>
+                            <TableCell sx={{ textAlign: "right" }}>
+                              {/* */}
+                                <button className="btn btn-primary" onClick={toggleModal}>Schedule</button>
+
+                              {/* <form
+                                action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+                                method="POST"
+                              >
+                                <input
+                                  type="hidden"
+                                  id="amount"
+                                  name="amount"
+                                  value={total_amount}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="tax_amount"
+                                  name="tax_amount"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="total_amount"
+                                  name="total_amount"
+                                  value={eSewaParameters.total_amount}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="transaction_uuid"
+                                  name="transaction_uuid"
+                                  value={uuid}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_code"
+                                  name="product_code"
+                                  value="EPAYTEST"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_service_charge"
+                                  name="product_service_charge"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_delivery_charge"
+                                  name="product_delivery_charge"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="success_url"
+                                  name="success_url"
+                                  value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="failure_url"
+                                  name="failure_url"
+                                  value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="signed_field_names"
+                                  name="signed_field_names"
+                                  value="total_amount,transaction_uuid,product_code"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="signature"
+                                  name="signature"
+                                  value={signature}
+                                  required
+                                />
+
+                                <Button
+                                  value="Submit"
+                                  type="submit"
+                                  disabled={signature.length > 0 ? false : true}
+                                  variant="contained"
+                                >
+                                  Pay by esewa
+                                </Button>
+                              </form> */}
+                            </TableCell>
+                          </TableRow>
+                        </Paper>
+                      </TableHead>
+                    </Table>
+                  </Box>
                 </Box>
               </Card>
             ))}
@@ -458,6 +730,124 @@ const BusinessTalk = ({ darkMode }) => {
           <Box>sorry but currenlty none are available</Box>
         )}
       </Grid>
+
+
+        
+              <Modal isOpen={schedule} toggle={toggleModal} centered scrollable>
+                <ModalHeader toggle={toggleModal}>Schedule Meeting</ModalHeader>
+                <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
+                  {/* <DateCalendar /> */}
+                  <Calendar onDateChange={handleDate} />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="secondary" onClick={toggleModal}>
+                    Cancel
+                  </Button>
+                   <form
+                                action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+                                method="POST"
+                              >
+                                <input
+                                  type="hidden"
+                                  id="amount"
+                                  name="amount"
+                                  value={total_amount}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="tax_amount"
+                                  name="tax_amount"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="total_amount"
+                                  name="total_amount"
+                                  value={eSewaParameters.total_amount}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="transaction_uuid"
+                                  name="transaction_uuid"
+                                  value={uuid}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_code"
+                                  name="product_code"
+                                  value="EPAYTEST"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_service_charge"
+                                  name="product_service_charge"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="product_delivery_charge"
+                                  name="product_delivery_charge"
+                                  value="0"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="success_url"
+                                  name="success_url"
+                                  value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="failure_url"
+                                  name="failure_url"
+                                  value={`${process.env.REACT_APP_LINK_TO_FRONTEND}/tenantHome`}
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="signed_field_names"
+                                  name="signed_field_names"
+                                  value="total_amount,transaction_uuid,product_code"
+                                  required
+                                />
+
+                                <input
+                                  type="hidden"
+                                  id="signature"
+                                  name="signature"
+                                  value={signature}
+                                  required
+                                />
+
+                                <Button
+                                  value="Submit"
+                                  type="submit"
+                                  disabled={signature.length > 0 ? false : true}
+                                  variant="contained"
+                                >
+                                  Pay by esewa
+                                </Button>
+                   </form>
+                </ModalFooter>
+              </Modal>
+
+
     </>
   );
 };

@@ -466,7 +466,7 @@ const verifyPayment = async (req, res) => {
 const saveRentedProduct = async (req, res) => {
   // console.log(req.body)
   try {
-    //save rented data
+   
     let response = new rentedModel(req.body);
     await response.save();
     return res.status(200).json({ msg: "post saved/updated" });
@@ -476,8 +476,18 @@ const saveRentedProduct = async (req, res) => {
 };
 
 const getRentedProduct = async (req, res) => {
+
+ 
+
+
   try {
-    const response = await rentedModel.find({});
+    let response;
+    if(req.query._id){
+ response = await rentedModel.find({tenantID: req.query._id});
+    }else{
+ response = await rentedModel.find({});
+    }
+    
 
     if (response) {
       return res.status(200).json(response);
@@ -489,95 +499,22 @@ const getRentedProduct = async (req, res) => {
   }
 };
 
+const updateRentedProduct = async (req, res) => {
+   const {  updatedObject } = req.body;
+   
 
-// const clickRecomendation =  async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
+  try {
+    await rentedModel.findByIdAndUpdate(updatedObject._id, {
+      $set:updatedObject,
+    });
 
-//     // Step 1: Get rooms clicked by the current user
-//     const userClicks = await Click.find({ userId }).select('roomId');
-//     const clickedRoomIds = userClicks.map(click => click.roomId.toString());
-
-//     // Step 2: Find other users who clicked on the same rooms
-//     const similarUsers = await Click.find({
-//       roomId: { $in: clickedRoomIds },
-//       userId: { $ne: userId }
-//     });
-
-//     // Step 3: Count other rooms clicked by these similar users
-//     const roomClickMap = {}; // {roomId: totalClicks}
-
-//     similarUsers.forEach(click => {
-//       const id = click.roomId.toString();
-//       if (!clickedRoomIds.includes(id)) {
-//         roomClickMap[id] = (roomClickMap[id] || 0) + click.count;
-//       }
-//     });
-
-//     // Step 4: Sort recommended rooms by total click count
-//     const sortedRoomIds = Object.entries(roomClickMap)
-//       .sort((a, b) => b[1] - a[1])
-//       .map(([roomId]) => roomId);
-
-//     // Step 5: Fetch and return those rooms
-//     const recommendedRooms = await rentedModel.find({ _id: { $in: sortedRoomIds } });
-
-//     res.status(200).json(recommendedRooms);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Recommendation error' });
-//   }
-// };
+    return res.status(200).json({ msg: "Rented successfully updated!!" });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
 
 
-// const clickRecomendation = async (userId) => {
-//   const userClicks = await Click.find({ userId }).select('roomId');
-//   const clickedRoomIds = userClicks.map(click => click.roomId.toString());
-
-//   console.log("roomID of room clciked by user: ")
-//   console.log(userClicks)
-
-//    console.log("roomID of room clciked by user: ")
-//   console.log(clickedRoomIds)
-
-//   const similarUsers = await Click.find({
-//     roomId: { $in: clickedRoomIds },
-//     userId: { $ne: userId }
-//   });
-
-//   console.log("similarUser: ")
-//   console.log(similarUsers)
-
-
-//   const roomClickMap = {};
-
-//   similarUsers.forEach(click => {
-//     const id = click.roomId.toString();
-//     console.log(id)
-//     if (!clickedRoomIds.includes(id)) {
-//       roomClickMap[id] = (roomClickMap[id] || 0) + click.count;
-//     }
-//   });
-
-
-//   console.log("room after loopforEach: ")
-//   console.log(roomClickMap)
-
-//   const sortedRoomIds = Object.entries(roomClickMap)
-//     .sort((a, b) => b[1] - a[1]) // descending by count
-//     .map(([roomId]) => roomId);
-
-//   const recommendedRooms = await rentedModel.find({ _id: { $in: sortedRoomIds } });
-
-//   // Attach count only to use for sorting
-//   const enriched = recommendedRooms.map(room => {
-//     const id = room._id.toString();
-//     return { ...room.toObject(), count: roomClickMap[id] || 0 };
-//   });
-
-//   // Final: Sort by count and return
-//   return enriched.sort((a, b) => b.count - a.count);
-// };
 
 const clickRecomendation = async (userId) => {
   // Step 1: Get all clicks
@@ -754,5 +691,6 @@ module.exports = {
   savePost,
   getRecommendedList,
   clickRecomendation,
-  registerClick
+  registerClick,
+  updateRentedProduct
 };

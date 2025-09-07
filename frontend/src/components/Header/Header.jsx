@@ -62,6 +62,18 @@ const handleDarkMode =()=>{
                     },
                     transition: '0.3s'}} onClick={()=>myFav()}>My Favourite</Toolbar>
 
+                    
+        <Toolbar sx={{'&:hover':{
+                        cursor: 'pointer',
+                        transform: 'Scale(1.02)',
+                        transition: '0.3s'
+                    },'&:active':{
+                        cursor: 'pointer',
+                        transform: 'Scale(1.04)',
+                    
+                    },
+                    transition: '0.3s'}} onClick={()=>navigate("/myschedule")}>My Schedule</Toolbar>
+
         <Toolbar sx={{'&:hover':{
                         cursor: 'pointer',
                         transform: 'Scale(1.02)',
@@ -72,6 +84,8 @@ const handleDarkMode =()=>{
                     
                     },
                     transition: '0.3s'}}>About</Toolbar>
+
+
                 </Box>
 
                 <Box sx={{display: 'flex'}}>

@@ -30,7 +30,8 @@ const {
   savePost,
   getRecommendedList,
   clickRecomendation,
-  registerClick
+  registerClick,
+  updateRentedProduct
 } = require("../controller/controller");
 
 //create a new account
@@ -94,7 +95,10 @@ router.post("/save/rented_product", saveRentedProduct);
 //get rented product
 router.get("/get/rented_product", getRentedProduct);
 
-//clicked reco
+//update rented product
+router.put("/update/rented_product", updateRentedProduct);
+
+
 
 // register click
 router.post("/post/registerClick", registerClick)

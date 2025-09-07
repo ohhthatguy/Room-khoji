@@ -14,6 +14,7 @@ import {
   Grid,
   Avatar,
   TableCell,
+  Chip
 } from "@mui/material";
 import {
   NavigateNext,
@@ -21,6 +22,7 @@ import {
   Bookmark,
   BookmarkBorderOutlined,
   DarkMode,
+   
 } from "@mui/icons-material";
 
 import { DataContext } from "../../../context/DataProvider";
@@ -222,7 +224,7 @@ const ProductMarket = ({ darkMode }) => {
           gap: "10px",
           marginBottom: "1.22rem",
           paddingTop: "1.5rem",
-          
+       
         }}
       >
         {optionList.map((e) =>
@@ -260,28 +262,30 @@ const ProductMarket = ({ darkMode }) => {
       </Box>
 
 
-      <Grid container justifyContent="center">
+      <Grid container spacing={3} style={{padding: "0 20px"}}  >
         {currentPost.length > 0 ? (
-          <Grid
+         
+            currentPost.map((e, index) => (
+               <Grid
             ref={productRef}
             item
-            sx={{
-              display: "flex",
-              rowGap: "2rem",
-              flexDirection: "column",
-            }}
-            lg={7}
+           
+            lg={4}
             md={8}
             sm={8}
           >
-            {currentPost.map((e, index) => (
               <Card
                 key={index}
+           
+
                 sx={{
                   position: "relative",
                   backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
                   color: darkMode ? "white" : "black",
+                    height: "750px"
                 }}
+           
+
               >
                 {bookMarkClicked.includes(e._id) ? (
                   <Bookmark
@@ -341,6 +345,7 @@ const ProductMarket = ({ darkMode }) => {
                       zIndex: "1",
                       position: "absolute",
                       top: "50%",
+                       
                     }}
                   >
                     <NavigateBefore
@@ -374,6 +379,7 @@ const ProductMarket = ({ darkMode }) => {
                     sx={{
                       height: "20rem",
                       display: "flex",
+                  
                       transform:
                         activeIndex === index
                           ? `  translateX(-${movement * 100}%)`
@@ -385,7 +391,7 @@ const ProductMarket = ({ darkMode }) => {
                       <Box
                         key={index}
                         sx={{
-                          background: `url(${item}) no-repeat 50% 50% / contain`,
+                          background: `url(${item}) no-repeat 50% 50% / cover`,
                           width: "100%",
                           height: "20rem",
                           flex: "0 0 100%",
@@ -396,11 +402,30 @@ const ProductMarket = ({ darkMode }) => {
                   </Box>
                 </Box>
 
-                <CardContent>
-                  <Typography variant="h5">{e.Description}</Typography>
+                <CardContent style={{display: "flex", justifyContent: "space-between", padding: "15px"}}>
+                  <Typography variant="h5">Rs. {e.Rate}</Typography>
+                  <Chip label={e.Category} />
                 </CardContent>
 
-                <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                <Box style={{padding: "15px"}}>
+                  <div style={{fontSize: "1.2rem", fontWeight: "bold", height: "3rem", lineHeight: "1.3rem" , overflowY: "hidden"}}>{e.Description}</div>
+                    <Typography style={{fontSize: "0.82rem", color: "GrayText",paddingTop: "15px", paddingBottom: "15px"}}>
+                      {e.Location.split(",").slice(2).join(",").trim()}
+                    </Typography>
+
+                    <div style={{display: "flex", justifyContent: "space-between"}} >
+
+                  <Chip label={`${e.Parking} Parking`} />
+                  <Chip label={`Pets ${e.Pets}`} />
+                  <Chip label={`Prefered ${e.People}`} />
+
+
+
+                    </div>
+
+                </Box>
+
+                {/* <Box sx={{ display: "flex", justifyContent: "space-around" }}>
               
                   <Box
                     sx={{
@@ -463,29 +488,23 @@ const ProductMarket = ({ darkMode }) => {
                       <Typography>: {e.Pets}</Typography>
                     </Box>
                   </Box>
-                </Box>
+                </Box> */}
 
-                <Box style={{ marginBottom: "1.2rem" }}>
-                  <div style={{ marginBottom: "2rem" }}>
-                    <Typography>
-                      {" "}
-                      <strong>Location: </strong>
-                    </Typography>
-                    <Typography>
-                      {e.Location.split(",").slice(2).join(",").trim()}
-                    </Typography>
-                  </div>
+                <Box style={{ marginBottom: "1.2rem", padding: "15px" }}>
+                  
                   <Button
                     variant="contained"
                     onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
                   >
-                    lets talk business
+                    View Details
                   </Button>
                 </Box>
               </Card>
-            ))}
-          
+
           </Grid>
+        
+            ))
+          
         ) : (
           <Box>sorry but currenlty none are available</Box>
         )}
