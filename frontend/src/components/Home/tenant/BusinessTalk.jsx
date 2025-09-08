@@ -96,8 +96,6 @@ const BusinessTalk = ({ darkMode }) => {
     const registerClick = async () => {
       try {
         const userId = JSON.parse(localStorage.getItem("currentUser"));
-        console.log(userId.name);
-        console.log(userId._id);
 
         const res = await API.registerClickAPI({
           userId: userId._id, // from auth context or localStorage
@@ -105,10 +103,10 @@ const BusinessTalk = ({ darkMode }) => {
         });
         if (res.isSuccess) {
           // console.log(res.data)
-          toast.success("CLikded send db failed");
+          toast.success("clicked registered!");
         } else {
           console.log("is failure");
-          toast.success("is failure");
+          toast.success("clicked registered failure!");
         }
       } catch (err) {
         console.log(err);

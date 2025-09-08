@@ -276,10 +276,11 @@ const getPostByCategory = async (req, res) => {
 
     // Combine: recommended first (sorted), then remaining
     const finalRooms = [...recommendedRooms, ...remainingRooms];
+    const finalFilter = finalRooms.filter((e)=> e.Category == category);
     // console.log(finalRooms)
     
 
-    res.status(200).json(finalRooms);
+    res.status(200).json(finalFilter);
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error in getPostByCategory" });
@@ -599,8 +600,21 @@ console.log('RoomMap:', userRoomMap[userId._id]);
   console.log("CLiked by user sorrted : ")
   console.log(sortedRoomIds)
 
+  console.log("All the rooms current user clicked except in descending order of the clicks: ")
+  
+  const getRoomIdsByCount = (userRoomMap, userId) =>
+  Object.entries(userRoomMap[userId._id] || {})
+    .sort((a, b) => b[1] - a[1])
+    .map(([roomId]) => roomId);
+
+
+    const userRoomIds = getRoomIdsByCount(userRoomMap, userId);
+    console.log(userRoomIds);
+
+
+const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
   // Step 7: Fetch room details
-  const recommendedRooms = await postModel.find({ _id: { $in: sortedRoomIds } });
+  const recommendedRooms = await postModel.find({ _id: { $in: finalRoomIds } });
 
   console.log("Prerecomenedation: ");
   console.log(recommendedRooms);
@@ -617,6 +631,10 @@ console.log('RoomMap:', userRoomMap[userId._id]);
 
 
   return enriched.sort((a, b) => b.score - a.score);
+ 
+
+
+
 };
 
 

@@ -84,7 +84,7 @@ const ProductMarket = ({ darkMode }) => {
           const userID = JSON.parse(user);
           const res = await API.getPostByCategory({ Category: selectedOption, userID: userID });
           if (res.isSuccess) {
-            // console.log(res.data)
+            console.log(res.data)
             setCurrentPost(res.data);
           } else {
             console.log("is failure");

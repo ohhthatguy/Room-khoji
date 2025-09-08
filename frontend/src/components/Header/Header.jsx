@@ -13,7 +13,7 @@ const Header =()=>{
     // console.log(account)
 
 const homeNavigation=()=>{
-    (account.category == "Tenant") ? navigate('/tenantHome') :  navigate('/') 
+    (account.category == "Tenant") ? navigate('/tenantHome') :  navigate('/landlordHome') 
 }
 
 const myFav =()=>{
