@@ -7,7 +7,7 @@ import {
   Box,
   TextField,
   Typography,
-  Switch,
+  CircularProgress ,
 } from "@mui/material";
 import Header from "../Header/Header";
 import { useNavigate, Link } from "react-router-dom";
@@ -172,7 +172,7 @@ const Login = () => {
               disabled={logInData.email && logInData.password ? false : true}
               onClick={() => handleLogIn()}
             >
-              {isLoading ? "Loading...": "Login"}
+              {isLoading ?  <CircularProgress size={24} color="inherit" />: "Login"}
             </Button>
 
             <Link style={{ textAlign: "center" }} to={"/create/account"}>

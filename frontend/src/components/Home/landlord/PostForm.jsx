@@ -14,7 +14,7 @@ import {
   TextareaAutosize,
   TableHead,
   TableCell,
-  TableRow,
+  CircularProgress,
 } from "@mui/material";
 import { Cancel, Label } from "@mui/icons-material";
 import LocationSelector from "../../Location-Selector/LocationSelector";
@@ -48,12 +48,15 @@ const PostForm = ({ darkMode }) => {
   const [productData, setProductData] = useState(initialProductData);
   const [productImage, setProductImage] = useState();
   const [success, setSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
   // console.log(productImage)
 
   useEffect(() => {
     if (productImage) {
       const sendProductImageToDB = async () => {
+    setIsLoading(true)
+
         console.log("here");
         const data = new FormData();
 
@@ -77,6 +80,8 @@ const PostForm = ({ darkMode }) => {
         } catch (err) {
           console.log("Some error happend. ERROR: ", err);
         }
+    setIsLoading(false)
+
       };
 
       sendProductImageToDB();
@@ -133,6 +138,7 @@ const PostForm = ({ darkMode }) => {
 
   const handleClick = async () => {
     console.log(productData);
+    setIsLoading(true)
     try {
       let res = await API.savePost(productData);
       // console.log(res)
@@ -145,6 +151,8 @@ const PostForm = ({ darkMode }) => {
     } catch (err) {
       console.log("error: ", err);
     }
+    setIsLoading(false)
+
   };
 
   return (
@@ -434,7 +442,8 @@ const PostForm = ({ darkMode }) => {
             style={{ color: darkMode ? "white" : "black" }}
             onClick={() => handleClick()}
           >
-            Look for teanants
+                                       {isLoading ?  <CircularProgress size={24} color="inherit" />: "Looking For Tenants"}
+
           </Button>
         </Paper>
       )}

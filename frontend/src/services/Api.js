@@ -16,6 +16,9 @@ const API_OBJECT = {
     getPostsOfId: {method: 'get', url: '/get/post', params: true},
     
     deletePostsOfId: {method: 'delete', url: '/delete/post', params: true},
+    deleteScheduleOfId: {method: 'delete', url: '/delete/schedule', params: true},
+
+
     updatePost: {method: 'put', url: '/update/post'},
     getPostByCategory: {method: 'get', url:'/tenant/productmarket', params: true},
     getRecommendedList: {method: 'get', url:'/tenant/recommended', params: true},

@@ -31,7 +31,8 @@ const {
   getRecommendedList,
   clickRecomendation,
   registerClick,
-  updateRentedProduct
+  updateRentedProduct,
+  deleteScheduleOfId
 } = require("../controller/controller");
 
 //create a new account
@@ -60,6 +61,10 @@ router.get("/get/post", getPostsOfId);
 
 //delete post by id
 router.delete("/delete/post", deletePostsOfId);
+
+//delte schedule by id
+
+router.delete("/delete/schedule",deleteScheduleOfId);
 
 //update post
 router.put("/update/post", updatePost);

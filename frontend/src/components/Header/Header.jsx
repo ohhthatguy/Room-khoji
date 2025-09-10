@@ -6,6 +6,8 @@ import { DataContext } from "../../context/DataProvider"
 import { useContext } from "react"
 
 
+
+
 const Header =()=>{
 
     const {account, setOpenPortal, setDarkMode, darkMode} = useContext(DataContext)
@@ -13,7 +15,7 @@ const Header =()=>{
     // console.log(account)
 
 const homeNavigation=()=>{
-    (account.category == "Tenant") ? navigate('/tenantHome') :  navigate('/landlordHome') 
+    (JSON.parse(localStorage.getItem('currentUser')).category == "Tenant") ? navigate('/tenantHome') :  navigate('/landlordHome') 
 }
 
 const myFav =()=>{

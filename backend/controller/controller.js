@@ -10,6 +10,21 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const Recommend = require('../Recommend/Recommend');
 
+const cloudinary = require('../Middleware/cloudinaryUpload')
+const upload = require('../Middleware/upload')
+
+ const streamUpload = (buffer, folderName) => {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: folderName },
+        (error, result) => {
+          if (result) resolve(result.secure_url);
+          else reject(error);
+        }
+      );
+      stream.end(buffer);
+    });
+  };
 
 const createNewAccount = async (req, res) => {
   try {
@@ -80,14 +95,14 @@ const checkLogIn = async (req, res) => {
 };
 
 const saveProfilePicture = async (req, res) => {
-  console.log(req.file.filename);
+  // console.log(req.file.filename);
   // console.log(req.files[0])
 
   try {
     let response = new ImageModel({ image: req.file.filename });
 
     await response.save();
-    console.log("here1");
+    // console.log("here1");
 
     return res.status(200).json({ msg: "data save sucesfully" });
   } catch (err) {
@@ -133,36 +148,39 @@ const getGharbetiById = async (req, res) => {
 };
 
 const getProductPicture = async (req, res) => {
-  // console.log(req.file.filename)
-
-  // try{
-  //     let response = new ImageModel({image: req.file.filename})
-  //     // let response = new ImageModel( req.file.filename)
-
-  //     await response.save()
-  //     console.log('here1')
-
-  //     return res.status(200).json({msg: 'data save sucesfully'})
-
-  // }catch(err){
-  //     console.log('here2')
-  //     return res.status(500).json({msg: 'data did not save sucesfully. ERROR: ', err})
-
-  // }
+  
   if (!req.files) {
     return res.status(404).json({ msg: "no files were found to upload" });
   }
 
-  let endPoints = [];
-  req.files.map((e) => {
-    endPoints = [
-      ...endPoints,
-      `${process.env.BACKEND_URL}/profile/${e.filename}`,
-    ];
-  });
-  // console.log(endPoints)
+ 
 
-  return res.status(200).json(endPoints);
+  try {
+    
+    // const result = await streamUpload(req.file.buffer);
+     // Upload all files in parallel
+    const uploadPromises = req.files.map((file) => streamUpload(file.buffer,"profile"));
+    const urls = await Promise.all(uploadPromises);
+
+    res.json( urls ); // array of Cloudinary URLs
+   
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Upload failed" });
+  }
+
+  // let endPoints = [];
+  // req.files.map((e) => {
+  //   endPoints = [
+  //     ...endPoints,
+  //     `${process.env.BACKEND_URL}/profile/${e.filename}`,
+  //   ];
+  // });
+  // // console.log(endPoints)
+
+  // return res.status(200).json(endPoints);
+
+
 };
 
 const savePost = async (req, res) => {
@@ -215,6 +233,25 @@ const deletePostsOfId = async (req, res) => {
   }
 };
 
+const deleteScheduleOfId = async (req, res) => {
+  try {
+    let response = await rentedModel.findOne({ _id: req.query._id });
+
+    if (!response) {
+      return res.status(404).json({ msg: "data to delete is not in database" });
+    }
+
+    await rentedModel.deleteOne({ _id: req.query._id });
+    return res.status(200).json({ msg: "data is delete successfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ msg: "error while deleting the blog is, " + err });
+  }
+};
+
+
+
 const updatePost = async (req, res) => {
   try {
     await postModel.findByIdAndUpdate(req.body._id, {
@@ -262,8 +299,8 @@ const getPostByCategory = async (req, res) => {
 
     // Get sorted recommended rooms with count
     const recommendedRooms = await clickRecomendation(userID);
-    console.log("reco-return-room")
-    console.log(recommendedRooms)
+    // console.log("reco-return-room")
+    // console.log(recommendedRooms)
 
 
     // Create a Set of recommended room IDs to avoid duplication
@@ -295,7 +332,7 @@ const getRecommendedList = async (req, res) => {
     const allCategoryList  = await findPostsByCategory(req.query.Category)
     // console.log(allCategoryList)
 
-    console.log("/////////////after////////////")
+    // console.log("/////////////after////////////")
 
 
 
@@ -536,22 +573,22 @@ const clickRecomendation = async (userId) => {
     userRoomMap[uid][rid] = (userRoomMap[uid][rid] || 0) + click.count;
   });
 
-  console.log("ROomMap: ")
-  console.log(userRoomMap)
+  // console.log("ROomMap: ")
+  // console.log(userRoomMap)
 
-    console.log("roomSet: ")
-  console.log(roomSet)
+  //   console.log("roomSet: ")
+  // console.log(roomSet)
 
 
 
   // Step 3: Convert user vectors to same dimension
   const allRoomIds = Array.from(roomSet);
- console.log('UserId:', userId._id);
-console.log('RoomMap:', userRoomMap[userId._id]);
+//  console.log('UserId:', userId._id);
+// console.log('RoomMap:', userRoomMap[userId._id]);
 
   const currentUserVector = allRoomIds.map(rid => userRoomMap[userId._id]?.[rid] || 0);
 
-  console.log("currentUserVector: ", currentUserVector)
+  // console.log("currentUserVector: ", currentUserVector)
 
   const similarityScores = []; // { userId, score }
 
@@ -561,16 +598,16 @@ console.log('RoomMap:', userRoomMap[userId._id]);
     const otherVector = allRoomIds.map(rid => userRoomMap[otherUserId][rid] || 0);
      
 
-     console.log("otherVector: ", otherVector)
+    //  console.log("otherVector: ", otherVector)
     const score = cosineSimilarity(currentUserVector, otherVector);
-    console.log(score)
+    // console.log(score)
     if (score > 0) {
       similarityScores.push({ userId: otherUserId, score });
     }
   }
 
-  console.log("similarityScores: ")
-  console.log(similarityScores)
+  // console.log("similarityScores: ")
+  // console.log(similarityScores)
 
   // Step 4: Sort similar users by similarity
   similarityScores.sort((a, b) => b.score - a.score);
@@ -588,8 +625,8 @@ console.log('RoomMap:', userRoomMap[userId._id]);
     }
   });
 
-  console.log("CLiked by user : ")
-  console.log(roomScoreMap)
+  // console.log("CLiked by user : ")
+  // console.log(roomScoreMap)
 
   // Step 6: Sort rooms by score
   const sortedRoomIds = Object.entries(roomScoreMap)
@@ -597,10 +634,10 @@ console.log('RoomMap:', userRoomMap[userId._id]);
     .map(([roomId]) => roomId);
 
     
-  console.log("CLiked by user sorrted : ")
-  console.log(sortedRoomIds)
+  // console.log("CLiked by user sorrted : ")
+  // console.log(sortedRoomIds)
 
-  console.log("All the rooms current user clicked except in descending order of the clicks: ")
+  // console.log("All the rooms current user clicked except in descending order of the clicks: ")
   
   const getRoomIdsByCount = (userRoomMap, userId) =>
   Object.entries(userRoomMap[userId._id] || {})
@@ -609,15 +646,15 @@ console.log('RoomMap:', userRoomMap[userId._id]);
 
 
     const userRoomIds = getRoomIdsByCount(userRoomMap, userId);
-    console.log(userRoomIds);
+    // console.log(userRoomIds);
 
 
 const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
   // Step 7: Fetch room details
   const recommendedRooms = await postModel.find({ _id: { $in: finalRoomIds } });
 
-  console.log("Prerecomenedation: ");
-  console.log(recommendedRooms);
+  // console.log("Prerecomenedation: ");
+  // console.log(recommendedRooms);
 
 
   const enriched = recommendedRooms.map(room => {
@@ -626,8 +663,8 @@ const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
   });
 
 
-    console.log("enriched: ");
-  console.log(enriched);
+  //   console.log("enriched: ");
+  // console.log(enriched);
 
 
   return enriched.sort((a, b) => b.score - a.score);
@@ -710,5 +747,6 @@ module.exports = {
   getRecommendedList,
   clickRecomendation,
   registerClick,
-  updateRentedProduct
+  updateRentedProduct,
+  deleteScheduleOfId
 };
