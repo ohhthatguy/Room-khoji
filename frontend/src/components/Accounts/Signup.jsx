@@ -17,7 +17,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { API } from "../../services/Api";
-
+import toast from "react-hot-toast"
 const StyledPaper = styled(Paper)`
   border: 1px solid black;
   display: flex;
@@ -55,6 +55,7 @@ const Signup = () => {
   const [signUpData, setSignUpData] = useState(initial);
   const [profileImage, setProfileImage] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  // const [isFormValid, setIsFormValid] = useState(false);
 
   const handleInput = (e) => {
     if (e.target.type !== undefined) {
@@ -98,6 +99,19 @@ const Signup = () => {
   }, [signUpData.profile]);
 
   const handleClick = async () => {
+
+    if(!signUpData.category){
+      toast.error("Please select Tenant or Landlord");
+      return
+    }
+
+    if(!isValidName(signUpData.name) ||
+  !isValidEmail(signUpData.email) ||
+  !isValidPassword(signUpData.password)){
+// setIsFormValid(false);
+return;
+  }
+
     console.log(signUpData);
     console.log(profileImage)
         setIsLoading(true)
@@ -126,6 +140,56 @@ const Signup = () => {
   };
 
   console.log(`profile: ${signUpData.profile}`);
+
+const isValidName = (name) => {
+  if (!name) {
+    toast.error("❗ Name is required.");
+    return false;
+  }
+  if (name.length < 5) {
+    toast.error("❗ Name must be at least 5 characters.");
+    return false;
+  }
+  if (name.length > 30) {
+   toast.error("❗ Name must be less than or equal to 30 characters.");
+    return false;
+  }
+  return true;
+};
+
+const isValidPassword = (password) => {
+  if (!password) {
+    toast.error("❗ Password is required.");
+    return false;
+  }
+  if (password.length < 5) {
+    toast.error("❗ Password must be at least 5 characters.");
+    return false;
+  }
+  if (password.length > 15) {
+    toast.error("❗ Password must be at most 15 characters.");
+    return false;
+  }
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
+    toast.error("❗ Password must contain at least one letter and one number.");
+    return false;
+  }
+  return true;
+};
+
+const isValidEmail = (email) => {
+  if (!email) {
+    toast.error("❗ Email is required.");
+    return false;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast.error("❗ Email format is invalid.");
+    return false;
+  }
+  return true;
+};
+
+
 
   return (
     <>
@@ -227,14 +291,15 @@ const Signup = () => {
             {/* && profileImage */}
             <Button
               variant="contained"
-              disabled={
-                signUpData.name &&
-                signUpData.email &&
-                signUpData.category &&
-                signUpData.password
-                  ? false
-                  : true
-              }
+              // disabled={ isFormValid}
+              // // disabled={
+              // //   signUpData.name &&
+              // //   signUpData.email &&
+              // //   signUpData.category &&
+              // //   signUpData.password
+              // //     ? false
+              // //     : true
+              // // }
               onClick={() => handleClick()}
             >
                             {isLoading ?  <CircularProgress size={24} color="inherit" />: "SignUp"}

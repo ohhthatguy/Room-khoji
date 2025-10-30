@@ -56,7 +56,48 @@ const Login = () => {
 
   console.log(logInData);
 
+  const isValidPassword = (password) => {
+    if (!password) {
+      toast.error("❗ Password is required.");
+      return false;
+    }
+    if (password.length < 5) {
+      toast.error("❗ Password must be at least 5 characters.");
+      return false;
+    }
+    if (password.length > 15) {
+      toast.error("❗ Password must be at most 15 characters.");
+      return false;
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
+      toast.error("❗ Password must contain at least one letter and one number.");
+      return false;
+    }
+    return true;
+  };
+  
+  const isValidEmail = (email) => {
+    if (!email) {
+      toast.error("❗ Email is required.");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("❗ Email format is invalid.");
+      return false;
+    }
+    return true;
+  };
+
   const handleLogIn = async () => {
+
+ if(
+  !isValidEmail(logInData.email) ||
+  !isValidPassword(logInData.password)){
+
+return;
+  }
+
+
     setIsLoading(true);
     // console.log(logInData)
     try {
@@ -64,7 +105,9 @@ const Login = () => {
 
       if (!response.isSuccess) {
         console.log("some error came across. RESPONSE: ", response);
-        toast.error("Error in login");
+console.log(response.data.msg)
+        
+       
       } else {
         // console.log("login successfull")
         setLogInData(initial);
@@ -89,7 +132,14 @@ const Login = () => {
       }
     } catch (err) {
       console.log("Some error in LOGIN. ERROR: ", err);
-      toast.error("Error in login");
+      if(err.code === 404){
+          
+          toast.error(err.data.msg);
+        }else{
+        toast.error("Error in login");
+
+        }
+     
     }
     setIsLoading(false);
   };
@@ -169,7 +219,7 @@ const Login = () => {
             <Button
               variant="contained"
            
-              disabled={logInData.email && logInData.password ? false : true}
+              // disabled={logInData.email && logInData.password ? false : true}
               onClick={() => handleLogIn()}
             >
               {isLoading ?  <CircularProgress size={24} color="inherit" />: "Login"}
