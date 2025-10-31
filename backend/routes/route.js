@@ -86,7 +86,7 @@ router.get("/get/favourtie/id", getFavouritePost);
 router.get("/get/favourite/posts", getFavDataFromFavPostId);
 
 //otpAuth
-router.post("otpAuth", otpAuth);
+router.post("/otpAuth", otpAuth);
 
 ////easewa//////////////////////////////////////
 
