@@ -32,7 +32,8 @@ const {
   clickRecomendation,
   registerClick,
   updateRentedProduct,
-  deleteScheduleOfId
+  deleteScheduleOfId,
+  otpAuth
 } = require("../controller/controller");
 
 //create a new account
@@ -83,6 +84,9 @@ router.get("/get/favourtie/id", getFavouritePost);
 
 //get fav posts
 router.get("/get/favourite/posts", getFavDataFromFavPostId);
+
+//otpAuth
+router.post("otpAuth", otpAuth);
 
 ////easewa//////////////////////////////////////
 

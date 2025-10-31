@@ -28,6 +28,7 @@ import {
 import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
+import Footer from "../../footer/Footer";
 
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -195,7 +196,7 @@ const ProductMarket = ({ darkMode }) => {
     setFavouritePost({ add: "", delete: e._id });
   };
 
-  const optionList = ["Flat", "Building", "Room", "Recommended"];
+  const optionList = ["Flat", "Building", "Room", "Filter"];
   //   console.log(selectedOption)
   //   console.log(favrouitPost)
   //   console.log(bookMarkClicked)
@@ -282,7 +283,12 @@ const ProductMarket = ({ darkMode }) => {
                   position: "relative",
                   backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
                   color: darkMode ? "white" : "black",
-                    height: "750px"
+                    height: "750px",
+                    // border: "1px solid black",
+                    boxShadow: "1px 3px 4px 0px"
+              
+
+
                 }}
            
 
@@ -330,6 +336,7 @@ const ProductMarket = ({ darkMode }) => {
                     "& .MuiCardHeader-subheader": {
                       color: darkMode ? "white" : "black",
                     },
+                   
                   }}
                   avatar={
                     <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
@@ -403,19 +410,19 @@ const ProductMarket = ({ darkMode }) => {
                 </Box>
 
                 <CardContent style={{display: "flex", justifyContent: "space-between", padding: "15px"}}>
-                  <Typography variant="h5">Rs. {e.Rate}</Typography>
+                  <Typography variant="body1">Rs. {e.Rate}</Typography>
                   <Chip label={e.Category} />
                 </CardContent>
 
                 <Box style={{padding: "15px"}}>
-                  <div style={{fontSize: "1.2rem", fontWeight: "bold", height: "3rem", lineHeight: "1.3rem" , overflowY: "hidden"}}>{e.Description}</div>
-                    <Typography style={{fontSize: "0.82rem", color: "GrayText",paddingTop: "15px", paddingBottom: "15px"}}>
+                  <Typography style={{fontSize: "1.2rem", fontWeight: "bold", height: "3rem", lineHeight: "1.3rem" , overflowY: "hidden"}} variant="caption">{e.Description}</Typography>
+                    <Typography style={{fontSize: "0.82rem", paddingTop: "15px", paddingBottom: "15px"}}>
                       {e.Location.split(",").slice(2).join(",").trim()}
                     </Typography>
 
                     <div style={{display: "flex", justifyContent: "space-between"}} >
 
-                  <Chip label={`${e.Parking} Parking`} />
+                  <Chip  label={`${e.Parking} Parking`} />
                   <Chip label={`Pets ${e.Pets}`} />
                   <Chip label={`Prefered ${e.People}`} />
 
@@ -509,6 +516,11 @@ const ProductMarket = ({ darkMode }) => {
           <Box>sorry but currenlty none are available</Box>
         )}
       </Grid>
+
+<div style={{marginTop: "2rem"}}>
+ <Footer />
+</div>
+     
     </>
   );
 };

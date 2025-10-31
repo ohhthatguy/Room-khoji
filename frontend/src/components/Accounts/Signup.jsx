@@ -17,14 +17,17 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { API } from "../../services/Api";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
+import Otp from "./Otp";
+
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+
 const StyledPaper = styled(Paper)`
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: #e5dfdb;
-  height: 100%;
+  height: 90%;
   padding: 2rem;
 
   gap: 2rem;
@@ -32,9 +35,10 @@ const StyledPaper = styled(Paper)`
 
 const StyledImg = styled("img")`
   width: 100%;
-  height: 100%;
+  height: 90%;
   object-fit: cover;
-  border: 1px solid black;
+
+  borderleft: 1px solid black;
 `;
 
 const Signup = () => {
@@ -56,6 +60,8 @@ const Signup = () => {
   const [profileImage, setProfileImage] = useState();
   const [isLoading, setIsLoading] = useState(false);
   // const [isFormValid, setIsFormValid] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(true);
+  const [otpCodeFromBackend, setOtpCodeFromBackend] = useState("");
 
   const handleInput = (e) => {
     if (e.target.type !== undefined) {
@@ -63,13 +69,10 @@ const Signup = () => {
     }
   };
 
-  useEffect(() => {
-    if (firstLoad.current) {
-      firstLoad.current = false;
-    } else {
-      const createAccount = async () => {
+   const createAccount = async () => {
         console.log(signUpData);
-        setIsLoading(true)
+        setOtpCodeFromBackend('')
+        setIsLoading(true);
 
         try {
           let response = await API.createNewAccount(signUpData);
@@ -85,12 +88,37 @@ const Signup = () => {
           console.log("ERROR: ", err);
         }
 
-        setIsLoading(false)
-
+        setIsLoading(false);
       };
 
-      createAccount();
+  useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+    } else {
+     
 
+      const otpAuth = async () => {
+        setIsLoading(true);
+
+        try {
+          let response = await API.otpAuth(signUpData);
+          if (!response.isSuccess) {
+            console.log(
+              "Server has sent data to frontend but some eroor in frntend while sending itp"
+            );
+          } else {
+            console.log("otp sent");
+            setOtpCodeFromBackend(response.code);
+            //show the dialoge box and if it enters correct call CreateAccount()
+          }
+        } catch (err) {
+          console.log("ERROR: ", err);
+        }
+
+        setIsLoading(false);
+      };
+
+      otpAuth()
 
     }
 
@@ -99,22 +127,23 @@ const Signup = () => {
   }, [signUpData.profile]);
 
   const handleClick = async () => {
-
-    if(!signUpData.category){
+    if (!signUpData.category) {
       toast.error("Please select Tenant or Landlord");
-      return
+      return;
     }
 
-    if(!isValidName(signUpData.name) ||
-  !isValidEmail(signUpData.email) ||
-  !isValidPassword(signUpData.password)){
-// setIsFormValid(false);
-return;
-  }
+    if (
+      !isValidName(signUpData.name) ||
+      !isValidEmail(signUpData.email) ||
+      !isValidPassword(signUpData.password)
+    ) {
+      // setIsFormValid(false);
+      return;
+    }
 
     console.log(signUpData);
-    console.log(profileImage)
-        setIsLoading(true)
+    console.log(profileImage);
+    setIsLoading(true);
 
     const data = new FormData();
     // data.append("name", profileImage.name)
@@ -135,68 +164,91 @@ return;
     } catch (err) {
       console.log("ERROR: ", err);
     }
-        setIsLoading(false)
-
+    setIsLoading(false);
   };
 
   console.log(`profile: ${signUpData.profile}`);
 
-const isValidName = (name) => {
-  if (!name) {
-    toast.error("❗ Name is required.");
-    return false;
-  }
-  if (name.length < 5) {
-    toast.error("❗ Name must be at least 5 characters.");
-    return false;
-  }
-  if (name.length > 30) {
-   toast.error("❗ Name must be less than or equal to 30 characters.");
-    return false;
-  }
-  return true;
-};
+  const isValidName = (name) => {
+    if (!name) {
+      toast.error("❗ Name is required.");
+      return false;
+    }
+    if (name.length < 5) {
+      toast.error("❗ Name must be at least 5 characters.");
+      return false;
+    }
+    if (name.length > 30) {
+      toast.error("❗ Name must be less than or equal to 30 characters.");
+      return false;
+    }
+    return true;
+  };
 
-const isValidPassword = (password) => {
-  if (!password) {
-    toast.error("❗ Password is required.");
-    return false;
-  }
-  if (password.length < 5) {
-    toast.error("❗ Password must be at least 5 characters.");
-    return false;
-  }
-  if (password.length > 15) {
-    toast.error("❗ Password must be at most 15 characters.");
-    return false;
-  }
-  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
-    toast.error("❗ Password must contain at least one letter and one number.");
-    return false;
-  }
-  return true;
-};
+  const isValidPassword = (password) => {
+    if (!password) {
+      toast.error("❗ Password is required.");
+      return false;
+    }
+    if (password.length < 5) {
+      toast.error("❗ Password must be at least 5 characters.");
+      return false;
+    }
+    if (password.length > 15) {
+      toast.error("❗ Password must be at most 15 characters.");
+      return false;
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
+      toast.error(
+        "❗ Password must contain at least one letter and one number."
+      );
+      return false;
+    }
+    return true;
+  };
 
-const isValidEmail = (email) => {
-  if (!email) {
-    toast.error("❗ Email is required.");
-    return false;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast.error("❗ Email format is invalid.");
-    return false;
-  }
-  return true;
-};
+  const isValidEmail = (email) => {
+    if (!email) {
+      toast.error("❗ Email is required.");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("❗ Email format is invalid.");
+      return false;
+    }
+    return true;
+  };
 
+  const handleOtpInput = (val) => {
+    console.log("val: ", val);
 
+    if (val.length == 6) {
+      // checkOtp(val);
+
+      console.log(otpCodeFromBackend)
+
+      if(otpCodeFromBackend == val){
+        //finally call the signup
+      createAccount();
+
+      }else{
+        toast.error("Wrong OTP Entered!")
+      }
+
+    }
+  };
 
   return (
     <>
       <Grid
         container
         justifyContent={"center"}
-        sx={{ padding: "2rem", height: "100vh" }}
+        sx={{
+          padding: "4rem",
+          height: "100vh",
+          background: "#85d6a9",
+          overflow: "hidden",
+        }}
       >
         <Grid
           item
@@ -214,12 +266,6 @@ const isValidEmail = (email) => {
             src="https://cdn.pixabay.com/photo/2019/05/24/11/00/interior-4226020_1280.jpg"
             alt="bg-login"
           />
-          <Typography
-            variant="h5"
-            sx={{ position: "absolute", top: "5%", left: "25%" }}
-          >
-            screen to room
-          </Typography>
         </Grid>
 
         <Grid item lg={4} md={5} sm={6} xs={10}>
@@ -285,8 +331,6 @@ const isValidEmail = (email) => {
                 type="file"
                 id="fileInput"
               />
-
-       
             </label>
             {/* && profileImage */}
             <Button
@@ -302,12 +346,36 @@ const isValidEmail = (email) => {
               // // }
               onClick={() => handleClick()}
             >
-                            {isLoading ?  <CircularProgress size={24} color="inherit" />: "SignUp"}
-              
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "SignUp"
+              )}
             </Button>
           </StyledPaper>
         </Grid>
       </Grid>
+
+      <Modal
+        isOpen={showOtpModal}
+        toggle={() => setShowOtpModal((prev) => !prev)}
+        centered
+        scrollable
+      >
+        <ModalHeader toggle={() => setShowOtpModal((prev) => !prev)}>
+          Logout
+        </ModalHeader>
+        <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
+          <Otp length={6} onChange={(val) => handleOtpInput(val)} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={() => setShowOtpModal(false)}>
+            Cancel
+          </Button>
+
+          <Button color="primary">LogOut</Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };

@@ -35,6 +35,7 @@ const API_OBJECT = {
     
 
     registerClickAPI:{method: 'post', url: '/post/registerClick', params: true},
+    otpAuth:{method: 'post', url: '/otpAuth'},
 
     
 

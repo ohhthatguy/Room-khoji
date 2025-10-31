@@ -71,15 +71,19 @@ const Schedule = ({ darkMode }) => {
     <>
       <Header />
 
-      <div style={{ marginTop: "4.3rem", height: "100vh" }}>
+      <div style={{ marginTop: "4.3rem", height: "80vh",  }}>
+        <Box style={{textAlign: "center"}}>
         <Typography
           varient="h1"
           style={{ padding: "0 20px", fontSize: "1.3rem", fontWeight: "500" }}
         >
           My Schedules
         </Typography>
+        </Box>
 
-        <Grid container spacing={3} style={{ padding: "0 20px" }}>
+
+        <Box >
+        <Grid container spacing={3} style={{ padding: "20px 20px"}}>
           {scheduledData?.length > 0 ? (
             scheduledData?.map((e, index) => (
               <Grid item lg={6} md={8} sm={8}>
@@ -179,9 +183,11 @@ const Schedule = ({ darkMode }) => {
               </Grid>
             ))
           ) : (
-            <Box>sorry but currenlty none are available</Box>
+            <Box style={{textAlign: "center",  width: "100%"}}>sorry but currenlty none are available</Box>
           )}
         </Grid>
+        </Box>
+        
       </div>
     </>
   );

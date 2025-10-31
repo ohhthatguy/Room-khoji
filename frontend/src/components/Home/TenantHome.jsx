@@ -138,18 +138,21 @@ const TenantHome = ({ darkMode }) => {
   const productType = [
     {
       image:
-        "https://media.istockphoto.com/id/1929345158/photo/modern-apartment-with-large-windows.jpg?s=1024x1024&w=is&k=20&c=BPU6q-8EwLIfG63zB0V-pYyxFbtPxNtfFFs8cLchyn8=", //room image
-      name: "Room",
+        // "https://cdn.discordapp.com/attachments/1410515477444169738/1433719948198547488/download_1.jpg?ex=6905b740&is=690465c0&hm=d9675ca233637faf250334247e49bb540a834ac8222401575a471e924219dfeb",
+      "https://cdn.discordapp.com/attachments/1410515477444169738/1433722279753416816/premium_photo-1675616563084-63d1f129623d.jpg?ex=6905b96c&is=690467ec&hm=27dfd104b8322a1771f740c4d8fb50dee3f31ad858ba8d11fafe86432a23b52a",
+        name: "Room",
     },
     {
       image:
-        "https://media.istockphoto.com/id/1486160447/photo/closeup-new-modern-apartment-buildings-background-with-copy-space.jpg?s=1024x1024&w=is&k=20&c=fLaSMshNwbfpMz-KxVb1ht3OSWoifoKzL0GrNbLvxsw=", //flat image
-      name: "Flat",
+        // "https://media.istockphoto.com/id/1486160447/photo/closeup-new-modern-apartment-buildings-background-with-copy-space.jpg?s=1024x1024&w=is&k=20&c=fLaSMshNwbfpMz-KxVb1ht3OSWoifoKzL0GrNbLvxsw=", //flat image
+      "https://cdn.discordapp.com/attachments/1410515477444169738/1433721773362253849/Flat-In-Pune-10.jpg?ex=6905b8f4&is=69046774&hm=f20031445f25211cdacba24ac0b6c8866522f628eb21a4e2fb6d9bb626341cf2",
+        name: "Flat",
     },
     {
       image:
-        "https://media.istockphoto.com/id/1328886194/photo/portrait-of-new-homeowners-admiring-their-investment.jpg?s=1024x1024&w=is&k=20&c=CkzeEmgQMZ4T8fjfL1Y1Px5EocV6YzQzpBVD6fb8Nec=", //building image
-      name: "Building",
+        // "https://media.istockphoto.com/id/1328886194/photo/portrait-of-new-homeowners-admiring-their-investment.jpg?s=1024x1024&w=is&k=20&c=CkzeEmgQMZ4T8fjfL1Y1Px5EocV6YzQzpBVD6fb8Nec=", //building image
+        "https://cdn.discordapp.com/attachments/1410515477444169738/1433721158880198747/download_4.jpg?ex=6905b861&is=690466e1&hm=cb09e84c6645c08d10bc0f207ceb3135aaf26789ead28ddd7ad3927dcb72b5ad",
+        name: "Building",
     },
   ];
 
@@ -160,7 +163,7 @@ const TenantHome = ({ darkMode }) => {
 
       photo:
         "https://cdn.pixabay.com/photo/2018/11/08/23/52/man-3803551_1280.jpg",
-      name: "John Doe",
+      name: "Ram Thapa",
     },
     {
       content:
@@ -168,7 +171,7 @@ const TenantHome = ({ darkMode }) => {
 
       photo:
         "https://cdn.pixabay.com/photo/2020/02/01/03/00/girl-4809433_1280.jpg",
-      name: "Ethal Cray",
+      name: "Sita Thapa",
     },
   ];
 
@@ -235,7 +238,7 @@ const TenantHome = ({ darkMode }) => {
     <>
       <Header />
 
-      <Grid container sx={{ marginTop: "4.3rem" }}>
+      <Grid container sx={{ marginTop: "4rem", overflowX: "hidden" }}>
         <Grid
           item
           sx={{
@@ -246,6 +249,7 @@ const TenantHome = ({ darkMode }) => {
             alignItems: "center",
             flexDirection: "column",
             gap: "10px",
+            
           }}
           xs={12}
         >
@@ -254,35 +258,12 @@ const TenantHome = ({ darkMode }) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              
             }}
           >
-            {/* <img src="https://houses.splash.html.themeplayers.net/images/country-logo2.png" alt='img' /> */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 96 96"
-            >
-              <g fill="#4d4d4d">
-                <path d="M51 31v61h46V31H54.688zm7.406 7.438h31.188v46.03H85V77h-7v7.47H58.406z"></path>
-                <path d="M62 45v8h7v-8z"></path>
-                <path d="M85 45h-7v8h7z"></path>
-                <path d="M69 70v-8h-7v8z"></path>
-                <path d="M78 70h7v-8h-7z"></path>
-              </g>
-              <g fill="#607ddf">
-                <path d="M39.094 0L36.5 2.828 21 19.292l-1 1.13V92h38.406V20.517l-1.218-1.226L41.812 2.828 39.094 0zm0 10.966l11.812 12.568V84.46H43V73.9h-8v10.56h-7.688V23.533l11.782-12.568z"></path>
-                <path d="M43 42h-8v13h8z"></path>
-              </g>
-              <g fill="#4d4d4d">
-                <path d="M0 52v40h27.406V52H0zm7.406 7.47H20v24.936h-3V81h-7v3.406H7.406V59.47z"></path>
-                <path d="M17 66h-7v7h7z"></path>
-              </g>
-            </svg>
-            <Typography sx={{ color: "white" }} variant="h5">
-              {" "}
-              Room Khoji
-            </Typography>
+          
+           
+           
           </Box>
 
           <Box>
@@ -299,7 +280,7 @@ const TenantHome = ({ darkMode }) => {
             color: darkMode ? "white" : "black",
           }}
         >
-          <Typography sx={{ margin: "2rem" }} variant="h4">
+          <Typography sx={{ margin: "2rem" }} variant="h3">
             {" "}
             What are you looking for exactly ?{" "}
           </Typography>
@@ -309,7 +290,7 @@ const TenantHome = ({ darkMode }) => {
             app makes finding your next home a breeze. Browse through a variety
             of listings, filter by your preferences, and connect with landlords
             directly. Enjoy a seamless experience from start to finish. Happy
-            room hunting! 🏡🔍
+            room hunting! 🏡
           </Typography>
         </Box>
 
@@ -319,6 +300,7 @@ const TenantHome = ({ darkMode }) => {
           justifyContent={"space-evenly"}
           direction={{ md: "row", lg: "row" }}
           sx={{ padding: "2rem" }}
+          varient="caption"
         >
           {productType.map((e, index) => (
             <Card
@@ -336,7 +318,7 @@ const TenantHome = ({ darkMode }) => {
                 transition: "0.4s",
                 cursor: "pointer",
 
-                background: "grey",
+                background: "#91ae98",
               }}
             >
               <CardMedia
@@ -344,10 +326,11 @@ const TenantHome = ({ darkMode }) => {
                 height="250"
                 image={`${e.image}`}
                 alt={`${e.name}`}
+
               />
 
               <CardHeader
-                sx={{ textAlign: "center", color: "white" }}
+                sx={{ textAlign: "center", color: "black" }}
                 title={`${e.name}`}
               />
             </Card>
@@ -361,7 +344,7 @@ const TenantHome = ({ darkMode }) => {
             color: darkMode ? "white" : "black",
             margin: "2rem",
           }}
-          variant="h4"
+          variant="h3"
         >
           See What People have to Say !
         </Typography>
@@ -379,9 +362,10 @@ const TenantHome = ({ darkMode }) => {
                 key={index}
                 sx={{
                   marginTop: "1.52rem",
-                  background: darkMode ? "#494F55" : "#F5F5F5",
+                  background: darkMode ? "#494F55" : "",
                   color: darkMode ? "white" : "black",
-                  boxShadow: darkMode && "0px 2px 2px 2px black",
+                  boxShadow:  "0px 2px 2px 2px black",
+                  borderRight: "4px solid green"
                 }}
               >
                 <CardHeader

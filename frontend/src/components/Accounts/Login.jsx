@@ -20,22 +20,24 @@ const StyledGrid = styled(Grid)`
 `;
 
 const StyledPaper = styled(Paper)`
-  border: 1px solid black;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: #e5dfdb;
-  height: 100%;
+  height: 80%;
   padding: 2rem;
-
+  margin-top: 1.5rem;
+  
   gap: 2rem;
 `;
 
 const StyledImg = styled("img")`
   width: 100%;
-  height: 100%;
+  height: 80%;
   object-fit: cover;
-  border: 1px solid black;
+  borderLeft: 1px solid black;
+   margin-top: 1.5rem;
 `;
 
 const Login = () => {
@@ -149,11 +151,13 @@ console.log(response.data.msg)
       <Grid
         container
         justifyContent={"center"}
-        sx={{ padding: "2rem", height: "100vh" }}
+       
+        sx={{padding:"4rem",  height: "100vh", background: "#85d6a9", overflow:"hidden",  }}
       >
         <Grid
           item
           sx={{
+          
             textAlign: "right",
             position: "relative",
             display: { xs: "none", sm: "block" },

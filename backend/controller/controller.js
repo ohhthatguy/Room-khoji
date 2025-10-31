@@ -10,8 +10,10 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const Recommend = require('../Recommend/Recommend');
 
-const cloudinary = require('../Middleware/cloudinaryUpload')
-const upload = require('../Middleware/upload')
+const cloudinary = require('../Middleware/cloudinaryUpload');
+const upload = require('../Middleware/upload');
+const sendMailFunction = require("../Middleware/authorizeEmail");
+
 
  const streamUpload = (buffer, folderName) => {
     return new Promise((resolve, reject) => {
@@ -41,6 +43,26 @@ const createNewAccount = async (req, res) => {
       .json({ msg: "data did not save sucesfully. ERROR: ", err });
   }
 };
+
+const otpAuth = async(req,res)=>{
+  try {
+    const userEmail = req.body.email;
+    const subject = "Confirm Your Account";
+
+     const code = Number(Math.floor(Math.random() * 1000000).toString().padStart(6, "9"));
+
+    const message = `<p1>Here is your otp for <strong>Room Khoji.</strong><br/><h1>OTP: <strong>${code}<strong> </h1>`;
+
+    sendMailFunction(userEmail, subject, message);
+
+    console.log("Code backedn: ", code)
+    return res.status(200).json({ msg: "OTP sent sucesfully", code });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ msg: "OTP did not sent sucesfully. ERROR: ", err });
+  }
+}
 
 const checkLogIn = async (req, res) => {
   const response = await accountModel.findOne({ email: req.body.email });
@@ -748,5 +770,6 @@ module.exports = {
   clickRecomendation,
   registerClick,
   updateRentedProduct,
-  deleteScheduleOfId
+  deleteScheduleOfId,
+  otpAuth
 };
