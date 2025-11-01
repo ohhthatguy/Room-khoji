@@ -8,26 +8,25 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const Recommend = require('../Recommend/Recommend');
+const Recommend = require("../Recommend/Recommend");
 
-const cloudinary = require('../Middleware/cloudinaryUpload');
-const upload = require('../Middleware/upload');
+const cloudinary = require("../Middleware/cloudinaryUpload");
+const upload = require("../Middleware/upload");
 const sendMailFunction = require("../Middleware/authorizeEmail");
 const sendMailFunctionByResendAPI = require("../Middleware/authEmailResend");
 
-
- const streamUpload = (buffer, folderName) => {
-    return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: folderName },
-        (error, result) => {
-          if (result) resolve(result.secure_url);
-          else reject(error);
-        }
-      );
-      stream.end(buffer);
-    });
-  };
+const streamUpload = (buffer, folderName) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: folderName },
+      (error, result) => {
+        if (result) resolve(result.secure_url);
+        else reject(error);
+      }
+    );
+    stream.end(buffer);
+  });
+};
 
 const createNewAccount = async (req, res) => {
   try {
@@ -45,26 +44,30 @@ const createNewAccount = async (req, res) => {
   }
 };
 
-const otpAuth = async(req,res)=>{
+const otpAuth = async (req, res) => {
   try {
     const userEmail = req.body.email;
     const subject = "Confirm Your Account";
 
-     const code = Number(Math.floor(Math.random() * 1000000).toString().padStart(6, "9"));
+    const code = Number(
+      Math.floor(Math.random() * 1000000)
+        .toString()
+        .padStart(6, "9")
+    );
 
     const message = `<p1>Here is your otp for <strong>Room Khoji.</strong><br/><h1>OTP: <strong>${code}<strong> </h1>`;
 
     sendMailFunction(userEmail, subject, message); //nodemailer
     // sendMailFunctionByResendAPI(userEmail, subject, message); //resend not working
 
-    console.log("Code backedn: ", code)
+    console.log("Code backedn: ", code);
     return res.status(200).json({ msg: "OTP sent sucesfully", code });
   } catch (err) {
     return res
       .status(500)
       .json({ msg: "OTP did not sent sucesfully. ERROR: ", err });
   }
-}
+};
 
 const checkLogIn = async (req, res) => {
   const response = await accountModel.findOne({ email: req.body.email });
@@ -93,14 +96,20 @@ const checkLogIn = async (req, res) => {
       const refreshToken = jwt.sign(
         { email: req.body.email },
         process.env.SECRET_REFRESH_KEY,
-        { expiresIn: "30s" }
+        { expiresIn: "1h" }
       );
-
-      res.cookie("accessToken", accessToken, { maxAge: 10000 });
-      res.cookie("refreshToken", refreshToken, {
-        maxAge: 30000,
+      const isProduction = process.env.NODE_ENV === "production";
+      res.cookie("accessToken", accessToken, {
+        maxAge: 10000,
         httpOnly: true,
-        secure: true,
+        secure: isProduction, // Only true in production
+        sameSite: isProduction ? "none" : "lax",
+      });
+      res.cookie("refreshToken", refreshToken, {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+        secure: isProduction, // Only true in production
+        sameSite: isProduction ? "none" : "lax",
       });
 
       // after confirming the valid user and also saving the token return back the accesstoken, refershtoken, name and email to frontend for us to use it
@@ -172,22 +181,19 @@ const getGharbetiById = async (req, res) => {
 };
 
 const getProductPicture = async (req, res) => {
-  
   if (!req.files) {
     return res.status(404).json({ msg: "no files were found to upload" });
   }
 
- 
-
   try {
-    
     // const result = await streamUpload(req.file.buffer);
-     // Upload all files in parallel
-    const uploadPromises = req.files.map((file) => streamUpload(file.buffer,"profile"));
+    // Upload all files in parallel
+    const uploadPromises = req.files.map((file) =>
+      streamUpload(file.buffer, "profile")
+    );
     const urls = await Promise.all(uploadPromises);
 
-    res.json( urls ); // array of Cloudinary URLs
-   
+    res.json(urls); // array of Cloudinary URLs
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Upload failed" });
@@ -203,8 +209,6 @@ const getProductPicture = async (req, res) => {
   // // console.log(endPoints)
 
   // return res.status(200).json(endPoints);
-
-
 };
 
 const savePost = async (req, res) => {
@@ -274,8 +278,6 @@ const deleteScheduleOfId = async (req, res) => {
   }
 };
 
-
-
 const updatePost = async (req, res) => {
   try {
     await postModel.findByIdAndUpdate(req.body._id, {
@@ -309,8 +311,6 @@ const findPostsByCategory = async (category) => {
 //   }
 // };
 
-
-
 //new one
 
 const getPostByCategory = async (req, res) => {
@@ -326,20 +326,20 @@ const getPostByCategory = async (req, res) => {
     // console.log("reco-return-room")
     // console.log(recommendedRooms)
 
-
     // Create a Set of recommended room IDs to avoid duplication
-    const recommendedIds = new Set(recommendedRooms.map(r => r._id.toString()));
+    const recommendedIds = new Set(
+      recommendedRooms.map((r) => r._id.toString())
+    );
 
     // Filter out category rooms that are already recommended
     const remainingRooms = categoryRooms.filter(
-      room => !recommendedIds.has(room._id.toString())
+      (room) => !recommendedIds.has(room._id.toString())
     );
 
     // Combine: recommended first (sorted), then remaining
     const finalRooms = [...recommendedRooms, ...remainingRooms];
-    const finalFilter = finalRooms.filter((e)=> e.Category == category);
+    const finalFilter = finalRooms.filter((e) => e.Category == category);
     // console.log(finalRooms)
-    
 
     res.status(200).json(finalFilter);
   } catch (err) {
@@ -353,20 +353,14 @@ const getPostByCategory = async (req, res) => {
 const getRecommendedList = async (req, res) => {
   try {
     // console.log(req.query);
-    const allCategoryList  = await findPostsByCategory(req.query.Category)
+    const allCategoryList = await findPostsByCategory(req.query.Category);
     // console.log(allCategoryList)
 
     // console.log("/////////////after////////////")
 
-
-
-    const tempData = Recommend(allCategoryList, req.query.userPrefData)
+    const tempData = Recommend(allCategoryList, req.query.userPrefData);
     // console.log(tempData)
-      return res.status(200).json(tempData);
-
-
-   
-    
+    return res.status(200).json(tempData);
   } catch (err) {
     console.log(err);
   }
@@ -459,6 +453,7 @@ async function getEsewaPaymentHash(amount, transaction_uuid) {
 const getSignature = async (req, res) => {
   // total_amount=100,transaction_uuid=11-201-13,product_code=EPAYTEST
   const { total_amount } = req.query;
+
   let transaction_uuid = uuidv4();
   //get hashed
   try {
@@ -485,6 +480,8 @@ async function verifyEsewaPayment(encodedData) {
     let decodedData = atob(encodedData);
     decodedData = await JSON.parse(decodedData);
 
+    console.log(decodedData);
+
     const data = `transaction_code=${decodedData.transaction_code},status=${decodedData.status},total_amount=${decodedData.total_amount},transaction_uuid=${decodedData.transaction_uuid},product_code=${process.env.ESEWA_PRODUCT_CODE},signed_field_names=${decodedData.signed_field_names}`;
 
     const secretKey = process.env.ESEWA_SECRET_KEY;
@@ -510,7 +507,6 @@ async function verifyEsewaPayment(encodedData) {
 
 const verifyPayment = async (req, res) => {
   const { data } = req.query;
-  // console.log(data)
 
   try {
     let response = await verifyEsewaPayment(data);
@@ -528,7 +524,6 @@ const verifyPayment = async (req, res) => {
 const saveRentedProduct = async (req, res) => {
   // console.log(req.body)
   try {
-   
     let response = new rentedModel(req.body);
     await response.save();
     return res.status(200).json({ msg: "post saved/updated" });
@@ -537,19 +532,62 @@ const saveRentedProduct = async (req, res) => {
   }
 };
 
+//sent mail after payment
+const sendMailAfterPayment = async (req, res) => {
+  try {
+    const responseGharbeti = await accountModel.find({
+      _id: { $in: req.body.Gharbeti_id },
+    }); //lot of id i.e id:ids
+    const responseTenant = await accountModel.find({
+      _id: { $in: req.body.tenantID },
+    }); //lot of id i.e id:ids
+
+    console.log(responseGharbeti);
+    console.log(responseTenant);
+
+    console.log(responseTenant.length);
+    console.log(responseGharbeti.length);
+
+    console.log(responseGharbeti[0].email);
+
+    if (responseGharbeti.length > 0 && responseTenant.length > 0) {
+      const userEmail = responseTenant[0].email;
+      const subject = "Contact Email of Landlord.";
+
+      const LandlordEMail = responseGharbeti[0].email;
+
+      const message = `<p1>Here is your Email for the Gharbeti You were looking for. <br/><h1>Email: <strong>${LandlordEMail}<strong> </h1>`;
+
+      sendMailFunction(userEmail, subject, message); //nodemailer
+
+      console.log("LandlordEMail: ", LandlordEMail);
+      console.log("userEmail:", userEmail);
+
+      return res
+        .status(200)
+        .json({ msg: "email after payment sent sucesfully" });
+    } else {
+      return res.status(404).json({ msg: "email after payment not sucesful" });
+    }
+  } catch (err) {
+    
+    return res
+      .status(500)
+      .json({
+        msg: "some error from server side while sending email after payment",
+        err
+      });
+  }
+};
+
 const getRentedProduct = async (req, res) => {
-
- 
-
-
   try {
     let response;
-    if(req.query._id){
- response = await rentedModel.find({tenantID: req.query._id});
-    }else{
- response = await rentedModel.find({});
+    if (req.query._id) {
+      response = await rentedModel.find({ tenantID: req.query._id });
+    } else {
+      response = await rentedModel.find({});
     }
-    
 
     if (response) {
       return res.status(200).json(response);
@@ -562,12 +600,11 @@ const getRentedProduct = async (req, res) => {
 };
 
 const updateRentedProduct = async (req, res) => {
-   const {  updatedObject } = req.body;
-   
+  const { updatedObject } = req.body;
 
   try {
     await rentedModel.findByIdAndUpdate(updatedObject._id, {
-      $set:updatedObject,
+      $set: updatedObject,
     });
 
     return res.status(200).json({ msg: "Rented successfully updated!!" });
@@ -575,8 +612,6 @@ const updateRentedProduct = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-
-
 
 const clickRecomendation = async (userId) => {
   // Step 1: Get all clicks
@@ -586,7 +621,7 @@ const clickRecomendation = async (userId) => {
   const userRoomMap = {}; // { userId: { roomId: count } }
   const roomSet = new Set();
 
-  allClicks.forEach(click => {
+  allClicks.forEach((click) => {
     const uid = click.userId.toString();
     const rid = click.roomId.toString();
 
@@ -603,14 +638,14 @@ const clickRecomendation = async (userId) => {
   //   console.log("roomSet: ")
   // console.log(roomSet)
 
-
-
   // Step 3: Convert user vectors to same dimension
   const allRoomIds = Array.from(roomSet);
-//  console.log('UserId:', userId._id);
-// console.log('RoomMap:', userRoomMap[userId._id]);
+  //  console.log('UserId:', userId._id);
+  // console.log('RoomMap:', userRoomMap[userId._id]);
 
-  const currentUserVector = allRoomIds.map(rid => userRoomMap[userId._id]?.[rid] || 0);
+  const currentUserVector = allRoomIds.map(
+    (rid) => userRoomMap[userId._id]?.[rid] || 0
+  );
 
   // console.log("currentUserVector: ", currentUserVector)
 
@@ -619,8 +654,9 @@ const clickRecomendation = async (userId) => {
   for (let otherUserId in userRoomMap) {
     if (otherUserId === userId._id) continue;
 
-    const otherVector = allRoomIds.map(rid => userRoomMap[otherUserId][rid] || 0);
-     
+    const otherVector = allRoomIds.map(
+      (rid) => userRoomMap[otherUserId][rid] || 0
+    );
 
     //  console.log("otherVector: ", otherVector)
     const score = cosineSimilarity(currentUserVector, otherVector);
@@ -644,7 +680,8 @@ const clickRecomendation = async (userId) => {
     const rooms = userRoomMap[otherId];
     for (let roomId in rooms) {
       if (!clickedByUser.has(roomId)) {
-        roomScoreMap[roomId] = (roomScoreMap[roomId] || 0) + score * rooms[roomId];
+        roomScoreMap[roomId] =
+          (roomScoreMap[roomId] || 0) + score * rooms[roomId];
       }
     }
   });
@@ -657,47 +694,36 @@ const clickRecomendation = async (userId) => {
     .sort((a, b) => b[1] - a[1])
     .map(([roomId]) => roomId);
 
-    
   // console.log("CLiked by user sorrted : ")
   // console.log(sortedRoomIds)
 
   // console.log("All the rooms current user clicked except in descending order of the clicks: ")
-  
+
   const getRoomIdsByCount = (userRoomMap, userId) =>
-  Object.entries(userRoomMap[userId._id] || {})
-    .sort((a, b) => b[1] - a[1])
-    .map(([roomId]) => roomId);
+    Object.entries(userRoomMap[userId._id] || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([roomId]) => roomId);
 
+  const userRoomIds = getRoomIdsByCount(userRoomMap, userId);
+  // console.log(userRoomIds);
 
-    const userRoomIds = getRoomIdsByCount(userRoomMap, userId);
-    // console.log(userRoomIds);
-
-
-const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
+  const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
   // Step 7: Fetch room details
   const recommendedRooms = await postModel.find({ _id: { $in: finalRoomIds } });
 
   // console.log("Prerecomenedation: ");
   // console.log(recommendedRooms);
 
-
-  const enriched = recommendedRooms.map(room => {
+  const enriched = recommendedRooms.map((room) => {
     const id = room._id.toString();
     return { ...room.toObject(), score: roomScoreMap[id] || 0 };
   });
 
-
   //   console.log("enriched: ");
   // console.log(enriched);
 
-
   return enriched.sort((a, b) => b.score - a.score);
- 
-
-
-
 };
-
 
 function cosineSimilarity(vecA, vecB) {
   const dotProduct = vecA.reduce((sum, val, i) => sum + val * vecB[i], 0);
@@ -709,45 +735,39 @@ function cosineSimilarity(vecA, vecB) {
   return dotProduct / (magnitudeA * magnitudeB);
 }
 
-
-
-const registerClick = async(req,res)=>{
-  try{
+const registerClick = async (req, res) => {
+  try {
     const { userId, postId } = req.query;
 
-  try {
-    // Option 1: Check if user already clicked this post before
-    let click = await Click.findOne({ userId, roomId: postId });
+    try {
+      // Option 1: Check if user already clicked this post before
+      let click = await Click.findOne({ userId, roomId: postId });
 
-    if (click) {
-      // Increment count
-      click.count += 1;
-      await click.save();
-    } else {
-      // First time clicking — create new
-      click = new Click({
-        userId,
-        roomId: postId,
-        count: 1
-      });
-      await click.save();
+      if (click) {
+        // Increment count
+        click.count += 1;
+        await click.save();
+      } else {
+        // First time clicking — create new
+        click = new Click({
+          userId,
+          roomId: postId,
+          count: 1,
+        });
+        await click.save();
+      }
+
+      res
+        .status(200)
+        .json({ message: "Click registered", click, isSuccess: true });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-
-    res.status(200).json({ message: "Click registered", click, isSuccess: true });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something  error in registering click" });
   }
-
-
-
-  }catch(err){
- console.error(err);
-    res.status(500).json({ message: 'Something  error in registering click' });
-  }
-}
-
-
-
+};
 
 module.exports = {
   saveRentedProduct,
@@ -773,5 +793,6 @@ module.exports = {
   registerClick,
   updateRentedProduct,
   deleteScheduleOfId,
-  otpAuth
+  otpAuth,
+  sendMailAfterPayment,
 };

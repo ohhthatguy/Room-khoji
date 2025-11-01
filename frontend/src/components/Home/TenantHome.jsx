@@ -17,6 +17,7 @@ import { API } from "../../services/Api";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../footer/Footer";
+import toast from "react-hot-toast";
 
 const TenantHome = ({ darkMode }) => {
   const reviewCard = useRef([]);
@@ -57,6 +58,7 @@ const TenantHome = ({ darkMode }) => {
 
   console.log(verifyData);
   const savedPost = localStorage.getItem("currentPost");
+  console.log("after esewa: savedpost: ", savedPost)
 
   if (verifyData.data?.status === "COMPLETE" && savedPost) {
     // save this data to db rented
@@ -71,34 +73,51 @@ const TenantHome = ({ darkMode }) => {
       tenantID: _id, // rename _id to tenantID
     };
 
-    const date = localStorage.getItem("scheduledDate");
-    rentedData.Date = date;
+    
 
-    // console.log(rentedData)
-
-    const saveRentedProduct = async () => {
-      //data is being saved in db but here it is showing error. solve this
-      //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
-      //use the prev made postdeleteById (see API.js)
-
+    const sendMailAfterPay = async () => {
       try {
-        let res = await API.saveRentedProduct(rentedData);
-        console.log(res);
-
+        let res = await API.sendMailAfterPayment(rentedData);
+        // console.log(res)
         if (res.isSuccess) {
-          console.log(res);
-          setRentedAdded(true);
+            toast.success("Contact is sent to Mail.")
         } else {
-          console.log(
-            "Server has sent data to frontend but some eroor in frntend"
-          );
+          console.log("something wrong happened");
+          console.log(res);
         }
       } catch (err) {
-        console.log("ERROR: ", err);
+        console.log(err);
       }
     };
 
-    saveRentedProduct();
+      sendMailAfterPay()
+
+ 
+// const date = localStorage.getItem("scheduledDate");
+    // rentedData.Date = date;
+    // const saveRentedProduct = async () => {
+    //   //data is being saved in db but here it is showing error. solve this
+    //   //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
+    //   //use the prev made postdeleteById (see API.js)
+
+    //   try {
+    //     let res = await API.saveRentedProduct(rentedData);
+    //     console.log(res);
+
+    //     if (res.isSuccess) {
+    //       console.log(res);
+    //       setRentedAdded(true);
+    //     } else {
+    //       console.log(
+    //         "Server has sent data to frontend but some eroor in frntend"
+    //       );
+    //     }
+    //   } catch (err) {
+    //     console.log("ERROR: ", err);
+    //   }
+    // };
+
+    // saveRentedProduct();
   }
   console.log(rentedAdded);
 
@@ -138,20 +157,20 @@ const TenantHome = ({ darkMode }) => {
   const productType = [
     {
       image:
-        // "https://cdn.discordapp.com/attachments/1410515477444169738/1433719948198547488/download_1.jpg?ex=6905b740&is=690465c0&hm=d9675ca233637faf250334247e49bb540a834ac8222401575a471e924219dfeb",
-      "https://cdn.discordapp.com/attachments/1410515477444169738/1433722279753416816/premium_photo-1675616563084-63d1f129623d.jpg?ex=6905b96c&is=690467ec&hm=27dfd104b8322a1771f740c4d8fb50dee3f31ad858ba8d11fafe86432a23b52a",
-        name: "Room",
+       "https://plus.unsplash.com/premium_photo-1675616563084-63d1f129623d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&fm=jpg&q=60&w=3000",
+      
+      name: "Room",
     },
     {
       image:
-        // "https://media.istockphoto.com/id/1486160447/photo/closeup-new-modern-apartment-buildings-background-with-copy-space.jpg?s=1024x1024&w=is&k=20&c=fLaSMshNwbfpMz-KxVb1ht3OSWoifoKzL0GrNbLvxsw=", //flat image
-      "https://cdn.discordapp.com/attachments/1410515477444169738/1433721773362253849/Flat-In-Pune-10.jpg?ex=6905b8f4&is=69046774&hm=f20031445f25211cdacba24ac0b6c8866522f628eb21a4e2fb6d9bb626341cf2",
-        name: "Flat",
+        "https://thearchitectsdiary.com/wp-content/uploads/2024/07/Flat-In-Pune-10.jpg",
+      
+      name: "Flat",
     },
     {
       image:
-        // "https://media.istockphoto.com/id/1328886194/photo/portrait-of-new-homeowners-admiring-their-investment.jpg?s=1024x1024&w=is&k=20&c=CkzeEmgQMZ4T8fjfL1Y1Px5EocV6YzQzpBVD6fb8Nec=", //building image
-        "https://cdn.discordapp.com/attachments/1410515477444169738/1433721158880198747/download_4.jpg?ex=6905b861&is=690466e1&hm=cb09e84c6645c08d10bc0f207ceb3135aaf26789ead28ddd7ad3927dcb72b5ad",
+       "https://i.pinimg.com/1200x/81/7d/73/817d734c0253df69aab40dad4fbaecbf.jpg",
+       
         name: "Building",
     },
   ];

@@ -33,7 +33,8 @@ const {
   registerClick,
   updateRentedProduct,
   deleteScheduleOfId,
-  otpAuth
+  otpAuth,
+  sendMailAfterPayment
 } = require("../controller/controller");
 
 //create a new account
@@ -71,7 +72,7 @@ router.delete("/delete/schedule",deleteScheduleOfId);
 router.put("/update/post", updatePost);
 
 //get post by category
-router.get("/tenant/productmarket", getPostByCategory);
+router.get("/tenant/productmarket",authorizeToken, getPostByCategory);
 
 //get recommended post by category
 router.get("/tenant/recommended", getRecommendedList);
@@ -100,6 +101,9 @@ router.get("/check/verification", verifyPayment);
 
 //save rented product
 router.post("/save/rented_product", saveRentedProduct);
+
+//sent mail after pay
+router.post("/sendMailAfterPayment", sendMailAfterPayment)
 
 //get rented product
 router.get("/get/rented_product", getRentedProduct);

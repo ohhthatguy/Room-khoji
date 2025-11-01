@@ -29,6 +29,7 @@ const API_OBJECT = {
     getFavDataFromFavPostId: {method: 'get', url: '/get/favourite/posts', params:true},
 
     saveRentedProduct: {method: 'post', url: '/save/rented_product'},
+    sendMailAfterPayment: {method: 'post', url: '/sendMailAfterPayment'},
     getRentedProduct: {method: 'get', url: '/get/rented_product', params: true},
     updateRentedProduct: {method: 'put', url: 'update/rented_product'},
    

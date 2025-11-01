@@ -173,6 +173,56 @@ const BusinessTalk = ({ darkMode }) => {
     localStorage.setItem("scheduledDate", date);
   };
 
+
+  const checkAvaibility = ()=>{
+
+  const savedPost = localStorage.getItem("currentPost");
+   const account = JSON.parse(localStorage.getItem("currentUser"));
+
+      let data = JSON.parse(savedPost);
+      let { _id, ...restAccount } = account; // extract _id from account
+
+let rentedData = {
+        ...data[0],
+        ...restAccount, // all other fields from account
+        tenantID: _id, // rename _id to tenantID
+      };
+
+      rentedData.Date = "Thu, 13 Nov 2025 04:30:29 GMT";
+
+        const saveRentedProduct = async () => {
+        try {
+          let res = await API.saveRentedProduct(rentedData);
+          console.log(res);
+  
+          if (res.isSuccess) {
+            console.log(res);
+           toast.success("Inquiry for avaibility is sent to landlord.");
+          } else {
+            console.log(
+              "Server has sent data to frontend but some eroor in frntend"
+              
+            );
+           toast.error("Inquiry for avaibility cannot be sent to landlord.");
+
+          }
+        } catch (err) {
+          console.log("ERROR: ", err);
+           toast.error("Error occured while sending inquiry for avaibility to landlord.");
+
+        }
+      };
+  
+      saveRentedProduct();
+
+
+  }
+
+  
+   
+
+
+
   return (
     <>
       <Header />
@@ -608,10 +658,14 @@ const BusinessTalk = ({ darkMode }) => {
                               subheader={e.Date}
                             />
 
-                            <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>To Schedule a meeting, You have to pay RS. 50 upfront. This is refundable fund once you reach the meeting. This measure is taken to reduce the fraud message </Typography>
+                            {/* <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>To Schedule a meeting, You have to pay RS. 50 upfront. This is refundable fund once you reach the meeting. This measure is taken to reduce the fraud message </Typography> */}
+                            <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>Check Availability of this property with Landlord. </Typography>
+                              
                             <TableCell sx={{ textAlign: "right" }}>
                               {/* */}
-                                <button className="btn btn-primary" onClick={toggleModal}>Schedule</button>
+                                {/* <button className="btn btn-primary" onClick={toggleModal}>Schedule</button> */}
+                                <button className="btn btn-primary" onClick={checkAvaibility}>Check Avaibility</button>
+
 
                               {/* <form
                                 action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
@@ -741,7 +795,13 @@ const BusinessTalk = ({ darkMode }) => {
                   <Button color="secondary" onClick={toggleModal}>
                     Cancel
                   </Button>
-                   <form
+
+                  <Button color="primary" onClick={checkAvaibility}>
+                    Check Avaibility
+                  </Button>
+
+
+                   {/* <form
                                 action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
                                 method="POST"
                               >
@@ -841,7 +901,7 @@ const BusinessTalk = ({ darkMode }) => {
                                 >
                                   Pay by esewa
                                 </Button>
-                   </form>
+                   </form> */}
                 </ModalFooter>
               </Modal>
 

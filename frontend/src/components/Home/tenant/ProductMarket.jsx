@@ -24,7 +24,7 @@ import {
   DarkMode,
    
 } from "@mui/icons-material";
-
+import toast from "react-hot-toast";
 import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
@@ -92,6 +92,9 @@ const ProductMarket = ({ darkMode }) => {
           }
         } catch (err) {
           console.log(err);
+          if(err?.code == 401){
+            toast.error("Token expired! Please Re-login!");
+          }
         }
       };
 
