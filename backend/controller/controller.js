@@ -13,6 +13,7 @@ const Recommend = require('../Recommend/Recommend');
 const cloudinary = require('../Middleware/cloudinaryUpload');
 const upload = require('../Middleware/upload');
 const sendMailFunction = require("../Middleware/authorizeEmail");
+const sendMailFunctionByResendAPI = require("../Middleware/authEmailResend");
 
 
  const streamUpload = (buffer, folderName) => {
@@ -53,7 +54,8 @@ const otpAuth = async(req,res)=>{
 
     const message = `<p1>Here is your otp for <strong>Room Khoji.</strong><br/><h1>OTP: <strong>${code}<strong> </h1>`;
 
-    sendMailFunction(userEmail, subject, message);
+    sendMailFunction(userEmail, subject, message); //nodemailer
+    // sendMailFunctionByResendAPI(userEmail, subject, message); //resend not working
 
     console.log("Code backedn: ", code)
     return res.status(200).json({ msg: "OTP sent sucesfully", code });

@@ -87,6 +87,10 @@ const Signup = () => {
           }
         } catch (err) {
           console.log("ERROR: ", err);
+          if(err?.data?.err?.code == 11000){
+            toast.error("Account with same email found already existing!");
+            setShowOtpModal(false)
+          }
         }
 
         setIsLoading(false);

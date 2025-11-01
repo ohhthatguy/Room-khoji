@@ -139,7 +139,7 @@ let res;
       }
     };
 
-    if (selectedOption.length > 0 && selectedOption !== "Recommended") {
+    if (selectedOption.length > 0 && selectedOption !== "Filter") {
       getPostOfCategory();
       gsap.fromTo(
         productRef.current,
@@ -148,7 +148,7 @@ let res;
       );
     }
 
-    if (selectedOption.length > 0 && selectedOption == "Recommended") {
+    if (selectedOption.length > 0 && selectedOption == "Filter") {
       getPostOfRecomended();
       gsap.fromTo(
         productRef.current,
@@ -244,13 +244,13 @@ let res;
     setFavouritePost({ add: "", delete: e._id });
   };
 
-  const optionList = ["Flat", "Building", "Room", "Recommended"];
+  const optionList = ["Flat", "Building", "Room", "Filter"];
   //   console.log(selectedOption)
   //   console.log(favrouitPost)
   //   console.log(bookMarkClicked)
 
   useEffect(() => {
-    if (selectedOption !== "" && selectedOption !== "Recommended") {
+    if (selectedOption !== "" && selectedOption !== "Filter") {
       navigate(`/tenant/productmarket/${Category}`);
     }
   }, [selectedOption]);
@@ -570,8 +570,8 @@ let res;
         )}
       </Grid>
 
-      <Modal isOpen={!getUserPref} toggle={toggleModal} centered scrollable>
-        <ModalHeader toggle={toggleModal}>User Pref</ModalHeader>
+      <Modal isOpen={!getUserPref} toggle={toggleModal} centered size="lg" scrollable>
+        <ModalHeader toggle={toggleModal}>User Prefernces</ModalHeader>
         <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <Paper
             elevation={3}

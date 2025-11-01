@@ -203,7 +203,7 @@ const ProductMarket = ({ darkMode }) => {
 
   useEffect(()=>{
 
-    if(selectedOption == "Recommended"){
+    if(selectedOption == "Filter"){
         navigate(`/tenant/recommended/${Category}`)
     }
 
