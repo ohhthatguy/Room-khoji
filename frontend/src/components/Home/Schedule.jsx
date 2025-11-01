@@ -136,7 +136,7 @@ const Schedule = ({ darkMode }) => {
           varient="h1"
           style={{ padding: "0 20px", fontSize: "1.3rem", fontWeight: "500" }}
         >
-          My Schedules
+          Property Status
         </Typography>
         </Box>
 
@@ -208,7 +208,7 @@ const Schedule = ({ darkMode }) => {
                       color={
                         e.Status == "PENDING"
                           ? "warning"
-                          : e.Status == "REJECTED"
+                          : e.Status == "UNAVAILABLE"
                           ? "error"
                           : "success"
                       }
@@ -217,7 +217,7 @@ const Schedule = ({ darkMode }) => {
 
                  
                    
-                      {e.Status == "PENDING" && <Button onClick={()=>handleContact(e)} variant="contained">Contact</Button>}
+                      {e.Status == "AVAILABLE" && <Button onClick={()=>handleContact(e)} variant="contained">Contact</Button>}
 
                     </div>
                   </div>

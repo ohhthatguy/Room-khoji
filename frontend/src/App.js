@@ -17,10 +17,12 @@ import Ecom from "./components/Accounts/Ecom";
 import Recommened from "./components/Home/tenant/Recommened";
 import Schedule from "./components/Home/Schedule";
 
+
 import LogOut from "./components/Logout/LogOut";
 import { DataContext } from "./context/DataProvider";
 
 import { Modal, ModalBody, ModalFooter, ModalHeader , Button} from "reactstrap";
+import Footer from "./components/footer/Footer";
 
 const App = () => {
   const { openPortal, setOpenPortal, darkMode } = useContext(DataContext);
@@ -71,7 +73,7 @@ const App = () => {
           element={<BusinessTalk darkMode={darkMode} />}
         />
         <Route
-          path="/tenant/favroit"
+          path="/tenant/favorite"
           element={<FavroitProduct darkMode={darkMode} />}
         />
         <Route
@@ -79,6 +81,8 @@ const App = () => {
           element={<Recommened darkMode={darkMode} />}
         />
       </Routes>
+
+     
 
       <Modal isOpen={openPortal} toggle={()=>setOpenPortal(prev=>!prev)} centered scrollable>
         <ModalHeader toggle={()=>setOpenPortal(prev=>!prev)}>Logout</ModalHeader>

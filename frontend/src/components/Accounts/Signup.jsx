@@ -14,6 +14,7 @@ import {
   TextField,
   FormLabel,
 } from "@mui/material";
+import EmailIcon from '@mui/icons-material/Email';
 
 import { useNavigate } from "react-router-dom";
 import { API } from "../../services/Api";
@@ -390,9 +391,17 @@ const Signup = () => {
         scrollable
       >
         <ModalHeader toggle={() => setShowOtpModal((prev) => !prev)}>
-          Check Email For OTP
+          <div style={{display: "flex"}} >
+          Verify Email <span style={{display: "flex", justifyContent: "center", alignItems: "center", marginLeft: "10px" }}> <EmailIcon /> </span>
+          </div>
         </ModalHeader>
-        <ModalBody >
+        <ModalBody style={{padding: "20px"}} >
+          <Typography variant="body1">Check Email For OTP</Typography>
+          <Typography variant="caption" sx={{fontWeight: "600"}}>We have sent you a <strong>6 digit</strong> code. Please Enter it here!</Typography>
+
+
+          <br/>
+          <br/>
           <Otp length={6} onChange={(val) => handleOtpInput(val)} />
         </ModalBody>
        

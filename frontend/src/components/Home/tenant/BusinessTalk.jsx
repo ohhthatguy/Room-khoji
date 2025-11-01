@@ -208,7 +208,12 @@ let rentedData = {
           }
         } catch (err) {
           console.log("ERROR: ", err);
+          if(err?.data?.code == 11000){
+            toast.error("this is already sent for inquiry")
+          }else{
            toast.error("Error occured while sending inquiry for avaibility to landlord.");
+
+          }
 
         }
       };
@@ -664,7 +669,7 @@ let rentedData = {
                             <TableCell sx={{ textAlign: "right" }}>
                               {/* */}
                                 {/* <button className="btn btn-primary" onClick={toggleModal}>Schedule</button> */}
-                                <button className="btn btn-primary" onClick={checkAvaibility}>Check Avaibility</button>
+                                <button className="btn btn-primary" onClick={checkAvaibility}>Check Availability</button>
 
 
                               {/* <form

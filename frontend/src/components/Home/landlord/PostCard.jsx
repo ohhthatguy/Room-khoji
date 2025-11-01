@@ -1,4 +1,4 @@
-import React , { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -7,11 +7,12 @@ import {
   CardHeader,
   Avatar,
   CardContent,
-  Chip
+  Grid,
+  Chip,
 } from "@mui/material";
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { DataContext } from "../../../context/DataProvider";
 import {
   NavigateNext,
@@ -32,9 +33,9 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
 
   const [obj, setObj] = useState({});
 
-
   const [selectedStatus, setSelectedStatus] = useState({
-    selectedObject: {}, status: ""
+    selectedObject: {},
+    status: "",
   });
 
   const handleNext = (totalProductImages, index) => {
@@ -75,7 +76,6 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
     }
   };
 
-
   let k;
   if (edit != 0) {
     console.log(edit);
@@ -83,119 +83,191 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
     console.log(k);
   }
 
-    const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event, e) => {
     setAnchorEl(event.currentTarget);
-    setObj(e)
+    setObj(e);
   };
 
   const handleClose = (x) => {
     setAnchorEl(null);
-  
-    setSelectedStatus({ selectedObject: obj, status: x})
+
+    setSelectedStatus({ selectedObject: obj, status: x });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
+    const updateRentedPost = async () => {
+      try {
+        const updatedObject = {
+          ...selectedStatus.selectedObject,
+          Status: selectedStatus.status,
+        };
+        console.log(updatedObject);
+        const res = await API.updateRentedProduct({
+          updatedObject,
+        });
 
-    const updateRentedPost = async()=>{
-        try{
-            const updatedObject = {...selectedStatus.selectedObject, Status :selectedStatus.status}
-            console.log(updatedObject);
-    const res = await API.updateRentedProduct({
-            
-            updatedObject
-          });
+        console.log(res);
+        console.log("sucessful update");
+        getHistoryPostfunc();
+      } catch (err) {
+        console.log("Error: ", err);
+      }
+    };
 
-          console.log(res)
-          console.log("sucessful update")
-          getHistoryPostfunc()
-
-
-        }catch(err){
-            console.log("Error: ", err);
-        }
+    if (selectedStatus.status != "") {
+      updateRentedPost();
     }
-
-    if(selectedStatus.status!=""){
-        updateRentedPost()
-    }
-
-
-  },[selectedStatus])
+  }, [selectedStatus]);
 
   return (
     <>
-      {edit != 0 && (
+      {edit != 0 ? (
         <PostEdit
           edit={edit}
           setEdit={setEdit}
           darkMode={darkMode}
           post={post.filter((ele) => ele._id == edit)}
         />
-      )}
+      ):(
 
-      <Box
-        sx={{
-          display: ` ${edit != 0 ? "none" : "flex"} `,
-          rowGap: "2rem",
-          flexDirection: "column-reverse",
-        }}
-      >
+      <Grid container spacing={3}>
         {post.map((e, index) => (
-          <Card
-            key={index}
-            sx={{
-              border: "2px solid #587351",
-              position: "relative",
-              backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
-              color: darkMode ? "white" : "black",
-            }}
-          >
-            {!e?.name && (
-              <Delete
-                onClick={() => handleDelete(e)}
-                sx={{
-                  position: "absolute",
-                  top: "5%",
-                  right: "5%",
-                  "&:hover": {
-                    color: "red",
-                    cursor: "pointer",
-                    transition: "0.4s",
-                  },
-                  transition: "0.4s",
-                  "&:active": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              />
-            )}
+    
 
-            {!e?.name && (
-              <Edit
-                onClick={() => setEdit(e._id)}
-                sx={{
-                  position: "absolute",
-                  top: "5%",
-                  right: "10%",
-                  "&:hover": {
-                    color: "green",
-                    cursor: "pointer",
+          <Grid item md={6}>
+            <Card
+              key={index}
+              sx={{
+                position: "relative",
+                backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
+                color: darkMode ? "white" : "black",
+                height: "680px",
+                // border: "1px solid black",
+                boxShadow: "1px 3px 4px 0px",
+                // width: "450px"
+              }}
+            >
+              {!e?.name && (
+                <Delete
+                  onClick={() => handleDelete(e)}
+                  sx={{
+                    position: "absolute",
+                    top: "5%",
+                    right: "2%",
+                    "&:hover": {
+                      color: "red",
+                      cursor: "pointer",
+                      transition: "0.4s",
+                    },
                     transition: "0.4s",
-                  },
-                  transition: "0.4s",
-                  "&:active": {
-                    transform: "scale(1.05)",
-                  },
-                }}
-              />
-            )}
+                    "&:active": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                />
+              )}
 
-            {e?.name ? (
-              <Box sx={{display: "flex", justifyContent: "space-between", placeItems: "center"}}>
+              {!e?.name && (
+                <Edit
+                  onClick={() => setEdit(e._id)}
+                  sx={{
+                    position: "absolute",
+  top: "5%",
+                    right: "10%",
+                    "&:hover": {
+                      color: "green",
+                      cursor: "pointer",
+                      transition: "0.4s",
+                    },
+                    transition: "0.4s",
+                    "&:active": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                />
+              )}
+
+              {e?.name ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    placeItems: "center",
+                  
+                  }}
+                >
+                  <CardHeader
+                 
+                    avatar={<Avatar src={e.profile[0]} alt={e.name} />}
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        color: darkMode ? "white" : "black",
+                      },
+                      "& .MuiCardHeader-subheader": {
+                        color: darkMode ? "white" : "black",
+                      },
+                      
+                    }}
+
+                      titleTypographyProps={{
+    fontWeight: "bold",
+    fontSize: "1.1rem",
+    color: darkMode ? "white" : "black",
+  }}
+  subheaderTypographyProps={{
+    color: darkMode ? "#cfcfcf" : "#555",
+  }}
+                    title={`${e.name}`}
+                    // subheader={e.Date}
+                  />
+
+                  <div key={index}>
+                    <Button
+                      id="basic-button"
+                      aria-controls={open ? "basic-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={(ele) => handleClick(ele, e)}
+                    >
+                      <Chip
+                
+                        color={
+                          e.Status == "PENDING"
+                            ? "warning"
+                            : e.Status == "UNAVAILABLE"
+                            ? "error"
+                            : "success"
+                        }
+                        label={e.Status}
+                      />
+                    </Button>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={() => setAnchorEl(null)}
+                      slotProps={{
+                        list: {
+                          "aria-labelledby": "basic-button",
+                        },
+                      }}
+                    >
+                      <MenuItem onClick={() => handleClose("PENDING")}>
+                        PENDING
+                      </MenuItem>
+                      <MenuItem onClick={() => handleClose("UNAVAILABLE")}>
+                        UNAVAILABLE
+                      </MenuItem>
+                      <MenuItem onClick={() => handleClose("AVAILABLE")}>
+                        AVAILABLE
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                </Box>
+              ) : (
                 <CardHeader
-                  avatar={<Avatar src={e.profile[0]} alt={e.name} />}
                   sx={{
                     "& .MuiCardHeader-title": {
                       color: darkMode ? "white" : "black",
@@ -204,210 +276,142 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
                       color: darkMode ? "white" : "black",
                     },
                   }}
-                  title={`${e.name} (Tenant)`}
-                  subheader= {e.Date}
+                  title={e.Category}
+                  subheader={e.Date}
                 />
-
-                <div key={index}>
-      <Button
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={(ele)=>handleClick(ele,e)}
-      >
-    <Chip color={e.Status=="PENDING"? "warning": e.Status=="REJECTED"? "error": "success"} label={e.Status} />
-        
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={()=>setAnchorEl(null)}
-        slotProps={{
-          list: {
-            'aria-labelledby': 'basic-button',
-          },
-        }}
-      >
-        <MenuItem onClick={()=>handleClose( "PENDING")}>PENDING</MenuItem>
-        <MenuItem onClick={()=>handleClose("REJECTED")}>REJECTED</MenuItem>
-        <MenuItem onClick={()=>handleClose("ACCEPTED")}>ACCEPTED</MenuItem>
-      </Menu>
-    </div>
-              </Box>
-            ) : (
-
-              <CardHeader
-                sx={{
-                  "& .MuiCardHeader-title": {
-                    color: darkMode ? "white" : "black",
-                  },
-                  "& .MuiCardHeader-subheader": {
-                    color: darkMode ? "white" : "black",
-                  },
-                }}
-                title={e.Category}
-                subheader={e.Date}
-              />
-
-              
-            )}
-
-            <Box sx={{ position: "relative" }}>
-              <Box
-                sx={{
-                  width: "100%",
-                  zIndex: "1",
-                  position: "absolute",
-                  top: "50%",
-                }}
-              >
-                <NavigateBefore
-                  disabled={movement - 1 == -1 ? true : false}
-                  fontSize="large"
-                  sx={{
-                    marginRight: "0%",
-                    display: `${
-                      e.productImages.length <= 1 ? "none" : "block"
-                    }`,
-                  }}
-                  onClick={() => handlePrev(index)}
-                />
-
-                <NavigateNext
-                  disabled={
-                    movement == e.productImages.length - 1 ? true : false
-                  }
-                  fontSize="large"
-                  sx={{
-                    marginLeft: "90%",
-                    display: `${
-                      e.productImages.length <= 1 ? "none" : "block"
-                    }`,
-                  }}
-                  onClick={() => handleNext(e.productImages.length, index)}
-                />
-              </Box>
-
-              <Box
-                sx={{
-                  boxShadow: darkMode
-                    ? "0px 2px 2px 0px #B6B6B4"
-                    : "9px 9px 9px 9px #FEFEFA",
-                  height: "20rem",
-                  display: "flex",
-                  transform:
-                    activeIndex === index
-                      ? `  translateX(-${movement * 100}%)`
-                      : `translateX(0px)`,
-                  transition: "0.5s",
-                }}
-              >
-                {e.productImages.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      background: `url(${item}) no-repeat 50% 50% / contain`,
-                      width: "100%",
-                      height: "20rem",
-                      flex: "0 0 100%",
-                      height: "100%",
-                    }}
-                  ></Box>
-                ))}
-              </Box>
-            </Box>
-
-            <CardContent>
-              {e?.name ? (
-                // <Box sx={{ display: 'flex'}}>
-
-                //     <Box sx={{height: '7rem', width: '7rem',border: '1px solid red', backgroundImage: `url('${e.profile[0]}')`, backgroundPosition: '75% 25%', backgroundSize: 'cover' ,
-                //     borderRadius: '50%' }}></Box>
-
-                //     {e.name}
-
-                // </Box>
-
-                <Typography variant="h5">{e.Category}</Typography>
-              ) : (
-                <Typography variant="h5">{e.Description}</Typography>
               )}
-            </CardContent>
 
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                padding: "1.2rem 0rem",
-              }}
-            >
-              <Box
-                sx={{
-                  marginLeft: "1.2rem",
+            
+
+              <Box sx={{ position: "relative" }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    zIndex: "1",
+                    position: "absolute",
+                    top: "50%",
+                  }}
+                >
+                  <NavigateBefore
+                    disabled={movement - 1 == -1 ? true : false}
+                    fontSize="large"
+                    sx={{
+                      marginRight: "0%",
+                      display: `${
+                        e.productImages.length <= 1 ? "none" : "block"
+                      }`,
+                    }}
+                    onClick={() => handlePrev(index)}
+                  />
+
+                  <NavigateNext
+                    disabled={
+                      movement == e.productImages.length - 1 ? true : false
+                    }
+                    fontSize="large"
+                    sx={{
+                      marginLeft: "90%",
+                      display: `${
+                        e.productImages.length <= 1 ? "none" : "block"
+                      }`,
+                    }}
+                    onClick={() => handleNext(e.productImages.length, index)}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    height: "20rem",
+                    display: "flex",
+
+                    transform:
+                      activeIndex === index
+                        ? `  translateX(-${movement * 100}%)`
+                        : `translateX(0px)`,
+                    transition: "0.5s",
+                  }}
+                >
+                  {e.productImages.map((item, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        background: `url(${item}) no-repeat 50% 50% / cover`,
+                        width: "100%",
+                        height: "20rem",
+                        flex: "0 0 100%",
+                        height: "100%",
+                      }}
+                    ></Box>
+                  ))}
+                </Box>
+              </Box>
+
+              <CardContent
+                style={{
                   display: "flex",
-                  columnGap: "1.4rem",
+                  justifyContent: "space-between",
+                  padding: "15px",
                 }}
               >
-                <Box>
-                  <Typography>
-                    <strong>Quantity</strong>
-                  </Typography>
-                  <Typography>
-                    {" "}
-                    <strong>Rate</strong>
-                  </Typography>
-                  {/* <Typography> <strong>Location</strong></Typography> */}
-                </Box>
+                <Typography variant="body1" sx={{
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 600,
+  }}>Rs. {e.Rate}</Typography>
+                <Chip sx={{
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 600,
+  }} label={e.Category} />
+              </CardContent>
 
-                <Box>
-                  <Typography>: {e.Quantity}</Typography>
-                  <Typography>: {e.Rate}</Typography>
-                  {/* <Typography>: {e.Location}</Typography> */}
-                </Box>
+              <Box style={{ padding: "15px" }}>
+                <Typography
+                  style={{
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                    height: "3rem",
+                    lineHeight: "1.3rem",
+                    overflowY: "hidden",
+                  }}
+                  variant="caption"
+                >
+                  {e.Description}
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "0.82rem",
+                    paddingTop: "15px",
+                    paddingBottom: "15px",
+                  }}
+                >
+                  {e.Location.split(",").slice(2).join(",").trim()}
+                </Typography>
+
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Chip sx={{
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 600,
+  }} label={`${e.Parking} Parking`} />
+                  <Chip sx={{
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 600,
+  }} label={`Pets ${e.Pets}`} />
+                  <Chip sx={{
+    fontFamily: "'Poppins', sans-serif",
+    fontWeight: 600,
+  }} label={`Prefered ${e.People}`} />
+                </div>
               </Box>
 
-              <Box sx={{ display: "flex", columnGap: "1.4rem" }}>
-                <Box>
-                  <Typography>
-                    <strong>Water</strong>
-                  </Typography>
-                  <Typography>
-                    {" "}
-                    <strong>Parking</strong>
-                  </Typography>
-                  <Typography>
-                    {" "}
-                    <strong>Prefered</strong>
-                  </Typography>
-                  <Typography>
-                    {" "}
-                    <strong>Pets</strong>
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <Typography>: {e.Water}</Typography>
-                  <Typography>: {e.Parking}</Typography>
-                  <Typography>: {e.People}</Typography>
-                  <Typography>: {e.Pets}</Typography>
-                </Box>
-              </Box>
-            </Box>
-
-            <div>
-              <Typography>
-                {" "}
-                <strong>Location: </strong>
-              </Typography>
-              <Typography>
-                {e.Location.split(",").slice(2).join(",").trim()}
-              </Typography>
-            </div>
-          </Card>
+            </Card>
+          </Grid>
         ))}
-      </Box>
+      </Grid>
+
+)}
+     
+      
     </>
   );
 };

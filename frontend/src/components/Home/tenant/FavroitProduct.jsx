@@ -117,7 +117,13 @@ const FavroitProduct = ({ darkMode }) => {
           paddingTop: "1.5rem",
         }}
       >
-        My Favroitss
+          <Typography
+                  varient="h1"
+                  style={{ padding: "0 20px", fontSize: "1.3rem", fontWeight: "500" }}
+                >
+                    My Favourite
+                </Typography>
+     
       </Box>
 
       {/* <Grid container justifyContent="center">
