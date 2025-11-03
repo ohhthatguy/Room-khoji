@@ -55,11 +55,13 @@ const PostHistory = ({ darkMode }) => {
   // console.log(historyPost[0].Gharbeti_id)
   // console.log(account._id)
 
+  console.log(historyPost)
+
   return (
     <>
       {
         isLoading ? <Loader /> :
-      historyPost.length > 0 && historyPost[0].Gharbeti_id == account._id ? (
+      historyPost.length > 0 && historyPost[historyPost.length - 1].Gharbeti_id == account._id ? (
         <PostCard post={historyPost} darkMode={darkMode} getHistoryPostfunc={getHistoryPost} />
       ) : (
         <Box
