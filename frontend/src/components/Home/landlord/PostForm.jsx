@@ -25,6 +25,7 @@ import { DataContext } from "../../../context/DataProvider";
 import { API } from "../../../services/Api";
 import PostAvailable from "./PostAvailable";
 
+
 const PostForm = ({ darkMode }) => {
   const account = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -49,6 +50,9 @@ const PostForm = ({ darkMode }) => {
   const [productImage, setProductImage] = useState();
   const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [location, setLocation] = useState(null);
+
+   
 
   // console.log(productImage)
 
@@ -377,9 +381,14 @@ const PostForm = ({ darkMode }) => {
 
             <div>
               {/* <LocationSelector onAddressChange={(latlng) => handleLocation(latlng)} /> */}
-              <MapSelector
+              {/* <MapSelector
                 onAddressChange={(latlng) => handleLocation(latlng)}
-              />
+              /> */}
+                  <MapSelector
+                                onAddressChange={(latlng) => handleLocation(latlng)}
+                                location={location}
+                                setLocation={setLocation}
+                              />
             </div>
 
             <TextareaAutosize

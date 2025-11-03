@@ -19,6 +19,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 
 import "leaflet/dist/leaflet.css";
+import Loader from "../../theme/Loader";
 
 const Schedule = ({ darkMode }) => {
   const [scheduledData, setScheduledData] = useState({});
@@ -26,11 +27,13 @@ const Schedule = ({ darkMode }) => {
   const [isUpdatedPost, setIsUpdatedPost] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [openPayModal, setOpenPayModal] = useState(false);
   const [selectedRental, setSelectedRental] = useState('');
 
   useEffect(() => {
     const getHistoryPost = async () => {
+        setIsInitialLoading(true)
       try {
         const tenantId = JSON.parse(localStorage.getItem("currentUser"));
         console.log(tenantId._id);
@@ -51,6 +54,7 @@ const Schedule = ({ darkMode }) => {
       } catch (err) {
         console.log("error: ", err);
       }
+      setIsInitialLoading(false)
     };
 
     getHistoryPost();
@@ -140,8 +144,9 @@ const Schedule = ({ darkMode }) => {
         </Typography>
         </Box>
 
-
-        <Box >
+      {
+        isInitialLoading ? <Loader />  :
+              <Box >
         <Grid container spacing={3} style={{ padding: "20px 20px"}}>
           {scheduledData?.length > 0 ? (
             scheduledData?.map((e, index) => (
@@ -274,6 +279,7 @@ const Schedule = ({ darkMode }) => {
           )}
         </Grid>
         </Box>
+}
         
       </div>
 

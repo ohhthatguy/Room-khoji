@@ -6,6 +6,7 @@ import { DataContext } from "../../../context/DataProvider"
 
 import { API } from "../../../services/Api"
 import PostCard from "./PostCard"
+import Loader from "../../../theme/Loader"
 
 
 
@@ -16,6 +17,7 @@ const PostAvailable = ({darkMode})=>{
     const account = JSON.parse(localStorage.getItem('currentUser'))
     const [post,setPost] = useState('')
     console.log(account._id)
+    const [isLoading, setIsLoading] = useState(false);
 
     console.log(isUpdatedPost)
 
@@ -23,7 +25,7 @@ const PostAvailable = ({darkMode})=>{
         useEffect(()=>{
             const getPostsOfId = async()=>{
                 try{
-
+setIsLoading(true)
                     let res = await API.getPostsOfId({Gharbeti_id: account._id})
                 
                     if(res.isSuccess){
@@ -38,6 +40,8 @@ const PostAvailable = ({darkMode})=>{
                 }catch(err){
                     console.log(err)
                 }
+setIsLoading(false)
+
             }
 
             getPostsOfId()
@@ -51,6 +55,7 @@ const PostAvailable = ({darkMode})=>{
        
 
             {
+                isLoading ? <Loader /> :
                 (post.length > 0) ? <PostCard post={post} darkMode={darkMode}/> : <Typography> You've made no posts yet </Typography>
             }
 

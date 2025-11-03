@@ -23,6 +23,7 @@ import {
 
 import PostEdit from "./PostEdit";
 import { API } from "../../../services/Api";
+import Loader from "../../../theme/Loader";
 
 const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
   // console.log(post)
@@ -30,7 +31,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
   const [movement, setMovement] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [edit, setEdit] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false)
   const [obj, setObj] = useState({});
 
   const [selectedStatus, setSelectedStatus] = useState({
@@ -63,6 +64,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
   const handleDelete = async (e) => {
     // console.log(e)
     try {
+      setIsLoading(true);
       let res = await API.deletePostsOfId({ _id: e._id });
 
       if (res.isSuccess) {
@@ -74,6 +76,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
     } catch (err) {
       console.log(err);
     }
+    setIsLoading(false)
   };
 
   let k;
@@ -99,6 +102,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
   useEffect(() => {
     const updateRentedPost = async () => {
       try {
+        setIsLoading(true)
         const updatedObject = {
           ...selectedStatus.selectedObject,
           Status: selectedStatus.status,
@@ -114,6 +118,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
       } catch (err) {
         console.log("Error: ", err);
       }
+      setIsLoading(false)
     };
 
     if (selectedStatus.status != "") {
@@ -123,7 +128,7 @@ const PostCard = ({ post, darkMode, getHistoryPostfunc }) => {
 
   return (
     <>
-      {edit != 0 ? (
+      { isLoading ? <Loader /> :  edit != 0 ? (
         <PostEdit
           edit={edit}
           setEdit={setEdit}

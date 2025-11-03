@@ -21,6 +21,7 @@ import {
   styled,
   Radio,
   TextareaAutosize,
+  Chip,
 } from "@mui/material";
 import {
   NavigateNext,
@@ -35,6 +36,7 @@ import MapSelector from "../../Location-Selector/LocationSelector";
 import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
+import Loader from "../../../theme/Loader";
 
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -55,7 +57,7 @@ const Recommened = ({ darkMode }) => {
 
   const [productData, setProductData] = useState(initialProductData);
   // const tl = gsap.timeline()
-
+  const [isLoading, setIsLoading] = useState(false);
   const { account } = useContext(DataContext);
   const { Category } = useParams();
   const navigate = useNavigate();
@@ -72,6 +74,7 @@ const Recommened = ({ darkMode }) => {
   const [movement, setMovement] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [getUserPref, setGetUserPref] = useState(false);
+  const [location, setLocation] = useState(null);
 
   const handleNext = (totalProductImages, index) => {
     console.log(index);
@@ -95,42 +98,41 @@ const Recommened = ({ darkMode }) => {
     }
   };
 
-
-
-  const getPostOfRecomended = async (userPrefData='') => {
-      try {
-let res;
-        if(userPrefData==''){
-         res = await API.getRecommendedList({ Category });
-        }else{
-         console.log(userPrefData)
-         res = await API.getRecommendedList({Category: Category, userPrefData});
-
-        }
-        if (res.isSuccess) {
-          // console.log(res.data)
-          setCurrentPost(res.data);
-        } else {
-          console.log("is failure");
-        }
-
-      } catch (err) {
-        console.log(err);
+  const getPostOfRecomended = async (userPrefData = "") => {
+    try {
+      let res;
+      if (userPrefData == "") {
+        res = await API.getRecommendedList({ Category });
+      } else {
+        console.log(userPrefData);
+        setIsLoading(true);
+        res = await API.getRecommendedList({
+          Category: Category,
+          userPrefData,
+        });
       }
+      if (res.isSuccess) {
+        // console.log(res.data)
+        setCurrentPost(res.data);
+      } else {
+        console.log("is failure");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
 
-      setGetUserPref(prev=> !prev)
-    };
+    setGetUserPref((prev) => !prev);
+  };
 
   useEffect(() => {
-    
-
     const getPostOfCategory = async () => {
       try {
         const res = await API.getPostByCategory({ Category });
         if (res.isSuccess) {
           // console.log(res.data)
           setCurrentPost(res.data);
-          console.log(res.data)
+          console.log(res.data);
         } else {
           console.log("is failure");
         }
@@ -163,6 +165,8 @@ let res;
   //save fav post's id to db
   useEffect(() => {
     const saveFavouritePost = async () => {
+      // setIsLoading(true);
+
       try {
         let res;
 
@@ -216,6 +220,7 @@ let res;
       } catch (err) {
         console.log(err);
       }
+      // setIsLoading(true);
     };
 
     saveFavouritePost();
@@ -272,6 +277,12 @@ let res;
   };
 
   const handleModalData = () => {
+    if (!location) {
+      toast.error("Location not found");
+
+      return;
+    }
+
     const allAreFilled = Object.values(productData).some(
       (value) => String(value).trim() === ""
     );
@@ -280,7 +291,7 @@ let res;
       toast.error("Please fill all the data");
     } else {
       console.log("here");
-      getPostOfRecomended(productData)
+      getPostOfRecomended(productData);
     }
   };
 
@@ -290,6 +301,7 @@ let res;
       Location: `${latlng.lat},${latlng.lng},${latlng.address}`,
     });
   };
+
 
   return (
     <>
@@ -338,239 +350,264 @@ let res;
           )
         )}
       </Box>
-
-      <Grid container justifyContent="center">
-        {currentPost.length > 0 && getUserPref ? (
-          <Grid
-            ref={productRef}
-            item
-            sx={{
-              display: "flex",
-              rowGap: "2rem",
-              flexDirection: "column-reverse",
-            }}
-            lg={7}
-            md={8}
-            sm={8}
-          >
-            {currentPost.map((e, index) => (
-              <Card
-                key={index}
-                sx={{
-                  position: "relative",
-                  backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
-                  color: darkMode ? "white" : "black",
-                }}
-              >
-                {bookMarkClicked.includes(e._id) ? (
-                  <Bookmark
-                    color="primary"
-                    onClick={() => handleRemoveFavroit(e)}
-                    sx={{
-                      position: "absolute",
-                      right: "2%",
-                      top: "5%",
-                      "&:hover": {
-                        color: "blue",
-                        cursor: "pointer",
-                        transition: "0.4s",
-                      },
-                      transition: "0.4s",
-                      "&:active": { transform: "scale(1.05)" },
-                    }}
-                  />
-                ) : (
-                  <BookmarkBorderOutlined
-                    onClick={() => handleSetFavroit(e)}
-                    sx={{
-                      position: "absolute",
-                      right: "2%",
-                      top: "5%",
-                      "&:hover": {
-                        color: "blue",
-                        cursor: "pointer",
-                        transition: "0.4s",
-                      },
-                      transition: "0.4s",
-                      "&:active": { transform: "scale(1.05)" },
-                    }}
-                  />
-                )}
-
-                <CardHeader
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Grid container justifyContent="center">
+          {currentPost.length > 0 && getUserPref ? (
+            <Grid
+              ref={productRef}
+              item
+              sx={{
+                display: "flex",
+                rowGap: "2rem",
+                flexDirection: "column",
+              }}
+              lg={7}
+              md={8}
+              sm={8}
+            >
+              {currentPost.map((e, index) => (
+                <Card
+                  key={index}
                   sx={{
-                    "& .MuiCardHeader-title": {
-                      color: darkMode ? "white" : "black",
-                    },
-                    "& .MuiCardHeader-subheader": {
-                      color: darkMode ? "white" : "black",
-                    },
+                    position: "relative",
+                    backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
+                    color: darkMode ? "white" : "black",
                   }}
-                  avatar={
-                    <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
-                  }
-                  title={e.Gharbeti_name}
-                  subheader={e.Date}
-                />
-
-                <Box sx={{ position: "relative" }}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      zIndex: "1",
-                      position: "absolute",
-                      top: "50%",
-                    }}
-                  >
-                    <NavigateBefore
-                      disabled={movement - 1 == -1 ? true : false}
-                      fontSize="large"
+                >
+                  {bookMarkClicked.includes(e._id) ? (
+                    <Bookmark
+                      color="primary"
+                      onClick={() => handleRemoveFavroit(e)}
                       sx={{
-                        marginRight: "0%",
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
+                        position: "absolute",
+                        right: "2%",
+                        top: "5%",
+                        "&:hover": {
+                          color: "blue",
+                          cursor: "pointer",
+                          transition: "0.4s",
+                        },
+                        transition: "0.4s",
+                        "&:active": { transform: "scale(1.05)" },
                       }}
-                      onClick={() => handlePrev(index)}
                     />
-
-                    <NavigateNext
-                      disabled={
-                        movement == e.productImages.length - 1 ? true : false
-                      }
-                      fontSize="large"
+                  ) : (
+                    <BookmarkBorderOutlined
+                      onClick={() => handleSetFavroit(e)}
                       sx={{
-                        marginLeft: "90%",
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
+                        position: "absolute",
+                        right: "2%",
+                        top: "5%",
+                        "&:hover": {
+                          color: "blue",
+                          cursor: "pointer",
+                          transition: "0.4s",
+                        },
+                        transition: "0.4s",
+                        "&:active": { transform: "scale(1.05)" },
                       }}
-                      onClick={() => handleNext(e.productImages.length, index)}
                     />
-                  </Box>
+                  )}
 
-                  <Box
+                  <CardHeader
                     sx={{
-                      height: "20rem",
-                      display: "flex",
-                      transform:
-                        activeIndex === index
-                          ? `  translateX(-${movement * 100}%)`
-                          : `translateX(0px)`,
-                      transition: "0.5s",
-                    }}
-                  >
-                    {e.productImages.map((item, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          background: `url(${item}) no-repeat 50% 50% / contain`,
-                          width: "100%",
-                          height: "20rem",
-                          flex: "0 0 100%",
-                          height: "100%",
-                        }}
-                      ></Box>
-                    ))}
-                  </Box>
-                </Box>
-
-                <CardContent>
-                  <Typography variant="h5">{e.Description}</Typography>
-                </CardContent>
-
-                <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                  {/* <Typography variant="h5">About {selectedOption}</Typography> */}
-                  <Box
-                    sx={{
-                      marginLeft: "2rem",
-                      display: "flex",
-                      columnGap: "1.4rem",
-                    }}
-                  >
-                    <Box sx={{}}>
-                      <Typography>
-                        <strong>Quantity</strong>
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        <strong>Rate</strong>
-                      </Typography>
-                      {/* <Typography> <strong>Location</strong></Typography> */}
-                    </Box>
-
-                    <Box>
-                      <Typography>: {e.Quantity}</Typography>
-                      <Typography>: {e.Rate}</Typography>
-                      {/* <Typography>: {e.Location}</Typography> */}
-                    </Box>
-                  </Box>
-
-                  {/* <Typography variant="h5">Additional Info</Typography> */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      columnGap: "1.4rem",
-                      "&::before": {
-                        content: '""',
-                        borderLeft: "1px solid black",
-                        marginRight: "5rem",
+                      "& .MuiCardHeader-title": {
+                        color: darkMode ? "white" : "black",
+                      },
+                      "& .MuiCardHeader-subheader": {
+                        color: darkMode ? "white" : "black",
                       },
                     }}
-                  >
-                    <Box>
-                      <Typography>
-                        <strong>Water</strong>
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        <strong>Parking</strong>
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        <strong>Prefered</strong>
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        <strong>Pets</strong>
-                      </Typography>
+                    avatar={
+                      <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
+                    }
+                    title={e.Gharbeti_name}
+                    subheader={e.Date}
+                  />
+
+                  <Box sx={{ position: "relative" }}>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        zIndex: "1",
+                        position: "absolute",
+                        top: "50%",
+                      }}
+                    >
+                      <NavigateBefore
+                        disabled={movement - 1 == -1 ? true : false}
+                        fontSize="large"
+                        sx={{
+                          marginRight: "0%",
+                          display: `${
+                            e?.productImages?.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() => handlePrev(index)}
+                      />
+
+                      <NavigateNext
+                        disabled={
+                          movement == e.productImages.length - 1 ? true : false
+                        }
+                        fontSize="large"
+                        sx={{
+                          marginLeft: "90%",
+                          display: `${
+                            e.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() =>
+                          handleNext(e.productImages.length, index)
+                        }
+                      />
                     </Box>
 
-                    <Box>
-                      <Typography>: {e.Water}</Typography>
-                      <Typography>: {e.Parking}</Typography>
-                      <Typography>: {e.People}</Typography>
-                      <Typography>: {e.Pets}</Typography>
+                    <Box
+                      sx={{
+                        height: "20rem",
+                        display: "flex",
+                        transform:
+                          activeIndex === index
+                            ? `  translateX(-${movement * 100}%)`
+                            : `translateX(0px)`,
+                        transition: "0.5s",
+                      }}
+                    >
+                      {e.productImages.map((item, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            background: `url(${item}) no-repeat 50% 50% / contain`,
+                            width: "100%",
+                            height: "20rem",
+                            flex: "0 0 100%",
+                            height: "100%",
+                          }}
+                        ></Box>
+                      ))}
                     </Box>
                   </Box>
-                </Box>
 
-                <Box style={{ marginBottom: "1.2rem" }}>
-                  <div style={{ marginBottom: "2rem" }}>
-                    <Typography>
+                  <CardContent>
+                    <Typography variant="body1">
                       {" "}
-                      <strong>Location: </strong>
+                      <span
+                        style={{
+                          background: "#91ae98",
+                          borderRadius: "6px",
+                          padding: "3px",
+                          color: "white",
+                        }}
+                      >
+                        <strong>{Math.floor(e.score * 100)}%</strong> match
+                      </span>
                     </Typography>
-                    <Typography>
-                      {e.Location.split(",").slice(2).join(",").trim()}
-                    </Typography>
-                  </div>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
-                  >
-                    lets talk business
-                  </Button>
-                </Box>
-              </Card>
-            ))}
-          </Grid>
-        ) : (
-          <Box>sorry but currenlty none are available</Box>
-        )}
-      </Grid>
 
-      <Modal isOpen={!getUserPref} toggle={toggleModal} centered size="lg" scrollable>
+                    <Typography variant="h5">{e.Description}</Typography>
+                  </CardContent>
+
+                  <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                    {/* <Typography variant="h5">About {selectedOption}</Typography> */}
+                    <Box
+                      sx={{
+                        marginLeft: "2rem",
+                        display: "flex",
+                        columnGap: "1.4rem",
+                      }}
+                    >
+                      <Box sx={{}}>
+                        <Typography>
+                          <strong>Quantity</strong>
+                        </Typography>
+                        <Typography>
+                          {" "}
+                          <strong>Rate</strong>
+                        </Typography>
+                        {/* <Typography> <strong>Location</strong></Typography> */}
+                      </Box>
+
+                      <Box>
+                        <Typography>: {e.Quantity}</Typography>
+                        <Typography>: {e.Rate}</Typography>
+                        {/* <Typography>: {e.Location}</Typography> */}
+                      </Box>
+                    </Box>
+
+                    {/* <Typography variant="h5">Additional Info</Typography> */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        columnGap: "1.4rem",
+                        "&::before": {
+                          content: '""',
+                          borderLeft: "1px solid black",
+                          marginRight: "5rem",
+                        },
+                      }}
+                    >
+                      <Box>
+                        <Typography>
+                          <strong>Water</strong>
+                        </Typography>
+                        <Typography>
+                          {" "}
+                          <strong>Parking</strong>
+                        </Typography>
+                        <Typography>
+                          {" "}
+                          <strong>Prefered</strong>
+                        </Typography>
+                        <Typography>
+                          {" "}
+                          <strong>Pets</strong>
+                        </Typography>
+                      </Box>
+
+                      <Box>
+                        <Typography>: {e.Water}</Typography>
+                        <Typography>: {e.Parking}</Typography>
+                        <Typography>: {e.People}</Typography>
+                        <Typography>: {e.Pets}</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box style={{ marginBottom: "1.2rem" }}>
+                    <div style={{ marginBottom: "2rem" }}>
+                      <Typography>
+                        {" "}
+                        <strong>Location: </strong>
+                      </Typography>
+                      <Typography>
+                        {e.Location.split(",").slice(2).join(",").trim()}
+                      </Typography>
+                    </div>
+                    <Button
+                      variant="contained"
+                      onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
+                    >
+                      lets talk business
+                    </Button>
+                  </Box>
+                </Card>
+              ))}
+            </Grid>
+          ) : (
+            <Box>sorry but currenlty none are available</Box>
+          )}
+        </Grid>
+      )}
+
+      <Modal
+        isOpen={!getUserPref}
+        toggle={toggleModal}
+        centered
+        size="lg"
+        scrollable
+      >
         <ModalHeader toggle={toggleModal}>User Prefernces</ModalHeader>
         <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <Paper
@@ -776,9 +813,12 @@ let res;
               <div>
                 <MapSelector
                   onAddressChange={(latlng) => handleLocation(latlng)}
+                  location={location}
+                  setLocation={setLocation}
                 />
               </div>
             </Box>
+
           </Paper>
         </ModalBody>
         <ModalFooter>
@@ -786,7 +826,7 @@ let res;
             Cancel
           </Button>
           <Button color="primary" onClick={handleModalData}>
-            Save
+            Search
           </Button>
         </ModalFooter>
       </Modal>

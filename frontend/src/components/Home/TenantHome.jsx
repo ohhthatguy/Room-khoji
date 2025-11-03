@@ -18,6 +18,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../footer/Footer";
 import toast from "react-hot-toast";
+import Loader from "../../theme/Loader";
 
 const TenantHome = ({ darkMode }) => {
   const reviewCard = useRef([]);
@@ -28,6 +29,7 @@ const TenantHome = ({ darkMode }) => {
   const account = JSON.parse(localStorage.getItem("currentUser"));
   const [verifyData, setVerifyData] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   //useLocation for query params
 

@@ -5,27 +5,7 @@ const dotenv = require('dotenv').config()
 const authorizeToken = async(req,res,next)=>{
     
     const accessToken = req.cookies.accessToken;
-    // console.log(accessToken)
-   
-       
-
-        // if(!accessToken){
-          
-        //     if(generateNewAccessToken(req,res)){
-        //         next()
-        //     }
-        // }else{
-
-        //     jwt.verify(accessToken, process.env.SECRET_ACCESS_KEY, (err,decoded)=>{
-        //         if(err){
-        //             return res.status(401).json({valid: false ,msg: 'unauthorized access user'})
-        //         }
-        //         req.email = decoded.email
-        //         // console.log(req)
-        //         next()
-        //     })
-        // }
-
+    
         if (!accessToken) {
             // Try to generate a new access token
             const success = await generateNewAccessToken(req, res);

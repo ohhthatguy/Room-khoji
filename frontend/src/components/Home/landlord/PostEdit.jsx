@@ -30,6 +30,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [postData, setPostData] = useState(post[0]);
+   const [location, setLocation] = useState(null);
 
   console.log(postData);
 
@@ -371,7 +372,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
 
           <div>
             {/* <LocationSelector onAddressChange={(latlng) => handleLocation(latlng)} /> */}
-            <MapSelector onAddressChange={(latlng) => handleLocation(latlng)} />
+            <MapSelector onAddressChange={(latlng) => handleLocation(latlng)} location={location} setLocation={setLocation} />
           </div>
 
           <TextareaAutosize

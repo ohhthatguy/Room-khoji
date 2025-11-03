@@ -34,7 +34,8 @@ const {
   updateRentedProduct,
   deleteScheduleOfId,
   otpAuth,
-  sendMailAfterPayment
+  sendMailAfterPayment,
+  getLocation
 } = require("../controller/controller");
 
 //create a new account
@@ -118,6 +119,9 @@ router.post("/post/registerClick", registerClick)
 
 // route: POST /api/rooms/click
 router.post("/click", clickRecomendation);
+
+//et location
+router.post("/getLocation", getLocation);
 
 
 module.exports = router;

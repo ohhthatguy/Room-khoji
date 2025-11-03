@@ -71,23 +71,14 @@ const otpAuth = async (req, res) => {
 
 const checkLogIn = async (req, res) => {
   const response = await accountModel.findOne({ email: req.body.email });
-
   if (!response) {
     return res
       .status(404)
       .json({ msg: "there is no account with such email." });
   }
-
-  //added
-
   try {
     let isValid = await bcrypt.compare(req.body.password, response.password);
-
     if (isValid) {
-      //if password is also right, user is valid and create token
-      // const accessToken = jwt.sign(response.toJSON(), process.env.SECRET_ACCESS_KEY, { expiresIn: '10s' })
-      // const refreshToken = jwt.sign(response.toJSON(), process.env.SECRET_REFRESH_KEY, {expiresIn: '2min'})
-
       const accessToken = jwt.sign(
         { email: req.body.email },
         process.env.SECRET_ACCESS_KEY,
@@ -111,7 +102,6 @@ const checkLogIn = async (req, res) => {
         secure: isProduction, // Only true in production
         sameSite: isProduction ? "none" : "lax",
       });
-
       // after confirming the valid user and also saving the token return back the accesstoken, refershtoken, name and email to frontend for us to use it
       let data = {
         accessToken: accessToken,
@@ -451,16 +441,13 @@ async function getEsewaPaymentHash(amount, transaction_uuid) {
 }
 
 const getSignature = async (req, res) => {
-  // total_amount=100,transaction_uuid=11-201-13,product_code=EPAYTEST
   const { total_amount } = req.query;
 
   let transaction_uuid = uuidv4();
   //get hashed
   try {
     let hash = await getEsewaPaymentHash(total_amount, transaction_uuid);
-    // console.log(total_amount)
-    // console.log(transaction_uuid)
-    // console.log(hash.signature)
+
     hash = {
       ...hash,
       transaction_uuid: transaction_uuid,
@@ -542,14 +529,6 @@ const sendMailAfterPayment = async (req, res) => {
       _id: { $in: req.body.tenantID },
     }); //lot of id i.e id:ids
 
-    console.log(responseGharbeti);
-    console.log(responseTenant);
-
-    console.log(responseTenant.length);
-    console.log(responseGharbeti.length);
-
-    console.log(responseGharbeti[0].email);
-
     if (responseGharbeti.length > 0 && responseTenant.length > 0) {
       const userEmail = responseTenant[0].email;
       const subject = "Contact Email of Landlord.";
@@ -570,13 +549,10 @@ const sendMailAfterPayment = async (req, res) => {
       return res.status(404).json({ msg: "email after payment not sucesful" });
     }
   } catch (err) {
-    
-    return res
-      .status(500)
-      .json({
-        msg: "some error from server side while sending email after payment",
-        err
-      });
+    return res.status(500).json({
+      msg: "some error from server side while sending email after payment",
+      err,
+    });
   }
 };
 
@@ -624,30 +600,17 @@ const clickRecomendation = async (userId) => {
   allClicks.forEach((click) => {
     const uid = click.userId.toString();
     const rid = click.roomId.toString();
-
     roomSet.add(rid);
-
     if (!userRoomMap[uid]) userRoomMap[uid] = {};
-
     userRoomMap[uid][rid] = (userRoomMap[uid][rid] || 0) + click.count;
   });
 
-  // console.log("ROomMap: ")
-  // console.log(userRoomMap)
-
-  //   console.log("roomSet: ")
-  // console.log(roomSet)
-
   // Step 3: Convert user vectors to same dimension
   const allRoomIds = Array.from(roomSet);
-  //  console.log('UserId:', userId._id);
-  // console.log('RoomMap:', userRoomMap[userId._id]);
 
   const currentUserVector = allRoomIds.map(
-    (rid) => userRoomMap[userId._id]?.[rid] || 0
+    (rid) => userRoomMap[userId?._id]?.[rid] || 0
   );
-
-  // console.log("currentUserVector: ", currentUserVector)
 
   const similarityScores = []; // { userId, score }
 
@@ -660,14 +623,11 @@ const clickRecomendation = async (userId) => {
 
     //  console.log("otherVector: ", otherVector)
     const score = cosineSimilarity(currentUserVector, otherVector);
-    // console.log(score)
+
     if (score > 0) {
       similarityScores.push({ userId: otherUserId, score });
     }
   }
-
-  // console.log("similarityScores: ")
-  // console.log(similarityScores)
 
   // Step 4: Sort similar users by similarity
   similarityScores.sort((a, b) => b.score - a.score);
@@ -686,18 +646,10 @@ const clickRecomendation = async (userId) => {
     }
   });
 
-  // console.log("CLiked by user : ")
-  // console.log(roomScoreMap)
-
   // Step 6: Sort rooms by score
   const sortedRoomIds = Object.entries(roomScoreMap)
     .sort((a, b) => b[1] - a[1])
     .map(([roomId]) => roomId);
-
-  // console.log("CLiked by user sorrted : ")
-  // console.log(sortedRoomIds)
-
-  // console.log("All the rooms current user clicked except in descending order of the clicks: ")
 
   const getRoomIdsByCount = (userRoomMap, userId) =>
     Object.entries(userRoomMap[userId._id] || {})
@@ -705,22 +657,15 @@ const clickRecomendation = async (userId) => {
       .map(([roomId]) => roomId);
 
   const userRoomIds = getRoomIdsByCount(userRoomMap, userId);
-  // console.log(userRoomIds);
 
   const finalRoomIds = [...sortedRoomIds, ...userRoomIds];
   // Step 7: Fetch room details
   const recommendedRooms = await postModel.find({ _id: { $in: finalRoomIds } });
 
-  // console.log("Prerecomenedation: ");
-  // console.log(recommendedRooms);
-
   const enriched = recommendedRooms.map((room) => {
     const id = room._id.toString();
     return { ...room.toObject(), score: roomScoreMap[id] || 0 };
   });
-
-  //   console.log("enriched: ");
-  // console.log(enriched);
 
   return enriched.sort((a, b) => b.score - a.score);
 };
@@ -769,6 +714,34 @@ const registerClick = async (req, res) => {
   }
 };
 
+const getLocation = async (req, res) => {
+  try {
+    
+    const { lat, lng } = req.body;
+
+    try {
+      // Option 1: Check if user already clicked this post before
+      // let click = await Click.findOne({ userId, roomId: postId });
+      const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+        );
+
+        const data = await response.json();
+      // console.log(data);
+
+    return  res
+        .status(200)
+        .json({ address: data, isSuccess: true });
+
+    } catch (error) {
+    return  res.status(500).json({ error: error.message });
+    }
+  } catch (err) {
+    console.error(err);
+   return res.status(500).json({ message: "Something  error in registering click" });
+  }
+};
+
 module.exports = {
   saveRentedProduct,
   getRentedProduct,
@@ -795,4 +768,5 @@ module.exports = {
   deleteScheduleOfId,
   otpAuth,
   sendMailAfterPayment,
+  getLocation
 };

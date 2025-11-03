@@ -18,7 +18,7 @@ import { NavigateNext, NavigateBefore } from "@mui/icons-material";
 import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
-
+import Loader from "../../../theme/Loader";
 const FavroitProduct = ({ darkMode }) => {
   // const {id} = useParams();
   const { account } = useContext(DataContext);
@@ -26,6 +26,7 @@ const FavroitProduct = ({ darkMode }) => {
 
   const [favPost, setFavPost] = useState([]);
   const [posts, setposts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // const [selectedOption, setSelectedOption] = useState(Category)
 
@@ -57,6 +58,7 @@ const FavroitProduct = ({ darkMode }) => {
   //gets posts id
   useEffect(() => {
     const getFavPost = async () => {
+      setIsLoading(true);
       try {
         const res = await API.getFavouritePost({ id: account._id });
         if (res.isSuccess) {
@@ -69,6 +71,7 @@ const FavroitProduct = ({ darkMode }) => {
       } catch (err) {
         console.log(err);
       }
+      setIsLoading(false);
     };
 
     getFavPost();
@@ -78,7 +81,12 @@ const FavroitProduct = ({ darkMode }) => {
 
   //fetches data of post id
   useEffect(() => {
+   
     const fetchPost = async () => {
+       setIsLoading(true
+
+
+       );
       try {
         const res = await API.getFavDataFromFavPostId({ id: posts });
 
@@ -92,16 +100,13 @@ const FavroitProduct = ({ darkMode }) => {
       } catch (err) {
         console.log(err);
       }
+       setIsLoading(false);
     };
     fetchPost();
   }, [posts]);
 
   console.log(favPost);
 
-  //   const optionList = ['Flat', 'Building', 'Room']
-  //   console.log(selectedOption)
-  //   console.log(currentPost)
-  //   console.log(gharBeti)
 
   return (
     <>
@@ -316,7 +321,9 @@ const FavroitProduct = ({ darkMode }) => {
           <Box>You have not selected any favroutes</Box>
         )}
       </Grid> */}
-
+  {
+    isLoading ? <Loader /> : 
+  
       <Grid container spacing={3} style={{padding: "0 20px"}}  >
               {favPost.length > 0 ? (
                
@@ -536,7 +543,7 @@ const FavroitProduct = ({ darkMode }) => {
               ) : (
                 <Box>sorry but currenlty none are available</Box>
               )}
-            </Grid>
+            </Grid> }
     </>
   );
 };

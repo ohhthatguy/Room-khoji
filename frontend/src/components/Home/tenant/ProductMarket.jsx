@@ -28,6 +28,7 @@ import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
 import Footer from "../../footer/Footer";
+import Loader from "../../../theme/Loader";
 
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -42,6 +43,7 @@ const ProductMarket = ({ darkMode }) => {
 
   const [currentPost, setCurrentPost] = useState([]);
   const [bookMarkClicked, setBookmarkClicked] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [currIndex, setCurrIndex] = useState('')
   const [favrouitPost, setFavouritePost] = useState({
     add: "",
@@ -78,6 +80,7 @@ const ProductMarket = ({ darkMode }) => {
     if (selectedOption.length > 0) {
       const getPostOfCategory = async () => {
         try {
+          setIsLoading(true);
           const user = localStorage.getItem("currentUser");
           const userID = JSON.parse(user);
           const res = await API.getPostByCategory({
@@ -96,6 +99,7 @@ const ProductMarket = ({ darkMode }) => {
             toast.error("Token expired! Please Re-login!");
           }
         }
+        setIsLoading(false)
       };
 
       getPostOfCategory();
@@ -117,7 +121,7 @@ const ProductMarket = ({ darkMode }) => {
     const saveFavouritePost = async () => {
       try {
         let res;
-
+setIsLoading(true)
         if (favrouitPost.add.length > 0) {
           res = await API.saveFavouritePost({
             Tenant_id: account._id,
@@ -168,6 +172,7 @@ const ProductMarket = ({ darkMode }) => {
       } catch (err) {
         console.log(err);
       }
+      setIsLoading(false)
     };
 
     saveFavouritePost();
@@ -213,6 +218,8 @@ const ProductMarket = ({ darkMode }) => {
     <>
       <Header />
 
+      
+
       <Box
         sx={{
           marginTop: "4rem",
@@ -257,6 +264,9 @@ const ProductMarket = ({ darkMode }) => {
         )}
       </Box>
 
+        {
+          isLoading ? <Loader /> : (<>
+        
       <Grid container spacing={3} style={{ padding: "0 20px" }}>
         {currentPost.length > 0 ? (
           currentPost.map((e, index) => (
@@ -510,9 +520,14 @@ const ProductMarket = ({ darkMode }) => {
         )}
       </Grid>
 
-      <div style={{ marginTop: "2rem" }}>
+        <div style={{ marginTop: "2rem" }}>
         <Footer />
       </div>
+
+          </>)
+}
+
+    
     </>
   );
 };

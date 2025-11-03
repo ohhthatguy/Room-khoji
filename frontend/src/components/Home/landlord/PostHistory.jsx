@@ -20,15 +20,18 @@ import {
 // import { useNavigate } from "react-router-dom"
 import { API } from "../../../services/Api";
 import PostCard from "./PostCard";
+import Loader from "../../../theme/Loader";
 
 const PostHistory = ({ darkMode }) => {
   //if any history steore in a var and send it as <postcard post = {post} /> else show this no room seold
 
   const [historyPost, setHistoryPost] = useState([]);
   const account = JSON.parse(localStorage.getItem("currentUser"));
+  const [isLoading, setIsLoading] = useState(false);
 
       const getHistoryPost = async () => {
       try {
+        setIsLoading(true)
         const res = await API.getRentedProduct();
 
         if (res.isSuccess) {
@@ -40,6 +43,7 @@ const PostHistory = ({ darkMode }) => {
       } catch (err) {
         console.log("error: ", err);
       }
+       setIsLoading(false)
     };
 
   useEffect(() => {
@@ -53,7 +57,9 @@ const PostHistory = ({ darkMode }) => {
 
   return (
     <>
-      {historyPost.length > 0 && historyPost[0].Gharbeti_id == account._id ? (
+      {
+        isLoading ? <Loader /> :
+      historyPost.length > 0 && historyPost[0].Gharbeti_id == account._id ? (
         <PostCard post={historyPost} darkMode={darkMode} getHistoryPostfunc={getHistoryPost} />
       ) : (
         <Box

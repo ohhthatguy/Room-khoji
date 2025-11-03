@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import { API } from "../../../services/Api";
 import { DataContext } from "../../../context/DataProvider";
 import toast from "react-hot-toast";
+import Loader from "../../../theme/Loader";
 
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -34,6 +35,7 @@ const BusinessTalk = ({ darkMode }) => {
   const { currentPost, setCurrentPost } = useContext(DataContext); //post tobe rented is saved
   const [latLng, setLatLng] = useState();
   const [schedule, setSchedule] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   // console.log(id)
 
   const [signature, setSignature] = useState("");
@@ -79,6 +81,7 @@ const BusinessTalk = ({ darkMode }) => {
 
   useEffect(() => {
     const getPostOfCategory = async () => {
+      setIsLoading(true)
       try {
         const res = await API.getPostsOfId({ postId: id });
         if (res.isSuccess) {
@@ -91,9 +94,13 @@ const BusinessTalk = ({ darkMode }) => {
       } catch (err) {
         console.log(err);
       }
+      setIsLoading(false)
+
     };
 
     const registerClick = async () => {
+      setIsLoading(true)
+
       try {
         const userId = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -103,15 +110,17 @@ const BusinessTalk = ({ darkMode }) => {
         });
         if (res.isSuccess) {
           // console.log(res.data)
-          toast.success("clicked registered!");
+          toast.success("Click Registered!");
         } else {
           console.log("is failure");
-          toast.success("clicked registered failure!");
+          toast.error("Click Register Failed!");
         }
       } catch (err) {
         console.log(err);
-        toast.success("somehitng wornfg");
+        toast.error("something went wrong!");
       }
+      setIsLoading(false)
+
     };
 
     getPostOfCategory();
@@ -191,6 +200,8 @@ let rentedData = {
       rentedData.Date = "Thu, 13 Nov 2025 04:30:29 GMT";
 
         const saveRentedProduct = async () => {
+      setIsLoading(true)
+
         try {
           let res = await API.saveRentedProduct(rentedData);
           console.log(res);
@@ -216,6 +227,8 @@ let rentedData = {
           }
 
         }
+      setIsLoading(false)
+
       };
   
       saveRentedProduct();
@@ -245,6 +258,9 @@ let rentedData = {
           gap: "10px",
         }}
       ></Box>
+
+  {
+    isLoading ? <Loader /> : 
 
       <Grid container justifyContent="center">
         {currentPost.length > 0 ? (
@@ -787,6 +803,8 @@ let rentedData = {
           <Box>sorry but currenlty none are available</Box>
         )}
       </Grid>
+
+      }
 
 
         
