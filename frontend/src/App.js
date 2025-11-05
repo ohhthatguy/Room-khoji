@@ -76,6 +76,8 @@ const App = () => {
           path="/tenant/favorite"
           element={<FavroitProduct darkMode={darkMode} />}
         />
+
+        
         <Route
           path="/tenant/recommended/:Category"
           element={<Recommened darkMode={darkMode} />}

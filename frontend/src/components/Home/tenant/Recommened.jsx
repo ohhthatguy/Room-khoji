@@ -302,6 +302,7 @@ const Recommened = ({ darkMode }) => {
     });
   };
 
+  console.log(currentPost);
 
   return (
     <>
@@ -353,64 +354,295 @@ const Recommened = ({ darkMode }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <Grid container justifyContent="center">
-          {currentPost.length > 0 && getUserPref ? (
-            <Grid
-              ref={productRef}
-              item
-              sx={{
-                display: "flex",
-                rowGap: "2rem",
-                flexDirection: "column",
-              }}
-              lg={7}
-              md={8}
-              sm={8}
-            >
-              {currentPost.map((e, index) => (
+        // <Grid container spacing={3}>
+        //   {currentPost?.finalByRate.length > 0 && getUserPref ? (
+        //     <Grid
+        //       ref={productRef}
+        //       item
+
+        //       md={6}
+
+        //     >
+        //       {currentPost?.finalByRate?.map((e, index) => (
+        //         <Card
+        //           key={index}
+        //           sx={{
+        //             position: "relative",
+        //             backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
+        //             color: darkMode ? "white" : "black",
+        //           }}
+        //         >
+        //           {bookMarkClicked.includes(e._id) ? (
+        //             <Bookmark
+        //               color="primary"
+        //               onClick={() => handleRemoveFavroit(e)}
+        //               sx={{
+        //                 position: "absolute",
+        //                 right: "2%",
+        //                 top: "5%",
+        //                 "&:hover": {
+        //                   color: "blue",
+        //                   cursor: "pointer",
+        //                   transition: "0.4s",
+        //                 },
+        //                 transition: "0.4s",
+        //                 "&:active": { transform: "scale(1.05)" },
+        //               }}
+        //             />
+        //           ) : (
+        //             <BookmarkBorderOutlined
+        //               onClick={() => handleSetFavroit(e)}
+        //               sx={{
+        //                 position: "absolute",
+        //                 right: "2%",
+        //                 top: "5%",
+        //                 "&:hover": {
+        //                   color: "blue",
+        //                   cursor: "pointer",
+        //                   transition: "0.4s",
+        //                 },
+        //                 transition: "0.4s",
+        //                 "&:active": { transform: "scale(1.05)" },
+        //               }}
+        //             />
+        //           )}
+
+        //           <CardHeader
+        //             sx={{
+        //               "& .MuiCardHeader-title": {
+        //                 color: darkMode ? "white" : "black",
+        //               },
+        //               "& .MuiCardHeader-subheader": {
+        //                 color: darkMode ? "white" : "black",
+        //               },
+        //             }}
+        //             avatar={
+        //               <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
+        //             }
+        //             title={e.Gharbeti_name}
+        //             subheader={e.Date}
+        //           />
+
+        //           <Box sx={{ position: "relative" }}>
+        //             <Box
+        //               sx={{
+        //                 width: "100%",
+        //                 zIndex: "1",
+        //                 position: "absolute",
+        //                 top: "50%",
+        //               }}
+        //             >
+        //               <NavigateBefore
+        //                 disabled={movement - 1 == -1 ? true : false}
+        //                 fontSize="large"
+        //                 sx={{
+        //                   marginRight: "0%",
+        //                   display: `${
+        //                     e?.productImages?.length <= 1 ? "none" : "block"
+        //                   }`,
+        //                 }}
+        //                 onClick={() => handlePrev(index)}
+        //               />
+
+        //               <NavigateNext
+        //                 disabled={
+        //                   movement == e.productImages.length - 1 ? true : false
+        //                 }
+        //                 fontSize="large"
+        //                 sx={{
+        //                   marginLeft: "90%",
+        //                   display: `${
+        //                     e.productImages.length <= 1 ? "none" : "block"
+        //                   }`,
+        //                 }}
+        //                 onClick={() =>
+        //                   handleNext(e.productImages.length, index)
+        //                 }
+        //               />
+        //             </Box>
+
+        //             <Box
+        //               sx={{
+        //                 height: "20rem",
+        //                 display: "flex",
+        //                 transform:
+        //                   activeIndex === index
+        //                     ? `  translateX(-${movement * 100}%)`
+        //                     : `translateX(0px)`,
+        //                 transition: "0.5s",
+        //               }}
+        //             >
+        //               {e.productImages.map((item, index) => (
+        //                 <Box
+        //                   key={index}
+        //                   sx={{
+        //                     background: `url(${item}) no-repeat 50% 50% / contain`,
+        //                     width: "100%",
+        //                     height: "20rem",
+        //                     flex: "0 0 100%",
+        //                     height: "100%",
+        //                   }}
+        //                 ></Box>
+        //               ))}
+        //             </Box>
+        //           </Box>
+
+        //           <CardContent>
+                    // <Typography variant="body1">
+                    //   {" "}
+                    //   <span
+                    //     style={{
+                    //       background: "#91ae98",
+                    //       borderRadius: "6px",
+                    //       padding: "3px",
+                    //       color: "white",
+                    //     }}
+                    //   >
+                    //     <strong>{Math.floor(e.score * 100)}%</strong> match
+                    //   </span>
+                    // </Typography>
+
+        //             <Typography variant="h5">{e.Description}</Typography>
+        //           </CardContent>
+
+        //           <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+        //             {/* <Typography variant="h5">About {selectedOption}</Typography> */}
+        //             <Box
+        //               sx={{
+        //                 marginLeft: "2rem",
+        //                 display: "flex",
+        //                 columnGap: "1.4rem",
+        //               }}
+        //             >
+        //               <Box sx={{}}>
+        //                 <Typography>
+        //                   <strong>Quantity</strong>
+        //                 </Typography>
+        //                 <Typography>
+        //                   {" "}
+        //                   <strong>Rate</strong>
+        //                 </Typography>
+        //                 {/* <Typography> <strong>Location</strong></Typography> */}
+        //               </Box>
+
+        //               <Box>
+        //                 <Typography>: {e.Quantity}</Typography>
+        //                 <Typography>: {e.Rate}</Typography>
+        //                 {/* <Typography>: {e.Location}</Typography> */}
+        //               </Box>
+        //             </Box>
+
+        //             {/* <Typography variant="h5">Additional Info</Typography> */}
+        //             <Box
+        //               sx={{
+        //                 display: "flex",
+        //                 columnGap: "1.4rem",
+        //                 "&::before": {
+        //                   content: '""',
+        //                   borderLeft: "1px solid black",
+        //                   marginRight: "5rem",
+        //                 },
+        //               }}
+        //             >
+        //               <Box>
+        //                 <Typography>
+        //                   <strong>Water</strong>
+        //                 </Typography>
+        //                 <Typography>
+        //                   {" "}
+        //                   <strong>Parking</strong>
+        //                 </Typography>
+        //                 <Typography>
+        //                   {" "}
+        //                   <strong>Prefered</strong>
+        //                 </Typography>
+        //                 <Typography>
+        //                   {" "}
+        //                   <strong>Pets</strong>
+        //                 </Typography>
+        //               </Box>
+
+        //               <Box>
+        //                 <Typography>: {e.Water}</Typography>
+        //                 <Typography>: {e.Parking}</Typography>
+        //                 <Typography>: {e.People}</Typography>
+        //                 <Typography>: {e.Pets}</Typography>
+        //               </Box>
+        //             </Box>
+        //           </Box>
+
+        //           <Box style={{ marginBottom: "1.2rem" }}>
+        //             <div style={{ marginBottom: "2rem" }}>
+        //               <Typography>
+        //                 {" "}
+        //                 <strong>Location: </strong>
+        //               </Typography>
+        //               <Typography>
+        //                 {e.Location.split(",").slice(2).join(",").trim()}
+        //               </Typography>
+        //             </div>
+        // <Button
+        //   variant="contained"
+        //   onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
+        // >
+        //   lets talk business
+        // </Button>
+        //           </Box>
+        //         </Card>
+        //       ))}
+        //     </Grid>
+        //   ) : (
+        //     <Box>sorry but currenlty none are available</Box>
+        //   )}
+        // </Grid>
+
+        <Box>
+          {currentPost?.finalByRate?.length > 0 && getUserPref ? (
+            <>
+
+            {/* by price */}
+
+            <div>
+               <div><Typography variant="body1">
+                      {" "}
+                      <span
+                        style={{
+                          background: "#91ae98",
+                          borderRadius: "6px",
+                          padding: "3px",
+                          color: "white",
+                        }}
+                      >
+                        <strong>Filter By Price</strong> 
+                      </span>
+                    </Typography></div>
+            <Box 
+             sx={{
+            display: "flex", // horizontal layout
+            overflowX: "auto", // enable horizontal scroll
+            gap: 3, // spacing between cards
+            padding: 2,
+            scrollBehavior: "smooth", // smooth scroll
+            "&::-webkit-scrollbar": {
+              // hide scrollbar (optional)
+              // display: "none",
+            },
+            // msOverflowStyle: "none",
+            scrollbarWidth: "5px",
+          }}>
+           
+              {currentPost.finalByRate?.map((e, index) => (
                 <Card
                   key={index}
                   sx={{
-                    position: "relative",
-                    backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
+                    width: "450px", // width of each card
+                    flexShrink: 0, // prevent shrinking
+                    backgroundColor: darkMode ? "#494F55" : "#F5F5F5",
                     color: darkMode ? "white" : "black",
+                    height: "680px",
+                    boxShadow: "1px 3px 4px 0px",
                   }}
                 >
-                  {bookMarkClicked.includes(e._id) ? (
-                    <Bookmark
-                      color="primary"
-                      onClick={() => handleRemoveFavroit(e)}
-                      sx={{
-                        position: "absolute",
-                        right: "2%",
-                        top: "5%",
-                        "&:hover": {
-                          color: "blue",
-                          cursor: "pointer",
-                          transition: "0.4s",
-                        },
-                        transition: "0.4s",
-                        "&:active": { transform: "scale(1.05)" },
-                      }}
-                    />
-                  ) : (
-                    <BookmarkBorderOutlined
-                      onClick={() => handleSetFavroit(e)}
-                      sx={{
-                        position: "absolute",
-                        right: "2%",
-                        top: "5%",
-                        "&:hover": {
-                          color: "blue",
-                          cursor: "pointer",
-                          transition: "0.4s",
-                        },
-                        transition: "0.4s",
-                        "&:active": { transform: "scale(1.05)" },
-                      }}
-                    />
-                  )}
-
                   <CardHeader
                     sx={{
                       "& .MuiCardHeader-title": {
@@ -442,7 +674,7 @@ const Recommened = ({ darkMode }) => {
                         sx={{
                           marginRight: "0%",
                           display: `${
-                            e?.productImages?.length <= 1 ? "none" : "block"
+                            e.productImages.length <= 1 ? "none" : "block"
                           }`,
                         }}
                         onClick={() => handlePrev(index)}
@@ -469,6 +701,7 @@ const Recommened = ({ darkMode }) => {
                       sx={{
                         height: "20rem",
                         display: "flex",
+
                         transform:
                           activeIndex === index
                             ? `  translateX(-${movement * 100}%)`
@@ -480,7 +713,7 @@ const Recommened = ({ darkMode }) => {
                         <Box
                           key={index}
                           sx={{
-                            background: `url(${item}) no-repeat 50% 50% / contain`,
+                            background: `url(${item}) no-repeat 50% 50% / cover`,
                             width: "100%",
                             height: "20rem",
                             flex: "0 0 100%",
@@ -491,8 +724,94 @@ const Recommened = ({ darkMode }) => {
                     </Box>
                   </Box>
 
-                  <CardContent>
-                    <Typography variant="body1">
+                  <CardContent
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "15px",
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Rs. {e.Rate}
+                    </Typography>
+                    <Chip
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                      label={e.Category}
+                    />
+                  </CardContent>
+
+                  <Box style={{ padding: "15px" }}>
+                    <Typography
+                      style={{
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        height: "3rem",
+                        lineHeight: "1.3rem",
+                        overflowY: "hidden",
+                      }}
+                      variant="caption"
+                    >
+                      {e.Description}
+                    </Typography>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`${e.Parking} Parking`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Pets ${e.Pets}`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Prefered ${e.People}`}
+                      />
+                    </div>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
+                  >
+                    lets talk business
+                  </Button>
+                </Card>
+              ))}
+            </Box>
+
+            </div>
+
+            {/* by distance  */}
+
+              <div style={{marginTop: "20px", marginBottom: "20px"}}>
+            {
+              currentPost?.finalByDistance?.length > 0 ?
+               (<div>
+               <div> <Typography variant="body1">
                       {" "}
                       <span
                         style={{
@@ -502,103 +821,453 @@ const Recommened = ({ darkMode }) => {
                           color: "white",
                         }}
                       >
-                        <strong>{Math.floor(e.score * 100)}%</strong> match
+                        <strong>Filter By Distance</strong> 
                       </span>
-                    </Typography>
+                    </Typography></div>
+            <Box 
+             sx={{
+            display: "flex", // horizontal layout
+            overflowX: "auto", // enable horizontal scroll
+            gap: 3, // spacing between cards
+            padding: 2,
+            scrollBehavior: "smooth", // smooth scroll
+            "&::-webkit-scrollbar": {
+              // hide scrollbar (optional)
+              display: "none",
+            },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}>
+           
+              {currentPost.finalByDistance.map((e, index) => (
+                <Card
+                  key={index}
+                  sx={{
+                    width: "450px", // width of each card
+                    flexShrink: 0, // prevent shrinking
+                    backgroundColor: darkMode ? "#494F55" : "#F5F5F5",
+                    color: darkMode ? "white" : "black",
+                    height: "680px",
+                    boxShadow: "1px 3px 4px 0px",
+                  }}
+                >
+                  <CardHeader
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        color: darkMode ? "white" : "black",
+                      },
+                      "& .MuiCardHeader-subheader": {
+                        color: darkMode ? "white" : "black",
+                      },
+                    }}
+                    avatar={
+                      <Avatar src={e.room.Gharbeti_profile} alt={e.room.Gharbeti_name} />
+                    }
+                    title={e.room.Gharbeti_name}
+                    subheader={e.room.Date}
+                  />
 
-                    <Typography variant="h5">{e.Description}</Typography>
+                  <Box sx={{ position: "relative" }}>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        zIndex: "1",
+                        position: "absolute",
+                        top: "50%",
+                      }}
+                    >
+                      <NavigateBefore
+                        disabled={movement - 1 == -1 ? true : false}
+                        fontSize="large"
+                        sx={{
+                          marginRight: "0%",
+                          display: `${
+                            e.room.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() => handlePrev(index)}
+                      />
+
+                      <NavigateNext
+                        disabled={
+                          movement == e.room.productImages.length - 1 ? true : false
+                        }
+                        fontSize="large"
+                        sx={{
+                          marginLeft: "90%",
+                          display: `${
+                            e.room.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() =>
+                          handleNext(e.room.productImages.length, index)
+                        }
+                      />
+                    </Box>
+
+                    <Box
+                      sx={{
+                        height: "20rem",
+                        display: "flex",
+
+                        transform:
+                          activeIndex === index
+                            ? `  translateX(-${movement * 100}%)`
+                            : `translateX(0px)`,
+                        transition: "0.5s",
+                      }}
+                    >
+                      {e.room.productImages.map((item, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            background: `url(${item}) no-repeat 50% 50% / cover`,
+                            width: "100%",
+                            height: "20rem",
+                            flex: "0 0 100%",
+                            height: "100%",
+                          }}
+                        ></Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  <CardContent
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "15px",
+                    }}
+                  >
+
+                    
+                    
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Rs. {e.room.Rate}
+                    </Typography>
+                    <Chip
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                      label={e.room.Category}
+                    />
                   </CardContent>
 
-                  <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-                    {/* <Typography variant="h5">About {selectedOption}</Typography> */}
-                    <Box
-                      sx={{
-                        marginLeft: "2rem",
+                  <Box style={{ padding: "15px" }}>
+                     <Typography variant="body1">
+                      {" "}
+                      <span
+                        style={{
+                          background: "#91ae98",
+                          borderRadius: "6px",
+                          padding: "3px",
+                          color: "white",
+                        }}
+                      >
+                        <strong>{e.distance > 0 && e.distance <1 ? "Less than 1" :Math.floor((e.distance))}Km</strong> Far
+                      </span>
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        height: "3rem",
+                        lineHeight: "1.3rem",
+                        overflowY: "hidden",
+                      }}
+                      variant="caption"
+                    >
+                      {e.room.Description}
+                    </Typography>
+
+                    <div
+                      style={{
                         display: "flex",
-                        columnGap: "1.4rem",
+                        justifyContent: "space-between",
+                        marginTop: "20px",
                       }}
                     >
-                      <Box sx={{}}>
-                        <Typography>
-                          <strong>Quantity</strong>
-                        </Typography>
-                        <Typography>
-                          {" "}
-                          <strong>Rate</strong>
-                        </Typography>
-                        {/* <Typography> <strong>Location</strong></Typography> */}
-                      </Box>
-
-                      <Box>
-                        <Typography>: {e.Quantity}</Typography>
-                        <Typography>: {e.Rate}</Typography>
-                        {/* <Typography>: {e.Location}</Typography> */}
-                      </Box>
-                    </Box>
-
-                    {/* <Typography variant="h5">Additional Info</Typography> */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        columnGap: "1.4rem",
-                        "&::before": {
-                          content: '""',
-                          borderLeft: "1px solid black",
-                          marginRight: "5rem",
-                        },
-                      }}
-                    >
-                      <Box>
-                        <Typography>
-                          <strong>Water</strong>
-                        </Typography>
-                        <Typography>
-                          {" "}
-                          <strong>Parking</strong>
-                        </Typography>
-                        <Typography>
-                          {" "}
-                          <strong>Prefered</strong>
-                        </Typography>
-                        <Typography>
-                          {" "}
-                          <strong>Pets</strong>
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography>: {e.Water}</Typography>
-                        <Typography>: {e.Parking}</Typography>
-                        <Typography>: {e.People}</Typography>
-                        <Typography>: {e.Pets}</Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-
-                  <Box style={{ marginBottom: "1.2rem" }}>
-                    <div style={{ marginBottom: "2rem" }}>
-                      <Typography>
-                        {" "}
-                        <strong>Location: </strong>
-                      </Typography>
-                      <Typography>
-                        {e.Location.split(",").slice(2).join(",").trim()}
-                      </Typography>
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`${e.room.Parking} Parking`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Pets ${e.room.Pets}`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Prefered ${e.room.People}`}
+                      />
                     </div>
-                    <Button
-                      variant="contained"
-                      onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
-                    >
-                      lets talk business
-                    </Button>
                   </Box>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/tenant/BusinessTalk/${e.room._id}`)}
+                  >
+                    lets talk business
+                  </Button>
                 </Card>
               ))}
-            </Grid>
+            </Box>
+
+            </div>) : 
+             <Box> rental matchiing the Distance</Box>
+            }
+            </div>
+
+            {/* by final score */}
+
+            <div>
+            {
+              currentPost?.finalByScore?.length > 0 ?
+               (<div>
+           <Typography variant="body1">
+                      {" "}
+                      <span
+                        style={{
+                          background: "#91ae98",
+                          borderRadius: "6px",
+                          padding: "3px",
+                          color: "white",
+                         
+                        }}
+                      >
+                        <strong>Final Recommendation</strong> 
+                      </span>
+                    </Typography>
+            <Box 
+             sx={{
+            display: "flex", // horizontal layout
+            overflowX: "auto", // enable horizontal scroll
+            gap: 3, // spacing between cards
+            padding: 2,
+            scrollBehavior: "smooth", // smooth scroll
+            "&::-webkit-scrollbar": {
+              // hide scrollbar (optional)
+              display: "none",
+            },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}>
+           
+              {currentPost.finalByScore.map((e, index) => (
+                <Card
+                  key={index}
+                  sx={{
+                    width: "450px", // width of each card
+                    flexShrink: 0, // prevent shrinking
+                    backgroundColor: darkMode ? "#494F55" : "#F5F5F5",
+                    color: darkMode ? "white" : "black",
+                    height: "680px",
+                    boxShadow: "1px 3px 4px 0px",
+                  }}
+                >
+                  <CardHeader
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        color: darkMode ? "white" : "black",
+                      },
+                      "& .MuiCardHeader-subheader": {
+                        color: darkMode ? "white" : "black",
+                      },
+                    }}
+                    avatar={
+                      <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
+                    }
+                    title={e.Gharbeti_name}
+                    subheader={e.Date}
+                  />
+
+                  <Box sx={{ position: "relative" }}>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        zIndex: "1",
+                        position: "absolute",
+                        top: "50%",
+                      }}
+                    >
+                      <NavigateBefore
+                        disabled={movement - 1 == -1 ? true : false}
+                        fontSize="large"
+                        sx={{
+                          marginRight: "0%",
+                          display: `${
+                            e.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() => handlePrev(index)}
+                      />
+
+                      <NavigateNext
+                        disabled={
+                          movement == e.productImages.length - 1 ? true : false
+                        }
+                        fontSize="large"
+                        sx={{
+                          marginLeft: "90%",
+                          display: `${
+                            e.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() =>
+                          handleNext(e.productImages.length, index)
+                        }
+                      />
+                    </Box>
+
+                    <Box
+                      sx={{
+                        height: "20rem",
+                        display: "flex",
+
+                        transform:
+                          activeIndex === index
+                            ? `  translateX(-${movement * 100}%)`
+                            : `translateX(0px)`,
+                        transition: "0.5s",
+                      }}
+                    >
+                      {e.productImages.map((item, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            background: `url(${item}) no-repeat 50% 50% / cover`,
+                            width: "100%",
+                            height: "20rem",
+                            flex: "0 0 100%",
+                            height: "100%",
+                          }}
+                        ></Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  <CardContent
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "15px",
+                    }}
+                  >
+
+                    
+                    
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Rs. {e.Rate}
+                    </Typography>
+                    <Chip
+                      sx={{
+                        fontFamily: "'Poppins', sans-serif",
+                        fontWeight: 600,
+                      }}
+                      label={e.Category}
+                    />
+                  </CardContent>
+
+                  <Box style={{ padding: "15px" }}>
+                     <Typography variant="body1">
+                      {" "}
+                      <span
+                        style={{
+                          background: "#91ae98",
+                          borderRadius: "6px",
+                          padding: "3px",
+                          color: "white",
+                        }}
+                      >
+                        <strong>{Math.floor(e.score * 100)}%</strong> Matched
+                      </span>
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontSize: "1.2rem",
+                        fontWeight: "bold",
+                        height: "3rem",
+                        lineHeight: "1.3rem",
+                        overflowY: "hidden",
+                      }}
+                      variant="caption"
+                    >
+                      {e.Description}
+                    </Typography>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`${e.Parking} Parking`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Pets ${e.Pets}`}
+                      />
+                      <Chip
+                        sx={{
+                          fontFamily: "'Poppins', sans-serif",
+                          fontWeight: 600,
+                        }}
+                        label={`Prefered ${e.People}`}
+                      />
+                    </div>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
+                  >
+                    lets talk business
+                  </Button>
+                </Card>
+              ))}
+            </Box>
+
+            </div>) : 
+             <Box> No rental to recommend</Box>
+            }
+            </div>
+          
+
+
+
+            </>
           ) : (
-            <Box>sorry but currenlty none are available</Box>
+            <Box>No rental matchiing the rate</Box>
           )}
-        </Grid>
+        </Box>
       )}
 
       <Modal
@@ -818,7 +1487,6 @@ const Recommened = ({ darkMode }) => {
                 />
               </div>
             </Box>
-
           </Paper>
         </ModalBody>
         <ModalFooter>

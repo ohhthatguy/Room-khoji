@@ -52,8 +52,8 @@ function locationScore(roomDistance, preferredDistance) {
 const FilterByRate = (rooms, userPref) =>
   rooms.filter((r) => parseInt(r.Rate) <= parseInt(userPref.Rate));
 
-const Recommend = (rooms, userPref) => { //filter
-
+const Recommend = (rooms, userPref) => {
+  //filter
 
   //1. first get the rooms with right price
   const [userLat, userLng] = userPref?.Location?.split(",")
@@ -61,7 +61,7 @@ const Recommend = (rooms, userPref) => { //filter
     .map(Number) // convert to numbers
     .filter((val) => !isNaN(val));
 
-  const radius = userPref.radius || 25;
+  const radius = userPref.radius || 10;
 
   console.log(userLat, userLng, radius);
 
@@ -75,23 +75,45 @@ const Recommend = (rooms, userPref) => { //filter
     }
   } while (filteredByRate.length === 0);
 
+  // console.log("Filter by price= ", FilterByRate)
+
+  const finalByRate = [...filteredByRate].sort(
+    (a, b) => Number(a.Rate) - Number(b.Rate)
+  );
+
   //2. get all the rooms between the range
-  const filteringForHaversine = filteredByRate.filter((r) => {
-    const [lat, lng] = r.Location.split(",")
-      .map((str) => str.trim())
-      .map(Number)
-      .filter((val) => !isNaN(val));
+  // const filteringForHaversine = filteredByRate.filter((r) => {
+  //   const [lat, lng] = r.Location.split(",")
+  //     .map((str) => str.trim())
+  //     .map(Number)
+  //     .filter((val) => !isNaN(val));
 
-    console.log("///HaverSine Value//");
-    console.log(` ${r.Description}:  ${haversine(userLat, userLng, lat, lng)}`);
-    return haversine(userLat, userLng, lat, lng) <= radius;
-  }); //for 25km radius
+  //   console.log("///HaverSine Value//");
+  //   console.log(` ${r.Description}:  ${haversine(userLat, userLng, lat, lng)}`);
+  //   return haversine(userLat, userLng, lat, lng) <= radius;
+  // }); //for 15km radius
 
-  console.log("///filteringForHaversine//");
-  console.log(filteringForHaversine);
-  console.log("///filteringForHaversine//");
+  const filteringForHaversine = filteredByRate
+    .map((r) => {
+      const [lat, lng] = r.Location.split(",")
+        .map((str) => str.trim())
+        .map(Number);
 
-  //4.  now build the room vector, :
+      const distance = haversine(userLat, userLng, lat, lng);
+
+      console.log("///HaverSine Value//");
+      console.log(`${r.Description}: ${distance}`);
+
+      return { ...r, distance }; // attach distance temporarily
+    })
+    .filter((r) => r.distance <= radius) // filter by radius
+    .sort((a, b) => a.distance - b.distance); // ascending order
+
+  // console.log("Filter by haversine= ", filteringForHaversine);
+  //     const byDistance = filteringForHaversine;
+  // const finalByRate = [...filteringForHaversine].sort((a, b) => Number(a.Rate) - Number(b.Rate));
+
+  //3.  now build the room vector, :
   const userVector = buildUserVector(userPref);
   console.log("///userVEctor////");
   console.log(userVector);
@@ -99,22 +121,22 @@ const Recommend = (rooms, userPref) => { //filter
 
   console.log("///EculidDistance//");
   const filteringWithEculidian = filteringForHaversine.map((room) => {
-    const roomVector = getRoomVector(room);
+    const roomVector = getRoomVector(room?._doc);
 
-    const [lat, lng] = room.Location.split(",")
+    const [lat, lng] = room?._doc.Location.split(",")
       .map((str) => str.trim())
       .map(Number)
       .filter((val) => !isNaN(val));
 
     const cosine = cosineSimilarity(userVector, roomVector);
 
+    //  find match score
 
-    const price = priceScore(userPref.Rate, room.Rate);
+    const price = priceScore(userPref.Rate, room?._doc.Rate);
 
     const roomDistance = haversine(userLat, userLng, lat, lng);
 
     const location = locationScore(roomDistance, radius);
-
 
     const score = cosine * 0.6 + price * 0.2 + location * 0.2;
 
@@ -122,41 +144,57 @@ const Recommend = (rooms, userPref) => { //filter
       room,
       score,
     };
-
   });
   console.log("///EculidDistance//");
 
   console.log("///Final List before sort//");
 
-  // const finalListbeforeSort = filteringWithEculidian.map((r) => r.room);
+  const finalByDistance = filteringForHaversine.map((r) => {
 
-  filteringWithEculidian.map((e) => {
-    console.log(`${e.room.Description}`);
-    console.log(`${e.score}`);
-
+    return {room: r._doc, distance: r.distance}
   });
+
 
   console.log("///Final List before sort//");
 
   console.log("///Final List //");
 
-  const finalList = filteringWithEculidian
-    .sort((a, b) => b.score - a.score)
-   .map((e) => {
-    if (!e || !e.room) return null; // skip invalid entries
-    return {
-      ...e.room._doc,
-      score: e.score, // safer name
-    };
-  })
+  // console.log(filteringWithEculidian[0])
+ const formatted = filteringWithEculidian.map((e) => {
+  const roomObj = e.room ? e.room._doc : e._doc;      // take _doc safely
+  const distance = e.room ? e.room.distance : e.distance; 
+  const score = e.score ?? 0;                        // default to 0 if missing
 
-  finalList.map((ele) => {
-    console.log(ele);
-  });
+  return { room: roomObj, distance, score };
+});
+
+
+
+
+  console.log("///Formatted //");
+
+  // console.log(formatted);
+
+  console.log("///Formatted //");
+
+  //  sort filtered rooms based on match_score
+  const finalList = formatted
+    .sort((a, b) => Number(b.score) - Number(a.score))
+    .map((e) => {
+      if (!e || !e.room) return null; // skip invalid entries
+      return {
+        ...e.room,
+        score: e.score, // safer name
+      };
+    });
+
+  
 
   console.log("///Final List //");
 
-  return finalList;
+  const k = {finalByRate, finalByDistance, finalByScore: finalList }
+
+  return k;
 };
 
 module.exports = Recommend;

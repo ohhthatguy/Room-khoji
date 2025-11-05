@@ -58,11 +58,23 @@ const PostHistory = ({ darkMode }) => {
   console.log(historyPost)
 
   return (
+
     <>
-      {
-        isLoading ? <Loader /> :
-      historyPost.length > 0 && historyPost[historyPost.length - 1].Gharbeti_id == account._id ? (
-        <PostCard post={historyPost} darkMode={darkMode} getHistoryPostfunc={getHistoryPost} />
+    {
+  isLoading ? (
+    <Loader />
+  ) : (
+    (() => {
+      const filteredPosts = historyPost.filter(
+        (post) => post.Gharbeti_id === account._id
+      );
+
+      return filteredPosts.length > 0 ? (
+        <PostCard
+          post={filteredPosts}
+          darkMode={darkMode}
+          getHistoryPostfunc={getHistoryPost}
+        />
       ) : (
         <Box
           sx={{
@@ -74,8 +86,33 @@ const PostHistory = ({ darkMode }) => {
         >
           you have no tenants yet!
         </Box>
-      )}
+      );
+    })()
+  )
+}
+
     </>
+
+    // <>
+    //   {
+    //     isLoading ? <Loader /> :
+    //   historyPost.length > 0 && historyPost[historyPost.length - 1].Gharbeti_id == account._id ? (
+    //     <PostCard post={historyPost} darkMode={darkMode} getHistoryPostfunc={getHistoryPost} />
+
+        
+    //   ) : (
+    //     <Box
+    //       sx={{
+    //         background: darkMode ? "#494F55" : "#F5F5F5 ",
+    //         color: darkMode && "white",
+    //         textAlign: "center",
+    //         fontSize: "2rem",
+    //       }}
+    //     >
+    //       you have no tenants yet!
+    //     </Box>
+    //   )}
+    // </>
   );
 };
 

@@ -329,9 +329,11 @@ const getPostByCategory = async (req, res) => {
     // Combine: recommended first (sorted), then remaining
     const finalRooms = [...recommendedRooms, ...remainingRooms];
     const finalFilter = finalRooms.filter((e) => e.Category == category);
+
+    const finalFilterList =  {isNewUser: recommendedRooms.length > 0 ? false : true, finalFilter}
     // console.log(finalRooms)
 
-    res.status(200).json(finalFilter);
+    res.status(200).json(finalFilterList);
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error in getPostByCategory" });
@@ -590,10 +592,11 @@ const updateRentedProduct = async (req, res) => {
 };
 
 const clickRecomendation = async (userId) => {
-  // Step 1: Get all clicks
+  // Step 1:  fetch data from clicks table
   const allClicks = await Click.find();
 
-  // Step 2: Build user -> room vector
+
+  // Step 2:  create a user_room map
   const userRoomMap = {}; // { userId: { roomId: count } }
   const roomSet = new Set();
 
@@ -605,7 +608,7 @@ const clickRecomendation = async (userId) => {
     userRoomMap[uid][rid] = (userRoomMap[uid][rid] || 0) + click.count;
   });
 
-  // Step 3: Convert user vectors to same dimension
+  // Step 3: create room_vector
   const allRoomIds = Array.from(roomSet);
 
   const currentUserVector = allRoomIds.map(
@@ -622,6 +625,8 @@ const clickRecomendation = async (userId) => {
     );
 
     //  console.log("otherVector: ", otherVector)
+
+    // calculate similarity score
     const score = cosineSimilarity(currentUserVector, otherVector);
 
     if (score > 0) {

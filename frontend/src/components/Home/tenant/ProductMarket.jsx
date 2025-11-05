@@ -263,13 +263,20 @@ setIsLoading(true)
           )
         )}
       </Box>
+      
+      { currentPost?.isNewUser &&
+        <Box style={{  height: "50px", width: "100%",textAlign: "center"}}>
+          No recommendation for new User. PLease start interacting!
+        </Box>
+      }
 
         {
           isLoading ? <Loader /> : (<>
         
       <Grid container spacing={3} style={{ padding: "0 20px" }}>
-        {currentPost.length > 0 ? (
-          currentPost.map((e, index) => (
+        {
+        currentPost?.finalFilter?.length > 0 ? (
+          currentPost?.finalFilter?.map((e, index) => (
             <Grid ref={productRef} item lg={4} md={8} sm={8}>
               <Card
                 key={index}
@@ -516,7 +523,7 @@ setIsLoading(true)
             </Grid>
           ))
         ) : (
-          <Box>sorry but currenlty none are available</Box>
+          <Box style={{  height: "750px", width: "100%",display: "flex", justifyContent: "center", alignItems: "center"}}>sorry but currenlty none are available</Box>
         )}
       </Grid>
 
