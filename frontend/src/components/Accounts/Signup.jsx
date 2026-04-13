@@ -87,7 +87,7 @@ const Signup = () => {
       }
     } catch (err) {
       console.log("ERROR: ", err);
-      if (err?.data?.err?.code == 11000) {
+      if (err?.data?.err?.code === 11000) {
         toast.error("Account with same email found already existing!");
         setShowOtpModal(false);
       }
@@ -226,12 +226,12 @@ const Signup = () => {
   const handleOtpInput = (val) => {
     console.log("val: ", val);
 
-    if (val.length == 6) {
+    if (val.length === 6) {
       // checkOtp(val);
 
       console.log(otpCodeFromBackend);
 
-      if (otpCodeFromBackend == val) {
+      if (otpCodeFromBackend === val) {
         //finally call the signup
         createAccount();
       } else {

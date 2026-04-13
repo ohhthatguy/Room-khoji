@@ -22,7 +22,7 @@ import { API } from "../../../services/Api";
 
 const PostEdit = ({ post, edit, setEdit, darkMode }) => {
   // console.log(post[0]._id)
-  const { setIsUpdatedPost, isUpdatedPost } = useContext(DataContext);
+  const { setIsUpdatedPost } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [postData, setPostData] = useState(post[0]);
@@ -147,7 +147,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
         sx={{
           border: "2px solid #587351",
           background: darkMode ? "#494F55" : "#F5F5F5",
-          display: `${edit == 0 ? "none" : "flex"}`,
+          display: `${edit === 0 ? "none" : "flex"}`,
           flexDirection: "column",
           padding: "2rem",
           rowGap: "2rem",

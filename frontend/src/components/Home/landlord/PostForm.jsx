@@ -150,7 +150,7 @@ const PostForm = ({ darkMode }) => {
 
   return (
     <>
-      {success == true ? (
+      {success === true ? (
         <PostAvailable />
       ) : (
         <Paper

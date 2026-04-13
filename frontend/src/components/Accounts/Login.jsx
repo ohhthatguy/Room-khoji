@@ -14,10 +14,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../context/DataProvider";
 import { API } from "../../services/Api";
 
-const StyledGrid = styled(Grid)`
-  margin-top: 8rem;
-`;
-
 const StyledPaper = styled(Paper)`
   display: flex;
   flex-direction: column;

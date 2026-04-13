@@ -51,7 +51,7 @@ const ProductMarket = ({ darkMode }) => {
   const handleNext = (totalProductImages, index) => {
     console.log(index);
     setActiveIndex(index);
-    if (movement == totalProductImages - 1) {
+    if (movement === totalProductImages - 1) {
       //last img
       //  //donothing
     } else {
@@ -62,10 +62,10 @@ const ProductMarket = ({ darkMode }) => {
   const handlePrev = (index) => {
     setActiveIndex(index);
     console.log(index);
-    if (movement - 1 == -1) {
+    if (movement - 1 === -1) {
       //first img
       //do nothing
-    } else if (movement != 0) {
+    } else if (movement !== 0) {
       setMovement((prev) => prev - 1);
     }
   };
@@ -89,7 +89,7 @@ const ProductMarket = ({ darkMode }) => {
           }
         } catch (err) {
           console.log(err);
-          if (err?.code == 401) {
+          if (err?.code === 401) {
             toast.error("Token expired! Please Re-login!");
           }
         }
@@ -147,7 +147,7 @@ const ProductMarket = ({ darkMode }) => {
           if (res.data.initializeBookmark[0]) {
             //first remder
             console.log("inside");
-            if (bookMarkClicked.length == 0) {
+            if (bookMarkClicked.length === 0) {
               setBookmarkClicked([...res.data.initializeBookmark[0].Post_id]);
             } else {
               res.data.initializeBookmark[0].Post_id.map(
@@ -201,7 +201,7 @@ const ProductMarket = ({ darkMode }) => {
   //   console.log(bookMarkClicked)
 
   useEffect(() => {
-    if (selectedOption == "Filter") {
+    if (selectedOption === "Filter") {
       navigate(`/tenant/recommended/${Category}`);
     }
   }, [selectedOption]);
@@ -345,7 +345,7 @@ const ProductMarket = ({ darkMode }) => {
                         }}
                       >
                         <NavigateBefore
-                          disabled={movement - 1 == -1 ? true : false}
+                          disabled={movement - 1 === -1 ? true : false}
                           fontSize="large"
                           sx={{
                             marginRight: "0%",
@@ -358,7 +358,7 @@ const ProductMarket = ({ darkMode }) => {
 
                         <NavigateNext
                           disabled={
-                            movement == e.productImages.length - 1
+                            movement === e.productImages.length - 1
                               ? true
                               : false
                           }
@@ -393,7 +393,7 @@ const ProductMarket = ({ darkMode }) => {
                             sx={{
                               background: `url(${item}) no-repeat 50% 50% / cover`,
                               width: "100%",
-                              height: "20rem",
+                              // height: "20rem",
                               flex: "0 0 100%",
                               height: "100%",
                             }}

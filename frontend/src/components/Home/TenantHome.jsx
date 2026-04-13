@@ -23,11 +23,10 @@ const TenantHome = ({ darkMode }) => {
   const startCard = useRef([]);
 
   // const {account} = useContext(DataContext)
-  const [rentedAdded, setRentedAdded] = useState(false);
+  // const [rentedAdded, setRentedAdded] = useState(false);
   const account = JSON.parse(localStorage.getItem("currentUser"));
   const [verifyData, setVerifyData] = useState("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
 
   //useLocation for query params
 
@@ -36,7 +35,7 @@ const TenantHome = ({ darkMode }) => {
   const data = queryParams.get("data");
   console.log(account);
 
-  if (data && verifyData.length == 0) {
+  if (data && verifyData.length === 0) {
     const verifyPayment = async () => {
       try {
         let res = await API.verifyPayment({ data });
@@ -116,32 +115,30 @@ const TenantHome = ({ darkMode }) => {
 
     // saveRentedProduct();
   }
-  console.log(rentedAdded);
+  // console.log(rentedAdded);
 
-  if (rentedAdded == true) {
-    const deleteRentedProductFromPost = async () => {
-      //data is being saved in db but here it is showing error. solve this
-      //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
-      //use the prev made postdeleteById (see API.js)
-      const rented = JSON.parse(savedPost);
-
-      console.log(rented[0]._id);
-      try {
-        let res = await API.deletePostsOfId({ _id: rented[0]._id });
-
-        if (res.isSuccess) {
-          console.log(res);
-          console.log("deletion complete of rented product fromm post");
-          setRentedAdded(false);
-        } else {
-          console.log("delteio faild");
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    // deleteRentedProductFromPost()
-  }
+  // if (rentedAdded === true) {
+  //   // const deleteRentedProductFromPost = async () => {
+  //   //   //data is being saved in db but here it is showing error. solve this
+  //   //   //then make a mechanism such that after saving the renteddata it deltes the data of given post id form post db colection
+  //   //   //use the prev made postdeleteById (see API.js)
+  //   //   const rented = JSON.parse(savedPost);
+  //   //   console.log(rented[0]._id);
+  //   //   try {
+  //   //     let res = await API.deletePostsOfId({ _id: rented[0]._id });
+  //   //     if (res.isSuccess) {
+  //   //       console.log(res);
+  //   //       console.log("deletion complete of rented product fromm post");
+  //   //       setRentedAdded(false);
+  //   //     } else {
+  //   //       console.log("delteio faild");
+  //   //     }
+  //   //   } catch (err) {
+  //   //     console.log(err);
+  //   //   }
+  //   // };
+  //   // deleteRentedProductFromPost()
+  // }
 
   const handleProductmarket = (e) => {
     // console.log(e)

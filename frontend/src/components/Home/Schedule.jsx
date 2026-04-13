@@ -106,10 +106,10 @@ const Schedule = ({ darkMode }) => {
     }
   };
 
-  const setLatLngFunc = (e) => {
-    const coords = e.Location.split(",").slice(0, 2).map(Number);
-    setLatLng(coords);
-  };
+  // const setLatLngFunc = (e) => {
+  //   const coords = e.Location.split(",").slice(0, 2).map(Number);
+  //   setLatLng(coords);
+  // };
 
   const handleContact = (e) => {
     setSelectedRental(e);
@@ -202,16 +202,16 @@ const Schedule = ({ darkMode }) => {
 
                           <Chip
                             color={
-                              e.Status == "PENDING"
+                              e.Status === "PENDING"
                                 ? "warning"
-                                : e.Status == "UNAVAILABLE"
+                                : e.Status === "UNAVAILABLE"
                                   ? "error"
                                   : "success"
                             }
                             label={e.Status}
                           />
 
-                          {e.Status == "AVAILABLE" && (
+                          {e.Status === "AVAILABLE" && (
                             <Button
                               onClick={() => handleContact(e)}
                               variant="contained"

@@ -34,7 +34,7 @@ const LandLordHome = ({ darkMode }) => {
 
     const temp = [opt1.current, opt2.current, opt3.current];
     temp.map((e) => {
-      if (e == opt.current) {
+      if (e === opt.current) {
         darkMode
           ? (e.style.backgroundColor = " #000000")
           : (e.style.backgroundColor = "#F1E9D2");
@@ -272,11 +272,11 @@ const LandLordHome = ({ darkMode }) => {
 
           {/* posts */}
           <Grid item lg={8.9} md={9.7} sm={9.8} xs={12}>
-            {option == "PostForm" ? (
+            {option === "PostForm" ? (
               <PostForm darkMode={darkMode} />
-            ) : option == "PostAvailable" ? (
+            ) : option === "PostAvailable" ? (
               <PostAvailable darkMode={darkMode} />
-            ) : option == "PostHistory" ? (
+            ) : option === "PostHistory" ? (
               <PostHistory darkMode={darkMode} />
             ) : (
               " so emptyyyy"

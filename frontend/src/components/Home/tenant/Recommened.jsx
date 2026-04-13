@@ -52,7 +52,7 @@ const Recommened = ({ darkMode }) => {
   const [currentPost, setCurrentPost] = useState([]);
   const [bookMarkClicked, setBookmarkClicked] = useState([]);
   // const [currIndex, setCurrIndex] = useState('')
-  const [favrouitPost, setFavouritePost] = useState({
+  const [favrouitPost] = useState({
     add: "",
     delete: "",
   });
@@ -214,27 +214,27 @@ const Recommened = ({ darkMode }) => {
     // console.log("here")
   }, [favrouitPost]);
 
-  const handleSetFavroit = (e) => {
-    setBookmarkClicked((prev) => {
-      if (prev.includes(e._id)) {
-        return prev.filter((itemId) => itemId !== e._id); // Remove from array if already bookmarked
-      } else {
-        return [...prev, e._id]; // Add to array if not bookmarked
-      }
-    });
-    setFavouritePost({ add: e._id, delete: "" });
-  };
+  // const handleSetFavroit = (e) => {
+  //   setBookmarkClicked((prev) => {
+  //     if (prev.includes(e._id)) {
+  //       return prev.filter((itemId) => itemId !== e._id); // Remove from array if already bookmarked
+  //     } else {
+  //       return [...prev, e._id]; // Add to array if not bookmarked
+  //     }
+  //   });
+  //   setFavouritePost({ add: e._id, delete: "" });
+  // };
 
-  const handleRemoveFavroit = (e) => {
-    setBookmarkClicked((prev) => {
-      if (prev.includes(e._id)) {
-        return prev.filter((itemId) => itemId !== e._id); // Remove from array if already bookmarked
-      } else {
-        return [...prev, e._id]; // Add to array if not bookmarked
-      }
-    });
-    setFavouritePost({ add: "", delete: e._id });
-  };
+  // const handleRemoveFavroit = (e) => {
+  //   setBookmarkClicked((prev) => {
+  //     if (prev.includes(e._id)) {
+  //       return prev.filter((itemId) => itemId !== e._id); // Remove from array if already bookmarked
+  //     } else {
+  //       return [...prev, e._id]; // Add to array if not bookmarked
+  //     }
+  //   });
+  //   setFavouritePost({ add: "", delete: e._id });
+  // };
 
   const optionList = ["Flat", "Building", "Room", "Filter"];
   //   console.log(selectedOption)

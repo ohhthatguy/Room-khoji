@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../context/DataProvider";
 
 const Header = () => {
-  const { account, setOpenPortal, setDarkMode, darkMode } =
-    useContext(DataContext);
+  const { setOpenPortal, setDarkMode, darkMode } = useContext(DataContext);
   const navigate = useNavigate();
   // console.log(account)
 
   const homeNavigation = () => {
-    JSON.parse(localStorage.getItem("currentUser")).category == "Tenant"
+    JSON.parse(localStorage.getItem("currentUser")).category === "Tenant"
       ? navigate("/tenantHome")
       : navigate("/landlordHome");
   };
@@ -19,8 +18,6 @@ const Header = () => {
   const myFav = () => {
     navigate(`/tenant/favorite`);
   };
-
-  const handleLogOut = () => {};
 
   const handleDarkMode = () => {
     !darkMode ? setDarkMode(true) : setDarkMode(false);

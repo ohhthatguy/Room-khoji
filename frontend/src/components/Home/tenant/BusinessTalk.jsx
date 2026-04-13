@@ -53,13 +53,13 @@ const BusinessTalk = ({ darkMode }) => {
   const [movement, setMovement] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedDate, setSelectedDate] = useState();
-
+  console.log(signature, total_amount, checkForTable, uuid, selectedDate);
   // eSewaParameters.amount >= 0 ? console.log(true) : console.log(false)
 
   const handleNext = (totalProductImages, index) => {
     console.log(index);
     setActiveIndex(index);
-    if (movement == totalProductImages - 1) {
+    if (movement === totalProductImages - 1) {
       //last img
       //  //donothing
     } else {
@@ -70,10 +70,10 @@ const BusinessTalk = ({ darkMode }) => {
   const handlePrev = (index) => {
     setActiveIndex(index);
     console.log(index);
-    if (movement - 1 == -1) {
+    if (movement - 1 === -1) {
       //first img
       //do nothing
-    } else if (movement != 0) {
+    } else if (movement !== 0) {
       setMovement((prev) => prev - 1);
     }
   };
@@ -211,7 +211,7 @@ const BusinessTalk = ({ darkMode }) => {
         }
       } catch (err) {
         console.log("ERROR: ", err);
-        if (err?.data?.code == 11000) {
+        if (err?.data?.code === 11000) {
           toast.error("this is already sent for inquiry");
         } else {
           toast.error(
@@ -299,7 +299,7 @@ const BusinessTalk = ({ darkMode }) => {
                       }}
                     >
                       <NavigateBefore
-                        disabled={movement - 1 == -1 ? true : false}
+                        disabled={movement - 1 === -1 ? true : false}
                         fontSize="large"
                         sx={{
                           display: `${
@@ -311,7 +311,7 @@ const BusinessTalk = ({ darkMode }) => {
 
                       <NavigateNext
                         disabled={
-                          movement == e.productImages.length - 1 ? true : false
+                          movement === e.productImages.length - 1 ? true : false
                         }
                         fontSize="large"
                         sx={{
@@ -344,7 +344,7 @@ const BusinessTalk = ({ darkMode }) => {
                           sx={{
                             background: `url(${item}) no-repeat 50% 50% / cover`,
                             width: "100%",
-                            height: "20rem",
+                            // height: "20rem",
                             flex: "0 0 100%",
                             height: "100%",
                           }}

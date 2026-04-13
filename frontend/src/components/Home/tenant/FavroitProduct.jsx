@@ -34,7 +34,7 @@ const FavroitProduct = ({ darkMode }) => {
   const handleNext = (totalProductImages, index) => {
     console.log(index);
     setActiveIndex(index);
-    if (movement == totalProductImages - 1) {
+    if (movement === totalProductImages - 1) {
       //last img
       //  //donothing
     } else {
@@ -45,10 +45,10 @@ const FavroitProduct = ({ darkMode }) => {
   const handlePrev = (index) => {
     setActiveIndex(index);
     console.log(index);
-    if (movement - 1 == -1) {
+    if (movement - 1 === -1) {
       //first img
       //do nothing
-    } else if (movement != 0) {
+    } else if (movement !== 0) {
       setMovement((prev) => prev - 1);
     }
   };
@@ -357,7 +357,7 @@ const FavroitProduct = ({ darkMode }) => {
                       }}
                     >
                       <NavigateBefore
-                        disabled={movement - 1 == -1 ? true : false}
+                        disabled={movement - 1 === -1 ? true : false}
                         fontSize="large"
                         sx={{
                           marginRight: "0%",
@@ -370,7 +370,7 @@ const FavroitProduct = ({ darkMode }) => {
 
                       <NavigateNext
                         disabled={
-                          movement == e.productImages.length - 1 ? true : false
+                          movement === e.productImages.length - 1 ? true : false
                         }
                         fontSize="large"
                         sx={{
@@ -403,7 +403,7 @@ const FavroitProduct = ({ darkMode }) => {
                           sx={{
                             background: `url(${item}) no-repeat 50% 50% / cover`,
                             width: "100%",
-                            height: "20rem",
+                            // height: "20rem",
                             flex: "0 0 100%",
                             height: "100%",
                           }}
