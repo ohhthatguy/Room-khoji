@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import {
   Grid,
   Paper,
@@ -7,7 +7,7 @@ import {
   Box,
   TextField,
   Typography,
-  CircularProgress ,
+  CircularProgress,
 } from "@mui/material";
 import Header from "../Header/Header";
 import { useNavigate, Link } from "react-router-dom";
@@ -20,7 +20,6 @@ const StyledGrid = styled(Grid)`
 `;
 
 const StyledPaper = styled(Paper)`
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,7 +27,7 @@ const StyledPaper = styled(Paper)`
   height: 80%;
   padding: 2rem;
   margin-top: 1.5rem;
-  
+
   gap: 2rem;
 `;
 
@@ -36,14 +35,15 @@ const StyledImg = styled("img")`
   width: 100%;
   height: 80%;
   object-fit: cover;
-  borderLeft: 1px solid black;
-   margin-top: 1.5rem;
+  borderleft: 1px solid black;
+  margin-top: 1.5rem;
 `;
 
 const Login = () => {
   const { setAccount } = useContext(DataContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const modalBtn = useRef(null);
 
   const initial = {
     email: "",
@@ -72,12 +72,14 @@ const Login = () => {
       return false;
     }
     if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
-      toast.error("❗ Password must contain at least one letter and one number.");
+      toast.error(
+        "❗ Password must contain at least one letter and one number.",
+      );
       return false;
     }
     return true;
   };
-  
+
   const isValidEmail = (email) => {
     if (!email) {
       toast.error("❗ Email is required.");
@@ -91,14 +93,12 @@ const Login = () => {
   };
 
   const handleLogIn = async () => {
-
- if(
-  !isValidEmail(logInData.email) ||
-  !isValidPassword(logInData.password)){
-
-return;
-  }
-
+    if (
+      !isValidEmail(logInData.email) ||
+      !isValidPassword(logInData.password)
+    ) {
+      return;
+    }
 
     setIsLoading(true);
     // console.log(logInData)
@@ -107,9 +107,7 @@ return;
 
       if (!response.isSuccess) {
         console.log("some error came across. RESPONSE: ", response);
-console.log(response.data.msg)
-        
-       
+        console.log(response.data.msg);
       } else {
         // console.log("login successfull")
         setLogInData(initial);
@@ -119,7 +117,6 @@ console.log(response.data.msg)
         const profile = response.data.response.profile;
         const _id = response.data.response._id;
         const category = response.data.response.category;
-
 
         const currentUser = { name, profile, _id, category };
 
@@ -134,14 +131,11 @@ console.log(response.data.msg)
       }
     } catch (err) {
       console.log("Some error in LOGIN. ERROR: ", err);
-      if(err.code === 404){
-          
-          toast.error(err.data.msg);
-        }else{
+      if (err.code === 404) {
+        toast.error(err.data.msg);
+      } else {
         toast.error("Error in login");
-
-        }
-     
+      }
     }
     setIsLoading(false);
   };
@@ -151,13 +145,16 @@ console.log(response.data.msg)
       <Grid
         container
         justifyContent={"center"}
-       
-        sx={{padding:"4rem",  height: "100vh", background: "#85d6a9", overflow:"hidden",  }}
+        sx={{
+          padding: "4rem",
+          height: "100vh",
+          background: "#85d6a9",
+          overflow: "hidden",
+        }}
       >
         <Grid
           item
           sx={{
-          
             textAlign: "right",
             position: "relative",
             display: { xs: "none", sm: "block" },
@@ -222,19 +219,86 @@ console.log(response.data.msg)
 
             <Button
               variant="contained"
-           
               // disabled={logInData.email && logInData.password ? false : true}
               onClick={() => handleLogIn()}
             >
-              {isLoading ?  <CircularProgress size={24} color="inherit" />: "Login"}
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Login"
+              )}
             </Button>
 
-            <Link style={{ textAlign: "center" }} to={"/create/account"}>
+            {/* <Link style={{ textAlign: "center" }} to={"/create/account"}>
               <Button>Create New Account</Button>
-            </Link>
+            </Link> */}
+            <Box sx={{ display: "grid", placeItems: "center" }}>
+              <div>
+                <Link style={{ textAlign: "center" }} to={"/create/account"}>
+                  <Button>Create New Account</Button>
+                </Link>
+              </div>
+              <div>
+                <button
+                  onClick={() => modalBtn.current?.showModal()}
+                  className="p-2 bg-blue-700 rounded-md  hover:cursor-pointer hover:scale-105 scale-100 duration-300 transition-all"
+                >
+                  Guest Mode
+                </button>
+              </div>
+            </Box>
           </StyledPaper>
         </Grid>
       </Grid>
+
+      <dialog
+        ref={modalBtn}
+        className="border-0 rounded-3 shadow-lg p-0  w-75 w-md-50"
+      >
+        <div className="modal-content comp-bg border-0">
+          {/* Header / Close Button */}
+          <div className="position-relative">
+            <button
+              onClick={() => modalBtn.current?.close()}
+              className="btn btn-primary position-absolute end-0 top-0 m-2 card_hover transition-all px-3 py-2"
+              style={{ zIndex: 10 }}
+            >
+              X
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="modal-body p-4 ele-bg rounded-3">
+            <div className="d-grid gap-4">
+              <section>
+                <h2 className="h3 fw-bold text-uppercase border-bottom pb-2">
+                  Landlord
+                </h2>
+                <p className="fs-5 mb-1 text-break">
+                  <span className="fw-semibold">Email:</span>{" "}
+                  thakullabhaskar456@gmail.com
+                </p>
+                <p className="fs-5">
+                  <span className="fw-semibold">Password:</span> landlord1
+                </p>
+              </section>
+
+              <section>
+                <h2 className="h3 fw-bold text-uppercase border-bottom pb-2">
+                  Tenant
+                </h2>
+                <p className="fs-5 mb-1 text-break">
+                  <span className="fw-semibold">Email:</span>{" "}
+                  peskolagimatra7@gmail.com
+                </p>
+                <p className="fs-5">
+                  <span className="fw-semibold">Password:</span> tenant1
+                </p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 };
