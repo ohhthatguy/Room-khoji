@@ -40,7 +40,6 @@ L.Icon.Default.mergeOptions({
 
 function LocationMarker({ onAddressChange }) {
   const [position, setPosition] = useState(null);
-  const key = "AIzaSyDLCq_LiZFbAa42lMRcURJdqNmqLNdGhEQ";
 
   useMapEvents({
     click: async (e) => {

@@ -15,11 +15,11 @@ const Footer = () => {
             padding: "2rem",
             justifyContent: "space-around",
             gap: "5rem",
-            width: "40%",
+            // width: "40%",
             width: "100%",
           }}
         >
-          {JSON.parse(localStorage.getItem("currentUser")).category ==
+          {JSON.parse(localStorage.getItem("currentUser")).category ===
           "Tenant" ? (
             <Box>
               <strong> Quick Links </strong>
@@ -27,7 +27,7 @@ const Footer = () => {
                 <a
                   style={{ color: "black", textDecoration: "none" }}
                   href={
-                    JSON.parse(localStorage.getItem("currentUser")).category ==
+                    JSON.parse(localStorage.getItem("currentUser")).category ===
                     "Tenant"
                       ? "/tenantHome"
                       : "/landlordHome"
