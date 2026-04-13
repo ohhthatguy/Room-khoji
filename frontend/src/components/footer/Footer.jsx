@@ -1,7 +1,7 @@
-import { Box, Typography, Grid } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { Box, Grid, Typography } from "@mui/material";
 
 const Footer = () => {
   return (
@@ -9,21 +9,18 @@ const Footer = () => {
       <Grid
         sx={{ paddingBottom: "1rem", background: "#91ae98", width: "100%" }}
       >
-        
-          <Box
-            sx={{
-              display: "flex",
-              padding: "2rem",
-              justifyContent: "space-around",
-              gap: "5rem",
-              width: "40%",
-              width: "100%",
-            }}
-          >
-            {
-JSON.parse(localStorage.getItem("currentUser")).category ==
-          "Tenant"  ?
-            
+        <Box
+          sx={{
+            display: "flex",
+            padding: "2rem",
+            justifyContent: "space-around",
+            gap: "5rem",
+            width: "40%",
+            width: "100%",
+          }}
+        >
+          {JSON.parse(localStorage.getItem("currentUser")).category ==
+          "Tenant" ? (
             <Box>
               <strong> Quick Links </strong>
               <Typography>
@@ -48,28 +45,29 @@ JSON.parse(localStorage.getItem("currentUser")).category ==
                   Status
                 </a>
               </Typography>
-            </Box> : <Box></Box>
-}
-            <Box>
-              <strong> Contact </strong>
-
-              <div style={{ display: "flex", gap: "0.4rem" }}>
-                <EmailIcon />
-                <Typography>roomKhojiHR@gmail.com</Typography>
-              </div>
-
-              <div style={{ display: "flex", gap: "0.4rem" }}>
-                <PhoneIcon />
-                <Typography>091 - 560123</Typography>
-              </div>
-
-              <div style={{ display: "flex", gap: "0.4rem" }}>
-                <FmdGoodIcon />
-                <Typography>Koteshwor, Kathmandu</Typography>
-              </div>
             </Box>
+          ) : (
+            <Box></Box>
+          )}
+          <Box>
+            <strong> Contact </strong>
+
+            <div style={{ display: "flex", gap: "0.4rem" }}>
+              <EmailIcon />
+              <Typography>roomKhojiHR@gmail.com</Typography>
+            </div>
+
+            <div style={{ display: "flex", gap: "0.4rem" }}>
+              <PhoneIcon />
+              <Typography>091 - 560123</Typography>
+            </div>
+
+            <div style={{ display: "flex", gap: "0.4rem" }}>
+              <FmdGoodIcon />
+              <Typography>Koteshwor, Kathmandu</Typography>
+            </div>
           </Box>
-        
+        </Box>
 
         <Box
           sx={{

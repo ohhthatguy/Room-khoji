@@ -1,27 +1,26 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import EmailIcon from "@mui/icons-material/Email";
 import {
-  Paper,
-  Button,
-  Grid,
   Box,
-  styled,
-  Checkbox,
-  Typography,
-  Radio,
-  RadioGroup,
+  Button,
   CircularProgress,
   FormControlLabel,
-  TextField,
   FormLabel,
+  Grid,
+  Paper,
+  Radio,
+  RadioGroup,
+  styled,
+  TextField,
+  Typography,
 } from "@mui/material";
-import EmailIcon from '@mui/icons-material/Email';
+import { useEffect, useRef, useState } from "react";
 
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../services/Api";
-import toast from "react-hot-toast";
 import Otp from "./Otp";
 
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const StyledPaper = styled(Paper)`
   display: flex;
@@ -70,39 +69,37 @@ const Signup = () => {
     }
   };
 
-   const createAccount = async () => {
-        console.log(signUpData);
-        setOtpCodeFromBackend('')
-        setIsLoading(true);
+  const createAccount = async () => {
+    console.log(signUpData);
+    setOtpCodeFromBackend("");
+    setIsLoading(true);
 
-        try {
-          let response = await API.createNewAccount(signUpData);
-          if (!response.isSuccess) {
-            console.log(
-              "Server has sent data to frontend but some eroor in frntend"
-            );
-          } else {
-            console.log("data saved");
-            toast.success("Account Created Successfully!")
-            navigate("/");
-          }
-        } catch (err) {
-          console.log("ERROR: ", err);
-          if(err?.data?.err?.code == 11000){
-            toast.error("Account with same email found already existing!");
-            setShowOtpModal(false)
-          }
-        }
+    try {
+      let response = await API.createNewAccount(signUpData);
+      if (!response.isSuccess) {
+        console.log(
+          "Server has sent data to frontend but some eroor in frntend",
+        );
+      } else {
+        console.log("data saved");
+        toast.success("Account Created Successfully!");
+        navigate("/");
+      }
+    } catch (err) {
+      console.log("ERROR: ", err);
+      if (err?.data?.err?.code == 11000) {
+        toast.error("Account with same email found already existing!");
+        setShowOtpModal(false);
+      }
+    }
 
-        setIsLoading(false);
-      };
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
-     
-
       const otpAuth = async () => {
         setIsLoading(true);
 
@@ -110,11 +107,11 @@ const Signup = () => {
           let response = await API.otpAuth(signUpData);
           if (!response.isSuccess) {
             console.log(
-              "Server has sent data to frontend but some eroor in frntend while sending itp"
+              "Server has sent data to frontend but some eroor in frntend while sending itp",
             );
           } else {
             console.log("otp sent");
-            console.log(response)
+            console.log(response);
             setOtpCodeFromBackend(response.data.code);
             setShowOtpModal(true);
             //show the dialoge box and if it enters correct call CreateAccount()
@@ -126,8 +123,7 @@ const Signup = () => {
         setIsLoading(false);
       };
 
-      otpAuth()
-
+      otpAuth();
     }
 
     console.log("here");
@@ -161,7 +157,7 @@ const Signup = () => {
       let response = await API.getProductPicture(data);
       if (!response.isSuccess) {
         console.log(
-          "Server has sent data to frontend but some eroor in frntend"
+          "Server has sent data to frontend but some eroor in frntend",
         );
       } else {
         console.log("photo saved");
@@ -208,7 +204,7 @@ const Signup = () => {
     }
     if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/.test(password)) {
       toast.error(
-        "❗ Password must contain at least one letter and one number."
+        "❗ Password must contain at least one letter and one number.",
       );
       return false;
     }
@@ -233,16 +229,14 @@ const Signup = () => {
     if (val.length == 6) {
       // checkOtp(val);
 
-      console.log(otpCodeFromBackend)
+      console.log(otpCodeFromBackend);
 
-      if(otpCodeFromBackend == val){
+      if (otpCodeFromBackend == val) {
         //finally call the signup
-      createAccount();
-
-      }else{
-        toast.error("Wrong OTP Entered!")
+        createAccount();
+      } else {
+        toast.error("Wrong OTP Entered!");
       }
-
     }
   };
 
@@ -274,35 +268,33 @@ const Signup = () => {
             src="https://cdn.pixabay.com/photo/2019/05/24/11/00/interior-4226020_1280.jpg"
             alt="bg-login"
           />
-
-           
         </Grid>
 
         <Grid item lg={4} md={5} sm={6} xs={10}>
           <StyledPaper>
             <Box sx={{ display: "grid", placeItems: "center" }}>
-               <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 96 96"
-            >
-              <g fill="#4d4d4d">
-                <path d="M51 31v61h46V31H54.688zm7.406 7.438h31.188v46.03H85V77h-7v7.47H58.406z"></path>
-                <path d="M62 45v8h7v-8z"></path>
-                <path d="M85 45h-7v8h7z"></path>
-                <path d="M69 70v-8h-7v8z"></path>
-                <path d="M78 70h7v-8h-7z"></path>
-              </g>
-              <g fill="#607ddf">
-                <path d="M39.094 0L36.5 2.828 21 19.292l-1 1.13V92h38.406V20.517l-1.218-1.226L41.812 2.828 39.094 0zm0 10.966l11.812 12.568V84.46H43V73.9h-8v10.56h-7.688V23.533l11.782-12.568z"></path>
-                <path d="M43 42h-8v13h8z"></path>
-              </g>
-              <g fill="#4d4d4d">
-                <path d="M0 52v40h27.406V52H0zm7.406 7.47H20v24.936h-3V81h-7v3.406H7.406V59.47z"></path>
-                <path d="M17 66h-7v7h7z"></path>
-              </g>
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 96 96"
+              >
+                <g fill="#4d4d4d">
+                  <path d="M51 31v61h46V31H54.688zm7.406 7.438h31.188v46.03H85V77h-7v7.47H58.406z"></path>
+                  <path d="M62 45v8h7v-8z"></path>
+                  <path d="M85 45h-7v8h7z"></path>
+                  <path d="M69 70v-8h-7v8z"></path>
+                  <path d="M78 70h7v-8h-7z"></path>
+                </g>
+                <g fill="#607ddf">
+                  <path d="M39.094 0L36.5 2.828 21 19.292l-1 1.13V92h38.406V20.517l-1.218-1.226L41.812 2.828 39.094 0zm0 10.966l11.812 12.568V84.46H43V73.9h-8v10.56h-7.688V23.533l11.782-12.568z"></path>
+                  <path d="M43 42h-8v13h8z"></path>
+                </g>
+                <g fill="#4d4d4d">
+                  <path d="M0 52v40h27.406V52H0zm7.406 7.47H20v24.936h-3V81h-7v3.406H7.406V59.47z"></path>
+                  <path d="M17 66h-7v7h7z"></path>
+                </g>
+              </svg>
 
               <Typography variant="h5">Room Finder</Typography>
             </Box>
@@ -391,20 +383,32 @@ const Signup = () => {
         scrollable
       >
         <ModalHeader toggle={() => setShowOtpModal((prev) => !prev)}>
-          <div style={{display: "flex"}} >
-          Verify Email <span style={{display: "flex", justifyContent: "center", alignItems: "center", marginLeft: "10px" }}> <EmailIcon /> </span>
+          <div style={{ display: "flex" }}>
+            Verify Email{" "}
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "10px",
+              }}
+            >
+              {" "}
+              <EmailIcon />{" "}
+            </span>
           </div>
         </ModalHeader>
-        <ModalBody style={{padding: "20px"}} >
+        <ModalBody style={{ padding: "20px" }}>
           <Typography variant="body1">Check Email For OTP</Typography>
-          <Typography variant="caption" sx={{fontWeight: "600"}}>We have sent you a <strong>6 digit</strong> code. Please Enter it here!</Typography>
+          <Typography variant="caption" sx={{ fontWeight: "600" }}>
+            We have sent you a <strong>6 digit</strong> code. Please Enter it
+            here!
+          </Typography>
 
-
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Otp length={6} onChange={(val) => handleOtpInput(val)} />
         </ModalBody>
-       
       </Modal>
     </>
   );

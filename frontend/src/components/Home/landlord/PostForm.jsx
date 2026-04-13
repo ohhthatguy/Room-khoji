@@ -1,30 +1,23 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import { Cancel } from "@mui/icons-material";
 import {
-  Button,
   Box,
-  Typography,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  TextField,
-  Paper,
-  styled,
-  Radio,
-  TextareaAutosize,
-  TableHead,
-  TableCell,
+  Button,
   CircularProgress,
+  FormControlLabel,
+  FormLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextareaAutosize,
+  TextField,
 } from "@mui/material";
-import { Cancel, Label } from "@mui/icons-material";
-import LocationSelector from "../../Location-Selector/LocationSelector";
 import MapSelector from "../../Location-Selector/LocationSelector";
 
-import { DataContext } from "../../../context/DataProvider";
 // import { useNavigate } from "react-router-dom"
 import { API } from "../../../services/Api";
 import PostAvailable from "./PostAvailable";
-
 
 const PostForm = ({ darkMode }) => {
   const account = JSON.parse(localStorage.getItem("currentUser"));
@@ -49,17 +42,15 @@ const PostForm = ({ darkMode }) => {
   const [productData, setProductData] = useState(initialProductData);
   const [productImage, setProductImage] = useState();
   const [success, setSuccess] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [location, setLocation] = useState(null);
-
-   
+  const [isLoading, setIsLoading] = useState(false);
+  const [location, setLocation] = useState(null);
 
   // console.log(productImage)
 
   useEffect(() => {
     if (productImage) {
       const sendProductImageToDB = async () => {
-    setIsLoading(true)
+        setIsLoading(true);
 
         console.log("here");
         const data = new FormData();
@@ -84,8 +75,7 @@ const PostForm = ({ darkMode }) => {
         } catch (err) {
           console.log("Some error happend. ERROR: ", err);
         }
-    setIsLoading(false)
-
+        setIsLoading(false);
       };
 
       sendProductImageToDB();
@@ -142,7 +132,7 @@ const PostForm = ({ darkMode }) => {
 
   const handleClick = async () => {
     console.log(productData);
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       let res = await API.savePost(productData);
       // console.log(res)
@@ -155,8 +145,7 @@ const PostForm = ({ darkMode }) => {
     } catch (err) {
       console.log("error: ", err);
     }
-    setIsLoading(false)
-
+    setIsLoading(false);
   };
 
   return (
@@ -216,8 +205,8 @@ const PostForm = ({ darkMode }) => {
                 productData.Quantity < 0
                   ? "Quantity must be at least 1"
                   : productData.Quantity > 10
-                  ? "Quantity must be at most 10"
-                  : ""
+                    ? "Quantity must be at most 10"
+                    : ""
               }
               type="number"
               name="Quantity"
@@ -245,8 +234,8 @@ const PostForm = ({ darkMode }) => {
                 productData.Rate < 1000
                   ? "Rate must be at least 1000"
                   : productData.Rate > 100000
-                  ? "Rate must be at most 100000"
-                  : ""
+                    ? "Rate must be at most 100000"
+                    : ""
               }
               inputProps={{ min: 1000, max: 100000 }}
               type="number"
@@ -384,11 +373,11 @@ const PostForm = ({ darkMode }) => {
               {/* <MapSelector
                 onAddressChange={(latlng) => handleLocation(latlng)}
               /> */}
-                  <MapSelector
-                                onAddressChange={(latlng) => handleLocation(latlng)}
-                                location={location}
-                                setLocation={setLocation}
-                              />
+              <MapSelector
+                onAddressChange={(latlng) => handleLocation(latlng)}
+                location={location}
+                setLocation={setLocation}
+              />
             </div>
 
             <TextareaAutosize
@@ -451,8 +440,11 @@ const PostForm = ({ darkMode }) => {
             style={{ color: darkMode ? "white" : "black" }}
             onClick={() => handleClick()}
           >
-                                       {isLoading ?  <CircularProgress size={24} color="inherit" />: "Looking For Tenants"}
-
+            {isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Looking For Tenants"
+            )}
           </Button>
         </Paper>
       )}

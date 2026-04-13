@@ -1,9 +1,5 @@
-import React from 'react'
-
 const Ecom = () => {
-  return (
-    <div>Ecom</div>
-  )
-}
+  return <div>Ecom</div>;
+};
 
-export default Ecom
+export default Ecom;

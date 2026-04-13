@@ -1,40 +1,39 @@
-import { useEffect, useState, useContext } from "react";
-import Header from "../../Header/Header";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
+import PlaceIcon from "@mui/icons-material/Place";
 import {
-  Button,
+  Avatar,
   Box,
-  Typography,
+  Button,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  Paper,
   Table,
+  TableCell,
   TableHead,
   TableRow,
-  TableCell,
-  Grid,
-  Avatar,
-  
-  Chip,
-  Paper,
+  Typography,
 } from "@mui/material";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Calendar from "../../Calendar/Calendar";
-import PlaceIcon from "@mui/icons-material/Place";
-import { NavigateNext, NavigateBefore } from "@mui/icons-material";
-import { useParams } from "react-router-dom";
-import { API } from "../../../services/Api";
-import { DataContext } from "../../../context/DataProvider";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { DataContext } from "../../../context/DataProvider";
+import { API } from "../../../services/Api";
 import Loader from "../../../theme/Loader";
+import Calendar from "../../Calendar/Calendar";
+import Header from "../../Header/Header";
 
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
 const BusinessTalk = ({ darkMode }) => {
   const { id } = useParams();
   const { currentPost, setCurrentPost } = useContext(DataContext); //post tobe rented is saved
   const [latLng, setLatLng] = useState();
-  const [schedule, setSchedule] = useState(false)
+  const [schedule, setSchedule] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // console.log(id)
 
@@ -81,7 +80,7 @@ const BusinessTalk = ({ darkMode }) => {
 
   useEffect(() => {
     const getPostOfCategory = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         const res = await API.getPostsOfId({ postId: id });
         if (res.isSuccess) {
@@ -94,12 +93,11 @@ const BusinessTalk = ({ darkMode }) => {
       } catch (err) {
         console.log(err);
       }
-      setIsLoading(false)
-
+      setIsLoading(false);
     };
 
     const registerClick = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
 
       try {
         const userId = JSON.parse(localStorage.getItem("currentUser"));
@@ -119,8 +117,7 @@ const BusinessTalk = ({ darkMode }) => {
         console.log(err);
         toast.error("something went wrong!");
       }
-      setIsLoading(false)
-
+      setIsLoading(false);
     };
 
     getPostOfCategory();
@@ -170,76 +167,63 @@ const BusinessTalk = ({ darkMode }) => {
 
   const checkForTable = ["Location", "Parking", "Quantity", "Rate", "Location"];
 
-   const toggleModal = () => {
+  const toggleModal = () => {
     setSchedule((prev) => !prev);
   };
 
- 
   const handleDate = (date) => {
     console.log("Selected Dayjs:", date);
     console.log("Formatted:", date.format("YYYY-MM-DD"));
-    setSelectedDate(date)
+    setSelectedDate(date);
     localStorage.setItem("scheduledDate", date);
   };
 
+  const checkAvaibility = () => {
+    const savedPost = localStorage.getItem("currentPost");
+    const account = JSON.parse(localStorage.getItem("currentUser"));
 
-  const checkAvaibility = ()=>{
+    let data = JSON.parse(savedPost);
+    let { _id, ...restAccount } = account; // extract _id from account
 
-  const savedPost = localStorage.getItem("currentPost");
-   const account = JSON.parse(localStorage.getItem("currentUser"));
+    let rentedData = {
+      ...data[0],
+      ...restAccount, // all other fields from account
+      tenantID: _id, // rename _id to tenantID
+    };
 
-      let data = JSON.parse(savedPost);
-      let { _id, ...restAccount } = account; // extract _id from account
+    rentedData.Date = "Thu, 13 Nov 2025 04:30:29 GMT";
 
-let rentedData = {
-        ...data[0],
-        ...restAccount, // all other fields from account
-        tenantID: _id, // rename _id to tenantID
-      };
+    const saveRentedProduct = async () => {
+      setIsLoading(true);
 
-      rentedData.Date = "Thu, 13 Nov 2025 04:30:29 GMT";
+      try {
+        let res = await API.saveRentedProduct(rentedData);
+        console.log(res);
 
-        const saveRentedProduct = async () => {
-      setIsLoading(true)
-
-        try {
-          let res = await API.saveRentedProduct(rentedData);
+        if (res.isSuccess) {
           console.log(res);
-  
-          if (res.isSuccess) {
-            console.log(res);
-           toast.success("Inquiry for avaibility is sent to landlord.");
-          } else {
-            console.log(
-              "Server has sent data to frontend but some eroor in frntend"
-              
-            );
-           toast.error("Inquiry for avaibility cannot be sent to landlord.");
-
-          }
-        } catch (err) {
-          console.log("ERROR: ", err);
-          if(err?.data?.code == 11000){
-            toast.error("this is already sent for inquiry")
-          }else{
-           toast.error("Error occured while sending inquiry for avaibility to landlord.");
-
-          }
-
+          toast.success("Inquiry for avaibility is sent to landlord.");
+        } else {
+          console.log(
+            "Server has sent data to frontend but some eroor in frntend",
+          );
+          toast.error("Inquiry for avaibility cannot be sent to landlord.");
         }
-      setIsLoading(false)
+      } catch (err) {
+        console.log("ERROR: ", err);
+        if (err?.data?.code == 11000) {
+          toast.error("this is already sent for inquiry");
+        } else {
+          toast.error(
+            "Error occured while sending inquiry for avaibility to landlord.",
+          );
+        }
+      }
+      setIsLoading(false);
+    };
 
-      };
-  
-      saveRentedProduct();
-
-
-  }
-
-  
-   
-
-
+    saveRentedProduct();
+  };
 
   return (
     <>
@@ -259,32 +243,32 @@ let rentedData = {
         }}
       ></Box>
 
-  {
-    isLoading ? <Loader /> : 
-
-      <Grid container justifyContent="center">
-        {currentPost.length > 0 ? (
-          <Grid
-            item
-            sx={{
-              display: "flex",
-              rowGap: "2rem",
-              flexDirection: "column-reverse",
-            }}
-            lg={12}
-            md={8}
-            sm={8}
-          >
-            {currentPost.map((e, index) => (
-              <Card
-                key={index}
-                sx={{
-                  position: "relative",
-                  color: darkMode ? "white" : "black",
-                  backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
-                }}
-              >
-                {/* <CardHeader
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Grid container justifyContent="center">
+          {currentPost.length > 0 ? (
+            <Grid
+              item
+              sx={{
+                display: "flex",
+                rowGap: "2rem",
+                flexDirection: "column-reverse",
+              }}
+              lg={12}
+              md={8}
+              sm={8}
+            >
+              {currentPost.map((e, index) => (
+                <Card
+                  key={index}
+                  sx={{
+                    position: "relative",
+                    color: darkMode ? "white" : "black",
+                    backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
+                  }}
+                >
+                  {/* <CardHeader
                   sx={{
                     "& .MuiCardHeader-title": {
                       color: darkMode ? "white" : "black",
@@ -300,75 +284,77 @@ let rentedData = {
                   subheader={e.Date}
                 /> */}
 
-                {/* <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                  {/* <Box sx={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
                     
                 </Box> */}
 
-                <Box sx={{ position: "relative" }}>
-                  {/* width: '100%', display: 'flex', justifyContent: 'space-around', alignContent: 'center', top: '50%', position: 'absolute' */}
-                  <Box
-                    sx={{
-                      width: "100%",
-                      zIndex: "1",
-                      position: "absolute",
-                      top: "50%",
-                    }}
-                  >
-                    <NavigateBefore
-                      disabled={movement - 1 == -1 ? true : false}
-                      fontSize="large"
+                  <Box sx={{ position: "relative" }}>
+                    {/* width: '100%', display: 'flex', justifyContent: 'space-around', alignContent: 'center', top: '50%', position: 'absolute' */}
+                    <Box
                       sx={{
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
+                        width: "100%",
+                        zIndex: "1",
+                        position: "absolute",
+                        top: "50%",
                       }}
-                      onClick={() => handlePrev(index)}
-                    />
-
-                    <NavigateNext
-                      disabled={
-                        movement == e.productImages.length - 1 ? true : false
-                      }
-                      fontSize="large"
-                      sx={{
-                        marginLeft: "95%",
-                        marginTop: "-4%",
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
-                      }}
-                      onClick={() => handleNext(e.productImages.length, index)}
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      height: "20rem",
-                      display: "flex",
-                      transform:
-                        activeIndex === index
-                          ? `  translateX(-${movement * 100}%)`
-                          : `translateX(0px)`,
-                      transition: "0.5s",
-                    }}
-                  >
-                    {e.productImages.map((item, index) => (
-                      <Box
-                        key={index}
+                    >
+                      <NavigateBefore
+                        disabled={movement - 1 == -1 ? true : false}
+                        fontSize="large"
                         sx={{
-                          background: `url(${item}) no-repeat 50% 50% / cover`,
-                          width: "100%",
-                          height: "20rem",
-                          flex: "0 0 100%",
-                          height: "100%",
+                          display: `${
+                            e.productImages.length <= 1 ? "none" : "block"
+                          }`,
                         }}
-                      ></Box>
-                    ))}
-                  </Box>
-                </Box>
+                        onClick={() => handlePrev(index)}
+                      />
 
-                <Box style={{ margin: "0 10%" }}>
-                  {/* <CardContent>
+                      <NavigateNext
+                        disabled={
+                          movement == e.productImages.length - 1 ? true : false
+                        }
+                        fontSize="large"
+                        sx={{
+                          marginLeft: "95%",
+                          marginTop: "-4%",
+                          display: `${
+                            e.productImages.length <= 1 ? "none" : "block"
+                          }`,
+                        }}
+                        onClick={() =>
+                          handleNext(e.productImages.length, index)
+                        }
+                      />
+                    </Box>
+
+                    <Box
+                      sx={{
+                        height: "20rem",
+                        display: "flex",
+                        transform:
+                          activeIndex === index
+                            ? `  translateX(-${movement * 100}%)`
+                            : `translateX(0px)`,
+                        transition: "0.5s",
+                      }}
+                    >
+                      {e.productImages.map((item, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            background: `url(${item}) no-repeat 50% 50% / cover`,
+                            width: "100%",
+                            height: "20rem",
+                            flex: "0 0 100%",
+                            height: "100%",
+                          }}
+                        ></Box>
+                      ))}
+                    </Box>
+                  </Box>
+
+                  <Box style={{ margin: "0 10%" }}>
+                    {/* <CardContent>
                   <Typography variant="h5">{e.Description}</Typography>
                 </CardContent>
 
@@ -406,289 +392,310 @@ let rentedData = {
                   </TableBody>
                 </Table> */}
 
-                  <CardContent
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      padding: "15px",
-                    }}
-                  >
-                    <Box style={{ padding: "15px" }}>
-                      <div style={{ fontSize: "1.7rem", fontWeight: "bold" }}>
-                        {e.Description}
-                      </div>
-                      <Typography
-                        style={{
-                          fontSize: "0.82rem",
-                          color: "GrayText",
-                          paddingTop: "15px",
-                          paddingBottom: "15px",
-                        }}
-                      >
-                        <PlaceIcon fontSize="small" />
-                        {e.Location.split(",").slice(2).join(",").trim()}
-                      </Typography>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Chip color="secondary" label={e.Category} />
-
-                        <Typography variant="h5">Rs. {e.Rate}</Typography>
-                      </div>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          // gridAutoColumns: "2",
-                          gap: "2rem",
-
-                          margin: "20px 0",
-                          overflowX: "auto",
-                        }}
-                      >
-                        <Paper
+                    <CardContent
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "15px",
+                      }}
+                    >
+                      <Box style={{ padding: "15px" }}>
+                        <div style={{ fontSize: "1.7rem", fontWeight: "bold" }}>
+                          {e.Description}
+                        </div>
+                        <Typography
                           style={{
-                            width: "200px",
-                            height: "150px",
-                            padding: "20px",
-                            display: "grid",
-                            placeItems: "center",
+                            fontSize: "0.82rem",
+                            color: "GrayText",
+                            paddingTop: "15px",
+                            paddingBottom: "15px",
                           }}
                         >
-                          <div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "0.9rem",
-                                color: "GrayText",
-                              }}
-                            >
-                              Parking
-                            </div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "1.3rem",
-                                fontWeight: "bolder",
-                              }}
-                            >
-                              {e.Parking}
-                            </div>
-                          </div>
-                        </Paper>
+                          <PlaceIcon fontSize="small" />
+                          {e.Location.split(",").slice(2).join(",").trim()}
+                        </Typography>
 
-                        <Paper
+                        <div
                           style={{
-                            width: "200px",
-                            height: "150px",
-                            padding: "20px",
-                            display: "grid",
-                            placeItems: "center",
+                            display: "flex",
+                            justifyContent: "space-between",
                           }}
                         >
-                          <div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "0.9rem",
-                                color: "GrayText",
-                              }}
-                            >
-                              Prefered
-                            </div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "1.3rem",
-                                fontWeight: "bolder",
-                              }}
-                            >
-                              {e.People}
-                            </div>
-                          </div>
-                        </Paper>
+                          <Chip color="secondary" label={e.Category} />
 
-                        <Paper
+                          <Typography variant="h5">Rs. {e.Rate}</Typography>
+                        </div>
+
+                        <div
                           style={{
-                            width: "200px",
-                            height: "150px",
-                            padding: "20px",
-                            display: "grid",
-                            placeItems: "center",
+                            display: "flex",
+                            // gridAutoColumns: "2",
+                            gap: "2rem",
+
+                            margin: "20px 0",
+                            overflowX: "auto",
                           }}
                         >
-                          <div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "0.9rem",
-                                color: "GrayText",
-                              }}
-                            >
-                              Pets
+                          <Paper
+                            style={{
+                              width: "200px",
+                              height: "150px",
+                              padding: "20px",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "0.9rem",
+                                  color: "GrayText",
+                                }}
+                              >
+                                Parking
+                              </div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "1.3rem",
+                                  fontWeight: "bolder",
+                                }}
+                              >
+                                {e.Parking}
+                              </div>
                             </div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "1.3rem",
-                                fontWeight: "bolder",
-                              }}
-                            >
-                              {e.Pets}
-                            </div>
-                          </div>
-                        </Paper>
+                          </Paper>
 
-                        <Paper
-                          style={{
-                            width: "200px",
-                            height: "150px",
-                            padding: "20px",
-                            display: "grid",
-                            placeItems: "center",
-                          }}
+                          <Paper
+                            style={{
+                              width: "200px",
+                              height: "150px",
+                              padding: "20px",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "0.9rem",
+                                  color: "GrayText",
+                                }}
+                              >
+                                Prefered
+                              </div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "1.3rem",
+                                  fontWeight: "bolder",
+                                }}
+                              >
+                                {e.People}
+                              </div>
+                            </div>
+                          </Paper>
+
+                          <Paper
+                            style={{
+                              width: "200px",
+                              height: "150px",
+                              padding: "20px",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "0.9rem",
+                                  color: "GrayText",
+                                }}
+                              >
+                                Pets
+                              </div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "1.3rem",
+                                  fontWeight: "bolder",
+                                }}
+                              >
+                                {e.Pets}
+                              </div>
+                            </div>
+                          </Paper>
+
+                          <Paper
+                            style={{
+                              width: "200px",
+                              height: "150px",
+                              padding: "20px",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "0.9rem",
+                                  color: "GrayText",
+                                }}
+                              >
+                                Water Available
+                              </div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "1.3rem",
+                                  fontWeight: "bolder",
+                                }}
+                              >
+                                {e.Water}
+                              </div>
+                            </div>
+                          </Paper>
+
+                          <Paper
+                            style={{
+                              width: "200px",
+                              height: "150px",
+                              padding: "20px",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "0.9rem",
+                                  color: "GrayText",
+                                }}
+                              >
+                                Available Unit
+                              </div>
+                              <div
+                                style={{
+                                  textAlign: "center",
+                                  fontSize: "1.3rem",
+                                  fontWeight: "bolder",
+                                }}
+                              >
+                                {e.Quantity}
+                              </div>
+                            </div>
+                          </Paper>
+                        </div>
+                      </Box>
+                    </CardContent>
+
+                    <Typography
+                      variant="h5"
+                      style={{ margin: "20px 0 10px 0" }}
+                    >
+                      Gallery ({e.productImages.length})
+                    </Typography>
+                    <div
+                      style={{
+                        height: "200px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {e.productImages.map((ele) => (
+                        <div>
+                          <img
+                            src={ele}
+                            style={{
+                              height: "100%",
+                              width: "100%",
+                              objectFit: "cover",
+                              borderRadius: "3%",
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    <Typography
+                      variant="h5"
+                      style={{ margin: "20px 0 10px 0" }}
+                    >
+                      Location
+                    </Typography>
+
+                    <div>
+                      {" "}
+                      {latLng && (
+                        <MapContainer
+                          center={latLng}
+                          zoom={18}
+                          style={{ height: "200px", width: "100%" }}
                         >
-                          <div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "0.9rem",
-                                color: "GrayText",
-                              }}
-                            >
-                              Water Available
-                            </div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "1.3rem",
-                                fontWeight: "bolder",
-                              }}
-                            >
-                              {e.Water}
-                            </div>
-                          </div>
-                        </Paper>
+                          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                          <Marker position={latLng} />
+                        </MapContainer>
+                      )}
+                    </div>
 
-                        <Paper
-                          style={{
-                            width: "200px",
-                            height: "150px",
-                            padding: "20px",
-                            display: "grid",
-                            placeItems: "center",
-                          }}
-                        >
-                          <div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "0.9rem",
-                                color: "GrayText",
-                              }}
-                            >
-                              Available Unit
-                            </div>
-                            <div
-                              style={{
-                                textAlign: "center",
-                                fontSize: "1.3rem",
-                                fontWeight: "bolder",
-                              }}
-                            >
-                              {e.Quantity}
-                            </div>
-                          </div>
-                        </Paper>
-                      </div>
-                    </Box>
-                  </CardContent>
+                    <Typography
+                      variant="h5"
+                      style={{ margin: "20px 0 10px 0" }}
+                    >
+                      Contact
+                    </Typography>
 
-                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
-                    Gallery ({e.productImages.length})
-                  </Typography>
-                  <div
-                    style={{
-                      height: "200px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    {e.productImages.map((ele) => (
-                      <div>
-                        <img
-                          src={ele}
-                          style={{
-                            height: "100%",
-                            width: "100%",
-                            objectFit: "cover",
-                            borderRadius: "3%",
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                    <Box>
+                      <Table sx={{ margin: "1rem 0 2rem 0" }}>
+                        <TableHead>
+                          <Paper>
+                            <TableRow style={{ display: "grid" }}>
+                              <CardHeader
+                                sx={{
+                                  "& .MuiCardHeader-title": {
+                                    color: darkMode ? "white" : "black",
+                                  },
+                                  "& .MuiCardHeader-subheader": {
+                                    color: darkMode ? "white" : "black",
+                                  },
+                                }}
+                                avatar={
+                                  <Avatar
+                                    src={e.Gharbeti_profile}
+                                    alt={e.Gharbeti_name}
+                                  />
+                                }
+                                title={e.Gharbeti_name}
+                                subheader={e.Date}
+                              />
 
-                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
-                    Location
-                  </Typography>
+                              {/* <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>To Schedule a meeting, You have to pay RS. 50 upfront. This is refundable fund once you reach the meeting. This measure is taken to reduce the fraud message </Typography> */}
+                              <Typography
+                                style={{
+                                  fontSize: "0.92rem",
+                                  padding: "0 2rem",
+                                }}
+                              >
+                                Check Availability of this property with
+                                Landlord.{" "}
+                              </Typography>
 
-                  <div>
-                    {" "}
-                    {latLng && (
-                      <MapContainer
-                        center={latLng}
-                        zoom={18}
-                        style={{ height: "200px", width: "100%" }}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <Marker position={latLng} />
-                      </MapContainer>
-                    )}
-                  </div>
-
-                  <Typography variant="h5" style={{ margin: "20px 0 10px 0" }}>
-                    Contact
-                  </Typography>
-
-                  <Box>
-                    <Table sx={{ margin: "1rem 0 2rem 0" }}>
-                      <TableHead>
-                        <Paper>
-                          <TableRow style={{ display: "grid" }}>
-                            <CardHeader
-                              sx={{
-                                "& .MuiCardHeader-title": {
-                                  color: darkMode ? "white" : "black",
-                                },
-                                "& .MuiCardHeader-subheader": {
-                                  color: darkMode ? "white" : "black",
-                                },
-                              }}
-                              avatar={
-                                <Avatar
-                                  src={e.Gharbeti_profile}
-                                  alt={e.Gharbeti_name}
-                                />
-                              }
-                              title={e.Gharbeti_name}
-                              subheader={e.Date}
-                            />
-
-                            {/* <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>To Schedule a meeting, You have to pay RS. 50 upfront. This is refundable fund once you reach the meeting. This measure is taken to reduce the fraud message </Typography> */}
-                            <Typography style={{fontSize: "0.92rem", padding: "0 2rem"}}>Check Availability of this property with Landlord. </Typography>
-                              
-                            <TableCell sx={{ textAlign: "right" }}>
-                              {/* */}
+                              <TableCell sx={{ textAlign: "right" }}>
+                                {/* */}
                                 {/* <button className="btn btn-primary" onClick={toggleModal}>Schedule</button> */}
-                                <button className="btn btn-primary" onClick={checkAvaibility}>Check Availability</button>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={checkAvaibility}
+                                >
+                                  Check Availability
+                                </button>
 
-
-                              {/* <form
+                                {/* <form
                                 action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
                                 method="POST"
                               >
@@ -789,42 +796,38 @@ let rentedData = {
                                   Pay by esewa
                                 </Button>
                               </form> */}
-                            </TableCell>
-                          </TableRow>
-                        </Paper>
-                      </TableHead>
-                    </Table>
+                              </TableCell>
+                            </TableRow>
+                          </Paper>
+                        </TableHead>
+                      </Table>
+                    </Box>
                   </Box>
-                </Box>
-              </Card>
-            ))}
-          </Grid>
-        ) : (
-          <Box>sorry but currenlty none are available</Box>
-        )}
-      </Grid>
+                </Card>
+              ))}
+            </Grid>
+          ) : (
+            <Box>sorry but currenlty none are available</Box>
+          )}
+        </Grid>
+      )}
 
-      }
+      <Modal isOpen={schedule} toggle={toggleModal} centered scrollable>
+        <ModalHeader toggle={toggleModal}>Schedule Meeting</ModalHeader>
+        <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
+          {/* <DateCalendar /> */}
+          <Calendar onDateChange={handleDate} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggleModal}>
+            Cancel
+          </Button>
 
+          <Button color="primary" onClick={checkAvaibility}>
+            Check Avaibility
+          </Button>
 
-        
-              <Modal isOpen={schedule} toggle={toggleModal} centered scrollable>
-                <ModalHeader toggle={toggleModal}>Schedule Meeting</ModalHeader>
-                <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
-                  {/* <DateCalendar /> */}
-                  <Calendar onDateChange={handleDate} />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="secondary" onClick={toggleModal}>
-                    Cancel
-                  </Button>
-
-                  <Button color="primary" onClick={checkAvaibility}>
-                    Check Avaibility
-                  </Button>
-
-
-                   {/* <form
+          {/* <form
                                 action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
                                 method="POST"
                               >
@@ -925,10 +928,8 @@ let rentedData = {
                                   Pay by esewa
                                 </Button>
                    </form> */}
-                </ModalFooter>
-              </Modal>
-
-
+        </ModalFooter>
+      </Modal>
     </>
   );
 };

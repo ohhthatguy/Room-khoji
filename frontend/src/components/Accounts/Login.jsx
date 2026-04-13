@@ -1,19 +1,18 @@
-import { useState, useContext, useRef } from "react";
 import {
+  Box,
+  Button,
+  CircularProgress,
   Grid,
   Paper,
-  Button,
   styled,
-  Box,
   TextField,
   Typography,
-  CircularProgress,
 } from "@mui/material";
-import Header from "../Header/Header";
-import { useNavigate, Link } from "react-router-dom";
-import { API } from "../../services/Api";
-import { DataContext } from "../../context/DataProvider";
+import { useContext, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { DataContext } from "../../context/DataProvider";
+import { API } from "../../services/Api";
 
 const StyledGrid = styled(Grid)`
   margin-top: 8rem;

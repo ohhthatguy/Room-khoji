@@ -1,28 +1,22 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { createPortal } from "react-dom";
 import { useContext } from "react";
 import { Toaster } from "react-hot-toast";
+import { Route, Routes, useNavigate } from "react-router-dom";
 // At the top of your App.js or Map component
-import "leaflet/dist/leaflet.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "leaflet/dist/leaflet.css";
 
 import Login from "./components/Accounts/Login";
 import Signup from "./components/Accounts/Signup";
-import TenantHome from "./components/Home/TenantHome";
 import LandLordHome from "./components/Home/LandLordHome";
-import ProductMarket from "./components/Home/tenant/ProductMarket";
+import Schedule from "./components/Home/Schedule";
 import BusinessTalk from "./components/Home/tenant/BusinessTalk";
 import FavroitProduct from "./components/Home/tenant/FavroitProduct";
-import Ecom from "./components/Accounts/Ecom";
+import ProductMarket from "./components/Home/tenant/ProductMarket";
 import Recommened from "./components/Home/tenant/Recommened";
-import Schedule from "./components/Home/Schedule";
-
-
-import LogOut from "./components/Logout/LogOut";
+import TenantHome from "./components/Home/TenantHome";
 import { DataContext } from "./context/DataProvider";
 
-import { Modal, ModalBody, ModalFooter, ModalHeader , Button} from "reactstrap";
-import Footer from "./components/footer/Footer";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 const App = () => {
   const { openPortal, setOpenPortal, darkMode } = useContext(DataContext);
@@ -36,11 +30,11 @@ const App = () => {
     root.style.background = "#F8F8FF";
   }
 
-  const handleLogOut1 =()=>{
-        navigate('/')
-        localStorage.clear() //clear data stored
-        setOpenPortal(false)
-    }
+  const handleLogOut1 = () => {
+    navigate("/");
+    localStorage.clear(); //clear data stored
+    setOpenPortal(false);
+  };
 
   return (
     <>
@@ -77,29 +71,32 @@ const App = () => {
           element={<FavroitProduct darkMode={darkMode} />}
         />
 
-        
         <Route
           path="/tenant/recommended/:Category"
           element={<Recommened darkMode={darkMode} />}
         />
       </Routes>
 
-     
-
-      <Modal isOpen={openPortal} toggle={()=>setOpenPortal(prev=>!prev)} centered scrollable>
-        <ModalHeader toggle={()=>setOpenPortal(prev=>!prev)}>Logout</ModalHeader>
+      <Modal
+        isOpen={openPortal}
+        toggle={() => setOpenPortal((prev) => !prev)}
+        centered
+        scrollable
+      >
+        <ModalHeader toggle={() => setOpenPortal((prev) => !prev)}>
+          Logout
+        </ModalHeader>
         <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
-          You want to logout ? 
+          You want to logout ?
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={()=>setOpenPortal(false)}>
+          <Button color="secondary" onClick={() => setOpenPortal(false)}>
             Cancel
           </Button>
 
-            <Button color="primary" onClick={handleLogOut1}>
+          <Button color="primary" onClick={handleLogOut1}>
             LogOut
           </Button>
-          
         </ModalFooter>
       </Modal>
     </>

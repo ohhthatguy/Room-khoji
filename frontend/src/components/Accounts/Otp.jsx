@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useState } from "react";
 
-const Otp = React.memo(({ length,  onChange }) => {
+const Otp = React.memo(({ length, onChange }) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputsRef = useRef([]);
 
@@ -24,10 +24,6 @@ const Otp = React.memo(({ length,  onChange }) => {
       inputsRef.current[idx - 1]?.focus();
     }
   };
-
- 
-
-
 
   return (
     <div style={{ display: "flex", gap: "1.5rem" }}>

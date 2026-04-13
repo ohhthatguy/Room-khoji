@@ -1,22 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 
+import { Cancel } from "@mui/icons-material";
 import {
-  Button,
   Box,
+  Button,
   CircularProgress,
-  FormLabel,
-  RadioGroup,
   FormControlLabel,
-  TextField,
+  FormLabel,
   Paper,
-  styled,
   Radio,
+  RadioGroup,
   TextareaAutosize,
-  TableHead,
-  TableCell,
-  TableRow,
+  TextField,
 } from "@mui/material";
-import { Cancel, Category } from "@mui/icons-material";
 import MapSelector from "../../Location-Selector/LocationSelector";
 
 import { DataContext } from "../../../context/DataProvider";
@@ -30,7 +26,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [postData, setPostData] = useState(post[0]);
-   const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState(null);
 
   console.log(postData);
 
@@ -41,7 +37,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
   useEffect(() => {
     if (productImage) {
       const sendProductImageToDB = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
 
         console.log("here");
         const data = new FormData();
@@ -66,8 +62,7 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
         } catch (err) {
           console.log("Some error happend. ERROR: ", err);
         }
-        setIsLoading(false)
-
+        setIsLoading(false);
       };
 
       sendProductImageToDB();
@@ -201,8 +196,8 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
               postData.Quantity < 0
                 ? "Quantity must be at least 1"
                 : postData.Quantity > 10
-                ? "Quantity must be at most 10"
-                : ""
+                  ? "Quantity must be at most 10"
+                  : ""
             }
             type="number"
             name="Quantity"
@@ -229,8 +224,8 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
               postData.Rate < 1000
                 ? "Rate must be at least 1000"
                 : postData.Rate > 100000
-                ? "Rate must be at most 100000"
-                : ""
+                  ? "Rate must be at most 100000"
+                  : ""
             }
             inputProps={{ min: 1000, max: 100000 }}
             type="number"
@@ -372,7 +367,11 @@ const PostEdit = ({ post, edit, setEdit, darkMode }) => {
 
           <div>
             {/* <LocationSelector onAddressChange={(latlng) => handleLocation(latlng)} /> */}
-            <MapSelector onAddressChange={(latlng) => handleLocation(latlng)} location={location} setLocation={setLocation} />
+            <MapSelector
+              onAddressChange={(latlng) => handleLocation(latlng)}
+              location={location}
+              setLocation={setLocation}
+            />
           </div>
 
           <TextareaAutosize

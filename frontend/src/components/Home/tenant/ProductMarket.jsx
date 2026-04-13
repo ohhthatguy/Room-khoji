@@ -1,34 +1,28 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import Header from "../../Header/Header";
 import {
-  Button,
-  Box,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Paper,
-  Table,
-  TableRow,
-  TableHead,
-  Grid,
-  Avatar,
-  TableCell,
-  Chip,
-} from "@mui/material";
-import {
-  NavigateNext,
-  NavigateBefore,
   Bookmark,
   BookmarkBorderOutlined,
-  DarkMode,
+  NavigateBefore,
+  NavigateNext,
 } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
+import { DataContext } from "../../../context/DataProvider";
 import { API } from "../../../services/Api";
-import Footer from "../../footer/Footer";
 import Loader from "../../../theme/Loader";
+import Footer from "../../footer/Footer";
+import Header from "../../Header/Header";
 
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -99,14 +93,14 @@ const ProductMarket = ({ darkMode }) => {
             toast.error("Token expired! Please Re-login!");
           }
         }
-        setIsLoading(false)
+        setIsLoading(false);
       };
 
       getPostOfCategory();
       gsap.fromTo(
         productRef.current,
         { opacity: 0, scale: 0 },
-        { opacity: 1, scale: 1 }
+        { opacity: 1, scale: 1 },
       );
     }
   }, [selectedOption]);
@@ -121,7 +115,7 @@ const ProductMarket = ({ darkMode }) => {
     const saveFavouritePost = async () => {
       try {
         let res;
-setIsLoading(true)
+        setIsLoading(true);
         if (favrouitPost.add.length > 0) {
           res = await API.saveFavouritePost({
             Tenant_id: account._id,
@@ -146,7 +140,7 @@ setIsLoading(true)
             res.data.msg.map(
               (e) =>
                 !bookMarkClicked.includes(e) &&
-                setBookmarkClicked([...bookMarkClicked, e])
+                setBookmarkClicked([...bookMarkClicked, e]),
             );
           }
 
@@ -159,7 +153,7 @@ setIsLoading(true)
               res.data.initializeBookmark[0].Post_id.map(
                 (e) =>
                   !bookMarkClicked.includes(e) &&
-                  setBookmarkClicked([...bookMarkClicked, e])
+                  setBookmarkClicked([...bookMarkClicked, e]),
               );
             }
           }
@@ -172,7 +166,7 @@ setIsLoading(true)
       } catch (err) {
         console.log(err);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     };
 
     saveFavouritePost();
@@ -218,8 +212,6 @@ setIsLoading(true)
     <>
       <Header />
 
-      
-
       <Box
         sx={{
           marginTop: "4rem",
@@ -260,193 +252,203 @@ setIsLoading(true)
             >
               {e}
             </Button>
-          )
+          ),
         )}
       </Box>
-      
-      { currentPost?.isNewUser &&
-        <Box style={{  height: "50px", width: "100%",textAlign: "center"}}>
+
+      {currentPost?.isNewUser && (
+        <Box style={{ height: "50px", width: "100%", textAlign: "center" }}>
           No recommendation for new User. PLease start interacting!
         </Box>
-      }
+      )}
 
-        {
-          isLoading ? <Loader /> : (<>
-        
-      <Grid container spacing={3} style={{ padding: "0 20px" }}>
-        {
-        currentPost?.finalFilter?.length > 0 ? (
-          currentPost?.finalFilter?.map((e, index) => (
-            <Grid ref={productRef} item lg={4} md={8} sm={8}>
-              <Card
-                key={index}
-                sx={{
-                  position: "relative",
-                  backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
-                  color: darkMode ? "white" : "black",
-                  height: "750px",
-                  // border: "1px solid black",
-                  boxShadow: "1px 3px 4px 0px",
-                }}
-              >
-                {bookMarkClicked.includes(e._id) ? (
-                  <Bookmark
-                    color="primary"
-                    onClick={() => handleRemoveFavroit(e)}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <Grid container spacing={3} style={{ padding: "0 20px" }}>
+            {currentPost?.finalFilter?.length > 0 ? (
+              currentPost?.finalFilter?.map((e, index) => (
+                <Grid ref={productRef} item lg={4} md={8} sm={8}>
+                  <Card
+                    key={index}
                     sx={{
-                      position: "absolute",
-                      right: "2%",
-                      top: "5%",
-                      "&:hover": {
-                        color: "blue",
-                        cursor: "pointer",
-                        transition: "0.4s",
-                      },
-                      transition: "0.4s",
-                      "&:active": { transform: "scale(1.05)" },
-                    }}
-                  />
-                ) : (
-                  <BookmarkBorderOutlined
-                    onClick={() => handleSetFavroit(e)}
-                    sx={{
-                      position: "absolute",
-                      right: "2%",
-                      top: "5%",
-                      "&:hover": {
-                        color: "blue",
-                        cursor: "pointer",
-                        transition: "0.4s",
-                      },
-                      transition: "0.4s",
-                      "&:active": { transform: "scale(1.05)" },
-                    }}
-                  />
-                )}
-
-                <CardHeader
-                  sx={{
-                    "& .MuiCardHeader-title": {
+                      position: "relative",
+                      backgroundColor: darkMode ? "#494F55" : " #F5F5F5",
                       color: darkMode ? "white" : "black",
-                    },
-                    "& .MuiCardHeader-subheader": {
-                      color: darkMode ? "white" : "black",
-                    },
-                  }}
-                  avatar={
-                    <Avatar src={e.Gharbeti_profile} alt={e.Gharbeti_name} />
-                  }
-                  title={e.Gharbeti_name}
-                  subheader={e.Date}
-                />
-
-                <Box sx={{ position: "relative" }}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      zIndex: "1",
-                      position: "absolute",
-                      top: "50%",
+                      height: "750px",
+                      // border: "1px solid black",
+                      boxShadow: "1px 3px 4px 0px",
                     }}
                   >
-                    <NavigateBefore
-                      disabled={movement - 1 == -1 ? true : false}
-                      fontSize="large"
-                      sx={{
-                        marginRight: "0%",
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
-                      }}
-                      onClick={() => handlePrev(index)}
-                    />
-
-                    <NavigateNext
-                      disabled={
-                        movement == e.productImages.length - 1 ? true : false
-                      }
-                      fontSize="large"
-                      sx={{
-                        marginLeft: "90%",
-                        display: `${
-                          e.productImages.length <= 1 ? "none" : "block"
-                        }`,
-                      }}
-                      onClick={() => handleNext(e.productImages.length, index)}
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      height: "20rem",
-                      display: "flex",
-
-                      transform:
-                        activeIndex === index
-                          ? `  translateX(-${movement * 100}%)`
-                          : `translateX(0px)`,
-                      transition: "0.5s",
-                    }}
-                  >
-                    {e.productImages.map((item, index) => (
-                      <Box
-                        key={index}
+                    {bookMarkClicked.includes(e._id) ? (
+                      <Bookmark
+                        color="primary"
+                        onClick={() => handleRemoveFavroit(e)}
                         sx={{
-                          background: `url(${item}) no-repeat 50% 50% / cover`,
-                          width: "100%",
-                          height: "20rem",
-                          flex: "0 0 100%",
-                          height: "100%",
+                          position: "absolute",
+                          right: "2%",
+                          top: "5%",
+                          "&:hover": {
+                            color: "blue",
+                            cursor: "pointer",
+                            transition: "0.4s",
+                          },
+                          transition: "0.4s",
+                          "&:active": { transform: "scale(1.05)" },
                         }}
-                      ></Box>
-                    ))}
-                  </Box>
-                </Box>
+                      />
+                    ) : (
+                      <BookmarkBorderOutlined
+                        onClick={() => handleSetFavroit(e)}
+                        sx={{
+                          position: "absolute",
+                          right: "2%",
+                          top: "5%",
+                          "&:hover": {
+                            color: "blue",
+                            cursor: "pointer",
+                            transition: "0.4s",
+                          },
+                          transition: "0.4s",
+                          "&:active": { transform: "scale(1.05)" },
+                        }}
+                      />
+                    )}
 
-                <CardContent
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "15px",
-                  }}
-                >
-                  <Typography variant="body1">Rs. {e.Rate}</Typography>
-                  <Chip label={e.Category} />
-                </CardContent>
+                    <CardHeader
+                      sx={{
+                        "& .MuiCardHeader-title": {
+                          color: darkMode ? "white" : "black",
+                        },
+                        "& .MuiCardHeader-subheader": {
+                          color: darkMode ? "white" : "black",
+                        },
+                      }}
+                      avatar={
+                        <Avatar
+                          src={e.Gharbeti_profile}
+                          alt={e.Gharbeti_name}
+                        />
+                      }
+                      title={e.Gharbeti_name}
+                      subheader={e.Date}
+                    />
 
-                <Box style={{ padding: "15px" }}>
-                  <Typography
-                    style={{
-                      fontSize: "1.2rem",
-                      fontWeight: "bold",
-                      height: "3rem",
-                      lineHeight: "1.3rem",
-                      overflowY: "hidden",
-                    }}
-                    variant="caption"
-                  >
-                    {e.Description}
-                  </Typography>
-                  <Typography
-                    style={{
-                      fontSize: "0.82rem",
-                      paddingTop: "15px",
-                      paddingBottom: "15px",
-                    }}
-                  >
-                    {e.Location.split(",").slice(2).join(",").trim()}
-                  </Typography>
+                    <Box sx={{ position: "relative" }}>
+                      <Box
+                        sx={{
+                          width: "100%",
+                          zIndex: "1",
+                          position: "absolute",
+                          top: "50%",
+                        }}
+                      >
+                        <NavigateBefore
+                          disabled={movement - 1 == -1 ? true : false}
+                          fontSize="large"
+                          sx={{
+                            marginRight: "0%",
+                            display: `${
+                              e.productImages.length <= 1 ? "none" : "block"
+                            }`,
+                          }}
+                          onClick={() => handlePrev(index)}
+                        />
 
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Chip label={`${e.Parking} Parking`} />
-                    <Chip label={`Pets ${e.Pets}`} />
-                    <Chip label={`Prefered ${e.People}`} />
-                  </div>
-                </Box>
+                        <NavigateNext
+                          disabled={
+                            movement == e.productImages.length - 1
+                              ? true
+                              : false
+                          }
+                          fontSize="large"
+                          sx={{
+                            marginLeft: "90%",
+                            display: `${
+                              e.productImages.length <= 1 ? "none" : "block"
+                            }`,
+                          }}
+                          onClick={() =>
+                            handleNext(e.productImages.length, index)
+                          }
+                        />
+                      </Box>
 
-                {/* <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                      <Box
+                        sx={{
+                          height: "20rem",
+                          display: "flex",
+
+                          transform:
+                            activeIndex === index
+                              ? `  translateX(-${movement * 100}%)`
+                              : `translateX(0px)`,
+                          transition: "0.5s",
+                        }}
+                      >
+                        {e.productImages.map((item, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              background: `url(${item}) no-repeat 50% 50% / cover`,
+                              width: "100%",
+                              height: "20rem",
+                              flex: "0 0 100%",
+                              height: "100%",
+                            }}
+                          ></Box>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    <CardContent
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "15px",
+                      }}
+                    >
+                      <Typography variant="body1">Rs. {e.Rate}</Typography>
+                      <Chip label={e.Category} />
+                    </CardContent>
+
+                    <Box style={{ padding: "15px" }}>
+                      <Typography
+                        style={{
+                          fontSize: "1.2rem",
+                          fontWeight: "bold",
+                          height: "3rem",
+                          lineHeight: "1.3rem",
+                          overflowY: "hidden",
+                        }}
+                        variant="caption"
+                      >
+                        {e.Description}
+                      </Typography>
+                      <Typography
+                        style={{
+                          fontSize: "0.82rem",
+                          paddingTop: "15px",
+                          paddingBottom: "15px",
+                        }}
+                      >
+                        {e.Location.split(",").slice(2).join(",").trim()}
+                      </Typography>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Chip label={`${e.Parking} Parking`} />
+                        <Chip label={`Pets ${e.Pets}`} />
+                        <Chip label={`Prefered ${e.People}`} />
+                      </div>
+                    </Box>
+
+                    {/* <Box sx={{ display: "flex", justifyContent: "space-around" }}>
               
                   <Box
                     sx={{
@@ -511,30 +513,39 @@ setIsLoading(true)
                   </Box>
                 </Box> */}
 
-                <Box style={{ marginBottom: "1.2rem", padding: "15px" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate(`/tenant/BusinessTalk/${e._id}`)}
-                  >
-                    View Details
-                  </Button>
-                </Box>
-              </Card>
-            </Grid>
-          ))
-        ) : (
-          <Box style={{  height: "750px", width: "100%",display: "flex", justifyContent: "center", alignItems: "center"}}>sorry but currenlty none are available</Box>
-        )}
-      </Grid>
+                    <Box style={{ marginBottom: "1.2rem", padding: "15px" }}>
+                      <Button
+                        variant="contained"
+                        onClick={() =>
+                          navigate(`/tenant/BusinessTalk/${e._id}`)
+                        }
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                  </Card>
+                </Grid>
+              ))
+            ) : (
+              <Box
+                style={{
+                  height: "750px",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                sorry but currenlty none are available
+              </Box>
+            )}
+          </Grid>
 
-        <div style={{ marginTop: "2rem" }}>
-        <Footer />
-      </div>
-
-          </>)
-}
-
-    
+          <div style={{ marginTop: "2rem" }}>
+            <Footer />
+          </div>
+        </>
+      )}
     </>
   );
 };

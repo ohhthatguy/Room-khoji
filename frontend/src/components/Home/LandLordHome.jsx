@@ -1,22 +1,22 @@
-import { useContext, useRef, useState } from "react";
-import { Logout, DarkMode, LightMode } from "@mui/icons-material";
+import { DarkMode, LightMode, Logout } from "@mui/icons-material";
 import {
   Box,
-  Typography,
   Card,
   CardContent,
-  Paper,
   Grid,
+  Paper,
   Table,
-  TableHead,
   TableCell,
+  TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import { useContext, useRef, useState } from "react";
 import { DataContext } from "../../context/DataProvider";
+import Footer from "../footer/Footer";
+import PostAvailable from "./landlord/PostAvailable";
 import PostForm from "./landlord/PostForm";
 import PostHistory from "./landlord/PostHistory";
-import PostAvailable from "./landlord/PostAvailable";
-import Footer from "../footer/Footer";
 
 const LandLordHome = ({ darkMode }) => {
   const { setOpenPortal, setDarkMode } = useContext(DataContext);
@@ -62,14 +62,10 @@ const LandLordHome = ({ darkMode }) => {
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
-         
         }}
       >
         {" "}
-        <Typography variant="h3">
-          Room-Finder
-        </Typography>
-       
+        <Typography variant="h3">Room-Finder</Typography>
         <Box
           sx={{
             display: "flex",
@@ -77,7 +73,6 @@ const LandLordHome = ({ darkMode }) => {
             right: "2%",
             width: "15%",
             justifyContent: "space-evenly",
-            
           }}
         >
           <Box
@@ -135,9 +130,10 @@ const LandLordHome = ({ darkMode }) => {
               color: darkMode ? "white" : "black",
               opacity: "0.95",
               width: "25.8%",
-              
-             border: "1px solid black", borderRadius: "8px",
-                boxShadow: "0px 2px 2px 0px"
+
+              border: "1px solid black",
+              borderRadius: "8px",
+              boxShadow: "0px 2px 2px 0px",
             }}
           >
             <Box
@@ -146,14 +142,13 @@ const LandLordHome = ({ darkMode }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                
               }}
             >
               <Box
                 sx={{
                   height: "7rem",
                   width: "7rem",
-                  
+
                   backgroundImage: `url('${account.profile}')`,
                   backgroundPosition: "75% 25%",
                   backgroundSize: "cover",
@@ -163,8 +158,17 @@ const LandLordHome = ({ darkMode }) => {
             </Box>
 
             <CardContent sx={{ textAlign: "center" }}>
-              <Typography variant="body1" style={{border: "1px solid black", borderRadius: "8px",
-                boxShadow: "0px 2px 2px 0px"}}> Welcome, <strong>{account.name}</strong></Typography>
+              <Typography
+                variant="body1"
+                style={{
+                  border: "1px solid black",
+                  borderRadius: "8px",
+                  boxShadow: "0px 2px 2px 0px",
+                }}
+              >
+                {" "}
+                Welcome, <strong>{account.name}</strong>
+              </Typography>
               {/* <Typography> ID:{account._id}</Typography> */}
             </CardContent>
           </Card>
@@ -172,13 +176,12 @@ const LandLordHome = ({ darkMode }) => {
 
         {/* <Typography>What are you looking for ?</Typography> */}
 
-        <Grid container >
+        <Grid container>
           {/* table */}
           <Grid
             sx={{
-            
               background: darkMode ? "#494F55" : " #F5F5F5",
-              height: "38vh"
+              height: "38vh",
             }}
             item
             lg={3}
@@ -188,63 +191,51 @@ const LandLordHome = ({ darkMode }) => {
           >
             <Table>
               <TableHead>
-                <TableRow
-                  ref={opt1}
-                  
-                  onClick={() => checkColor(opt1)}
-                >
+                <TableRow ref={opt1} onClick={() => checkColor(opt1)}>
                   <TableCell
-                    
                     sx={{
                       // color: darkMode ? "white" : "black",
-                    cursor: "pointer",
-                    fontSize: "50%",
-                    "&:hover": {
-                      transform: "scale(1.03)",
+                      cursor: "pointer",
+                      fontSize: "50%",
+                      "&:hover": {
+                        transform: "scale(1.03)",
+                        transition: "0.4s",
+                        boxShadow: "0px 2px 2px 0px black",
+                      },
+                      "&:active": {
+                        transform: "scale(1.06)",
+                      },
                       transition: "0.4s",
-                      boxShadow: "0px 2px 2px 0px black",
-                    },
-                    "&:active": {
-                      transform: "scale(1.06)",
-                    },
-                    transition: "0.4s",
-                  }}
+                    }}
                     onClick={() => setOption((prev) => "PostHistory")}
-                    
                   >
                     <Typography variant="body1">
                       <strong>Check Status</strong>
                     </Typography>
-                  
                   </TableCell>
                 </TableRow>
               </TableHead>
 
               <TableHead>
-                <TableRow
-                  ref={opt2}
-                 
-                  onClick={() => checkColor(opt2)}
-                >
+                <TableRow ref={opt2} onClick={() => checkColor(opt2)}>
                   <TableCell
-                  
-                     sx={{
+                    sx={{
                       // color: darkMode ? "white" : "black",
-                    cursor: "pointer",
-                    fontSize: "50%",
-                    "&:hover": {
-                      transform: "scale(1.03)",
+                      cursor: "pointer",
+                      fontSize: "50%",
+                      "&:hover": {
+                        transform: "scale(1.03)",
+                        transition: "0.4s",
+                        boxShadow: "0px 2px 2px 0px black",
+                      },
+                      "&:active": {
+                        transform: "scale(1.06)",
+                      },
                       transition: "0.4s",
-                      boxShadow: "0px 2px 2px 0px black",
-                    },
-                    "&:active": {
-                      transform: "scale(1.06)",
-                    },
-                    transition: "0.4s",
-                  }}
+                    }}
                     onClick={() => setOption((prev) => "PostAvailable")}
                   >
-                     <Typography variant="body1">
+                    <Typography variant="body1">
                       <strong>Your Rentals</strong>
                     </Typography>
                   </TableCell>
@@ -252,30 +243,25 @@ const LandLordHome = ({ darkMode }) => {
               </TableHead>
 
               <TableHead>
-                <TableRow
-                  ref={opt3}
-                  
-                  onClick={() => checkColor(opt3)}
-                >
+                <TableRow ref={opt3} onClick={() => checkColor(opt3)}>
                   <TableCell
-                    
-                     sx={{
+                    sx={{
                       // color: darkMode ? "white" : "black",
-                    cursor: "pointer",
-                    fontSize: "50%",
-                    "&:hover": {
-                      transform: "scale(1.03)",
+                      cursor: "pointer",
+                      fontSize: "50%",
+                      "&:hover": {
+                        transform: "scale(1.03)",
+                        transition: "0.4s",
+                        boxShadow: "0px 2px 2px 0px black",
+                      },
+                      "&:active": {
+                        transform: "scale(1.06)",
+                      },
                       transition: "0.4s",
-                      boxShadow: "0px 2px 2px 0px black",
-                    },
-                    "&:active": {
-                      transform: "scale(1.06)",
-                    },
-                    transition: "0.4s",
-                  }}
+                    }}
                     onClick={() => setOption((prev) => "PostForm")}
                   >
-                     <Typography variant="body1">
+                    <Typography variant="body1">
                       <strong>Add Rentals</strong>
                     </Typography>
                   </TableCell>
@@ -298,10 +284,9 @@ const LandLordHome = ({ darkMode }) => {
           </Grid>
         </Grid>
       </Grid>
-<div style={{marginTop: "10px"}}>
-       <Footer />
-
-</div>
+      <div style={{ marginTop: "10px" }}>
+        <Footer />
+      </div>
     </>
   );
 };

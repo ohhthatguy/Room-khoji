@@ -1,26 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import {
-  Button,
-  Box,
-  Typography,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  Paper,
-  styled,
-  Grid,
-  Table,
-  TableHead,
-  TableCell,
-  TableRow,
-} from "@mui/material";
+import { Box } from "@mui/material";
 // import { DataContext } from "../../context/DataProvider"
 // import { useNavigate } from "react-router-dom"
 import { API } from "../../../services/Api";
-import PostCard from "./PostCard";
 import Loader from "../../../theme/Loader";
+import PostCard from "./PostCard";
 
 const PostHistory = ({ darkMode }) => {
   //if any history steore in a var and send it as <postcard post = {post} /> else show this no room seold
@@ -29,68 +14,62 @@ const PostHistory = ({ darkMode }) => {
   const account = JSON.parse(localStorage.getItem("currentUser"));
   const [isLoading, setIsLoading] = useState(false);
 
-      const getHistoryPost = async () => {
-      try {
-        setIsLoading(true)
-        const res = await API.getRentedProduct();
+  const getHistoryPost = async () => {
+    try {
+      setIsLoading(true);
+      const res = await API.getRentedProduct();
 
-        if (res.isSuccess) {
-          // console.log(res.data)
-          setHistoryPost(res.data);
-        } else {
-          console.log("some wrng");
-        }
-      } catch (err) {
-        console.log("error: ", err);
+      if (res.isSuccess) {
+        // console.log(res.data)
+        setHistoryPost(res.data);
+      } else {
+        console.log("some wrng");
       }
-       setIsLoading(false)
-    };
+    } catch (err) {
+      console.log("error: ", err);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-
-
     getHistoryPost();
   }, []);
 
   // console.log(historyPost[0].Gharbeti_id)
   // console.log(account._id)
 
-  console.log(historyPost)
+  console.log(historyPost);
 
   return (
-
     <>
-    {
-  isLoading ? (
-    <Loader />
-  ) : (
-    (() => {
-      const filteredPosts = historyPost.filter(
-        (post) => post.Gharbeti_id === account._id
-      );
-
-      return filteredPosts.length > 0 ? (
-        <PostCard
-          post={filteredPosts}
-          darkMode={darkMode}
-          getHistoryPostfunc={getHistoryPost}
-        />
+      {isLoading ? (
+        <Loader />
       ) : (
-        <Box
-          sx={{
-            background: darkMode ? "#494F55" : "#F5F5F5 ",
-            color: darkMode && "white",
-            textAlign: "center",
-            fontSize: "2rem",
-          }}
-        >
-          you have no tenants yet!
-        </Box>
-      );
-    })()
-  )
-}
+        (() => {
+          const filteredPosts = historyPost.filter(
+            (post) => post.Gharbeti_id === account._id,
+          );
 
+          return filteredPosts.length > 0 ? (
+            <PostCard
+              post={filteredPosts}
+              darkMode={darkMode}
+              getHistoryPostfunc={getHistoryPost}
+            />
+          ) : (
+            <Box
+              sx={{
+                background: darkMode ? "#494F55" : "#F5F5F5 ",
+                color: darkMode && "white",
+                textAlign: "center",
+                fontSize: "2rem",
+              }}
+            >
+              you have no tenants yet!
+            </Box>
+          );
+        })()
+      )}
     </>
 
     // <>
@@ -99,7 +78,6 @@ const PostHistory = ({ darkMode }) => {
     //   historyPost.length > 0 && historyPost[historyPost.length - 1].Gharbeti_id == account._id ? (
     //     <PostCard post={historyPost} darkMode={darkMode} getHistoryPostfunc={getHistoryPost} />
 
-        
     //   ) : (
     //     <Box
     //       sx={{

@@ -1,24 +1,22 @@
-import { useEffect, useState, useRef } from "react";
-import Header from "../Header/Header";
 import {
-  Box,
-  Typography,
-  Card,
   Avatar,
+  Box,
+  Card,
+  CardContent,
   CardHeader,
   CardMedia,
-  CardContent,
   Grid,
   Rating,
+  Typography,
 } from "@mui/material";
-import { DataContext } from "../../context/DataProvider";
-import { useNavigate, useLocation } from "react-router-dom";
-import { API } from "../../services/Api";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Footer from "../footer/Footer";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import Loader from "../../theme/Loader";
+import { useLocation, useNavigate } from "react-router-dom";
+import { API } from "../../services/Api";
+import Footer from "../footer/Footer";
+import Header from "../Header/Header";
 
 const TenantHome = ({ darkMode }) => {
   const reviewCard = useRef([]);
@@ -60,7 +58,7 @@ const TenantHome = ({ darkMode }) => {
 
   console.log(verifyData);
   const savedPost = localStorage.getItem("currentPost");
-  console.log("after esewa: savedpost: ", savedPost)
+  console.log("after esewa: savedpost: ", savedPost);
 
   if (verifyData.data?.status === "COMPLETE" && savedPost) {
     // save this data to db rented
@@ -75,14 +73,12 @@ const TenantHome = ({ darkMode }) => {
       tenantID: _id, // rename _id to tenantID
     };
 
-    
-
     const sendMailAfterPay = async () => {
       try {
         let res = await API.sendMailAfterPayment(rentedData);
         // console.log(res)
         if (res.isSuccess) {
-            toast.success("Contact is sent to Mail.")
+          toast.success("Contact is sent to Mail.");
         } else {
           console.log("something wrong happened");
           console.log(res);
@@ -92,10 +88,9 @@ const TenantHome = ({ darkMode }) => {
       }
     };
 
-      sendMailAfterPay()
+    sendMailAfterPay();
 
- 
-// const date = localStorage.getItem("scheduledDate");
+    // const date = localStorage.getItem("scheduledDate");
     // rentedData.Date = date;
     // const saveRentedProduct = async () => {
     //   //data is being saved in db but here it is showing error. solve this
@@ -159,21 +154,21 @@ const TenantHome = ({ darkMode }) => {
   const productType = [
     {
       image:
-       "https://plus.unsplash.com/premium_photo-1675616563084-63d1f129623d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&fm=jpg&q=60&w=3000",
-      
+        "https://plus.unsplash.com/premium_photo-1675616563084-63d1f129623d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG90ZWwlMjByb29tfGVufDB8fDB8fHww&fm=jpg&q=60&w=3000",
+
       name: "Room",
     },
     {
       image:
         "https://thearchitectsdiary.com/wp-content/uploads/2024/07/Flat-In-Pune-10.jpg",
-      
+
       name: "Flat",
     },
     {
       image:
-       "https://i.pinimg.com/1200x/81/7d/73/817d734c0253df69aab40dad4fbaecbf.jpg",
-       
-        name: "Building",
+        "https://i.pinimg.com/1200x/81/7d/73/817d734c0253df69aab40dad4fbaecbf.jpg",
+
+      name: "Building",
     },
   ];
 
@@ -220,7 +215,7 @@ const TenantHome = ({ darkMode }) => {
           duration: 1,
           ease: "power2.out",
         },
-        index * 0.2 // Adding delay within the timeline for each card
+        index * 0.2, // Adding delay within the timeline for each card
       );
     });
 
@@ -250,7 +245,7 @@ const TenantHome = ({ darkMode }) => {
 
           boxShadow: "0px 0px 0px 0px black",
         },
-        index * 2.2
+        index * 2.2,
       );
     });
   }, []);
@@ -270,7 +265,6 @@ const TenantHome = ({ darkMode }) => {
             alignItems: "center",
             flexDirection: "column",
             gap: "10px",
-            
           }}
           xs={12}
         >
@@ -279,13 +273,8 @@ const TenantHome = ({ darkMode }) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              
             }}
-          >
-          
-           
-           
-          </Box>
+          ></Box>
 
           <Box>
             <Typography sx={{ color: "white" }} variant="h5">
@@ -347,7 +336,6 @@ const TenantHome = ({ darkMode }) => {
                 height="250"
                 image={`${e.image}`}
                 alt={`${e.name}`}
-
               />
 
               <CardHeader
@@ -385,8 +373,8 @@ const TenantHome = ({ darkMode }) => {
                   marginTop: "1.52rem",
                   background: darkMode ? "#494F55" : "",
                   color: darkMode ? "white" : "black",
-                  boxShadow:  "0px 2px 2px 2px black",
-                  borderRight: "4px solid green"
+                  boxShadow: "0px 2px 2px 2px black",
+                  borderRight: "4px solid green",
                 }}
               >
                 <CardHeader

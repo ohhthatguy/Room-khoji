@@ -1,42 +1,32 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import Header from "../../Header/Header";
 import {
-  Button,
-  Box,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Paper,
-  Table,
-  TableRow,
-  TableHead,
-  Grid,
-  Avatar,
-  TableCell,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  TextField,
-  styled,
-  Radio,
-  TextareaAutosize,
-  Chip,
-} from "@mui/material";
-import {
-  NavigateNext,
   NavigateBefore,
-  Bookmark,
-  BookmarkBorderOutlined,
-  DarkMode,
+  NavigateNext
 } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  FormControlLabel,
+  FormLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography
+} from "@mui/material";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import MapSelector from "../../Location-Selector/LocationSelector";
-import { DataContext } from "../../../context/DataProvider";
 import { useNavigate, useParams } from "react-router-dom";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { DataContext } from "../../../context/DataProvider";
 import { API } from "../../../services/Api";
 import Loader from "../../../theme/Loader";
+import Header from "../../Header/Header";
+import MapSelector from "../../Location-Selector/LocationSelector";
 
 import { gsap } from "gsap";
 // import { ScrollTrigger } from 'gsap/ScrollTrigger';
